@@ -1,0 +1,11 @@
+{
+  "name": "softonic/graphql-client",
+  "type": "library",
+  "description" : "Softonic GraphQL client",
+  "keywords": ["softonic", "oauth2", "graphql", "client"],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/softonic/graphql-client",
+  "support": {
+    "issues": "https://github.com/softonic/graphql-client/issues"
+  }
+}
