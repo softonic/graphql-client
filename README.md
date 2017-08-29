@@ -1,4 +1,4 @@
-Softonic OAuth2 Provider
+PHP GraphQL Client
 =====
 
 [![Latest Version](https://img.shields.io/github/release/softonic/graphql-client.svg?style=flat-square)](https://github.com/softonic/graphql-client/releases)
@@ -25,7 +25,7 @@ $options = [
 
 $provider = new Softonic\OAuth2\Client\Provider\Softonic($options);
 
-$config = ['grant_type' => 'client_credentials', 'scope' => 'myscope];
+$config = ['grant_type' => 'client_credentials', 'scope' => 'myscope'];
 
 $cache = new \Symfony\Component\Cache\Adapter\FilesystemAdapter();
 
