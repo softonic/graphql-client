@@ -23,7 +23,7 @@ class Client
     public function query(string $query, array $variables = [], float $connectTimeout = 0): Response
     {
         $options = [
-            'connect_timeout' => $connectTimeout
+            'connect_timeout' => $connectTimeout,
             'json' => [
                 'query' => $query,
                 'variables' => $variables,
