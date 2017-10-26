@@ -11,7 +11,8 @@
   "require": {
     "php": ">=7.0",
     "guzzlehttp/guzzle": "^6.3",
-    "softonic/guzzle-oauth2-middleware": "^1.1"
+    "softonic/guzzle-oauth2-middleware": "^1.1",
+    "eljam/guzzle-jwt-middleware": "^0.4.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.0",

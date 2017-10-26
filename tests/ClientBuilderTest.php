@@ -30,4 +30,21 @@ class ClientBuilderTest extends TestCase
         );
         $this->assertInstanceOf(\Softonic\GraphQL\Client::class, $client);
     }
+
+    public function testBuildWithJwtAuth()
+    {
+        $mockAuthStrategy = $this->createMock(\Eljam\GuzzleJwt\Strategy\Auth\FormAuthStrategy::class);
+        $mockTokenOptions = [
+            'token_url' => '/api/token',
+            'token_key' => 'access_token', // default is token
+            'expire_key' => 'expires_in', // default is expires_in if not set
+        ];
+
+        $client = ClientBuilder::buildWithJwtAuth(
+            'http://foo.bar/qux',
+            $mockTokenOptions,
+            $mockAuthStrategy
+        );
+        $this->assertInstanceOf(\Softonic\GraphQL\Client::class, $client);
+    }
 }

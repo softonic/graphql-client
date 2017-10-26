@@ -12,7 +12,7 @@ PHP Client for [GraphQL](http://graphql.org/)
 
 Documentation
 -------
-
+###Oauth:
 To instantiate a client with an OAuth2 provider:
 
 ``` php
@@ -49,8 +49,49 @@ QUERY;
 $variables = ['idFoo' => 'foo', 'idBar' => 'bar'];
 $response = $client->query($query, $variables);
 ```
+###Jwt:
+JWT auth implements and uses eljam/guzzle-jwt-middleware
 
-To instantiate a client without OAuth2:
+To view strategies for JWT: 
+https://github.com/eljam/guzzle-jwt-middleware/blob/master/README.md
+
+```php
+<?php
+$options = [
+    'token_url' => '/api/token',
+    'token_key' => 'access_token', // default is token
+    'expire_key' => 'expires_in', // default is expires_in if not set
+];
+
+$authStrategy = new FormAuthStrategy(
+    [
+        'username' => 'admin',
+        'password' => 'admin',
+        'form_fields' => ['username', 'password'],
+    ]
+);
+
+$client = \Softonic\GraphQL\ClientBuilder::buildWithJwtAuth(
+    'https://catalog.swarm.pub.softonic.one/graphql',
+    $options,
+    $authStrategy
+);
+
+$query = <<<'QUERY'
+query GetFooBar($idFoo: String, $idBar: String) {
+  foo(id: $idFoo) {
+    id_foo
+    bar (id: $idBar) {
+      id_bar
+    }
+  }
+}
+QUERY;
+$variables = ['idFoo' => 'foo', 'idBar' => 'bar'];
+$response = $client->query($query, $variables);
+```
+###No Auth:
+To instantiate a client without Auth:
 
 ``` php
 <?php
