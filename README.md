@@ -54,7 +54,7 @@ To instantiate a client without OAuth2:
 
 ``` php
 <?php
-$client = \Softonic\GraphQL\ClientBuilder::build($options);
+$client = \Softonic\GraphQL\ClientBuilder::build('https://catalog.swarm.pub.softonic.one/graphql');
 
 $query = <<<'QUERY'
 query GetFooBar($idFoo: String, $idBar: String) {
