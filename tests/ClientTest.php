@@ -48,7 +48,7 @@ class ClientTest extends TestCase
                 [
                     'json' => [
                         'query' => $query,
-                        'variables' => [],
+                        'variables' => '{}',
                     ],
                 ]
             )
@@ -87,7 +87,7 @@ class ClientTest extends TestCase
                 [
                     'json' => [
                         'query' => $query,
-                        'variables' => [],
+                        'variables' => '{}',
                     ],
                 ]
             )
@@ -128,7 +128,7 @@ class ClientTest extends TestCase
                 [
                     'json' => [
                         'query' => $query,
-                        'variables' => $variables,
+                        'variables' => json_encode($variables),
                     ],
                 ]
             )
