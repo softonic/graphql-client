@@ -22,12 +22,11 @@ class Client
      */
     public function query(string $query, array $variables = []): Response
     {
-        $options = [
-            'json' => [
-                'query' => $query,
-                'variables' => $variables,
-            ],
-        ];
+        $options = ['json' => ['query' => $query]];
+
+        if (!empty($variables)) {
+            $options['json']['variables'] = json_encode($variables);
+        }
 
         try {
             $response = $this->httpClient->request('POST', '', $options);
