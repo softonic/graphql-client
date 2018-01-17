@@ -46,6 +46,7 @@ class ClientTest extends TestCase
                 'POST',
                 '',
                 [
+                    'connect_timeout' => 0,
                     'json' => [
                         'query' => $query,
                         'variables' => [],
@@ -85,6 +86,7 @@ class ClientTest extends TestCase
                 'POST',
                 '',
                 [
+                    'connect_timeout' => 0,
                     'json' => [
                         'query' => $query,
                         'variables' => [],
@@ -101,7 +103,7 @@ class ClientTest extends TestCase
     {
         $mockResponse = $this->createMock(\Softonic\GraphQL\Response::class);
         $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
-        
+
         $response = [
             'data' => [
                 'program' => [
@@ -126,6 +128,7 @@ class ClientTest extends TestCase
                 'POST',
                 '',
                 [
+                    'connect_timeout' => 0,
                     'json' => [
                         'query' => $query,
                         'variables' => $variables,

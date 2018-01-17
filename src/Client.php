@@ -20,9 +20,10 @@ class Client
      * @throws \UnexpectedValueException When response body is not a valid json
      * @throws \RuntimeException         When there are transfer errors
      */
-    public function query(string $query, array $variables = []): Response
+    public function query(string $query, array $variables = [], float $connectTimeout = 0): Response
     {
         $options = [
+            'connect_timeout' => $connectTimeout,
             'json' => [
                 'query' => $query,
                 'variables' => $variables,
