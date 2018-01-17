@@ -25,7 +25,7 @@ class Client
         $options = [
             'json' => [
                 'query' => $query,
-                'variables' => $variables,
+                'variables' => json_encode($variables),
             ],
         ];
 
