@@ -12,7 +12,7 @@
          stopOnFailure="false">
 
     <testsuites>
-        <testsuite name="Softonic OAuth2 Provider">
+        <testsuite name="Softonic GraphQL Client">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
