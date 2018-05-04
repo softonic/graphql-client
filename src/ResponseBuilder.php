@@ -20,7 +20,13 @@ class ResponseBuilder
         $decodedResponse = $this->getJsonDecodedResponse($body);
         
         if (!array_key_exists('data', $decodedResponse)) {
-            throw new \UnexpectedValueException('Invalid GraphQL JSON response.');
+            $message = 'Invalid GraphQL JSON response.';
+            if (array_key_exists('errors', $decodedResponse)
+                && is_array($decodedResponse['errors'])
+                && array_key_exists('message', $decodedResponse['errors'][0])) {
+                $message .= ' ' . stripslashes($decodedResponse['errors'][0]['message']);
+            }
+            throw new \UnexpectedValueException($message);
         }
 
         return [
@@ -35,7 +41,11 @@ class ResponseBuilder
 
         $error = json_last_error();
         if (JSON_ERROR_NONE !== $error) {
-            throw new \UnexpectedValueException('Invalid JSON response.');
+            $message = 'Invalid JSON response.';
+            if (json_last_error_msg()) {
+                $message .= ' ' . json_last_error_msg();
+            }
+            throw new \UnexpectedValueException($message);
         }
         return $response;
     }
