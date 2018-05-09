@@ -31,6 +31,28 @@ class ClientTest extends TestCase
         $this->client->query($query);
     }
 
+    public function testCanRetrievePreviousExceptionWhenSimpleQueryHasErrors()
+    {
+        $previousException = null;
+        try {
+            $originalException = new \GuzzleHttp\Exception\ServerException(
+                'Server side error',
+                $this->createMock(\Psr\Http\Message\RequestInterface::class)
+            );
+
+            $this->httpClient->expects($this->once())
+                ->method('request')
+                ->willThrowException($originalException);
+
+            $query = $this->getSimpleQuery();
+            $this->client->query($query);
+        } catch (\Exception $e) {
+            $previousException = $e->getPrevious();
+        } finally {
+            $this->assertSame($originalException, $previousException);
+        }
+    }
+
     public function testSimpleQueryWhenInvalidJsonIsReceived()
     {
         $query = $this->getSimpleQuery();
