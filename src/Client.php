@@ -32,7 +32,7 @@ class Client
         try {
             $response = $this->httpClient->request('POST', '', $options);
         } catch (TransferException $e) {
-            throw new \RuntimeException('Network Error.'.$e->getMessage(), null, $e);
+            throw new \RuntimeException('Network Error.'.$e->getMessage(), 0, $e);
         }
 
         return $this->responseBuilder->build($response);
