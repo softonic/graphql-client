@@ -15,7 +15,7 @@ class ResponseBuilderTest extends TestCase
             ->willReturn('malformed response');
 
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('Invalid JSON response.');
+        $this->expectExceptionMessage('Invalid JSON response. Response body: ');
 
         $builder = new ResponseBuilder();
         $builder->build($mockHttpResponse);
@@ -45,7 +45,7 @@ class ResponseBuilderTest extends TestCase
             ->willReturn($body);
 
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('Invalid GraphQL JSON response.');
+        $this->expectExceptionMessage('Invalid GraphQL JSON response. Response body: ');
 
         $builder = new ResponseBuilder();
         $builder->build($mockHttpResponse);
@@ -68,13 +68,28 @@ class ResponseBuilderTest extends TestCase
         );
     }
 
-    public function testBuildValidGraphqlJsonWithErrors()
+    public function buildValidGraphqlJsonWithErrorsProvider()
+    {
+        return [
+            'Response with null data' => [
+                'body' => '{"data": null, "errors": [{"foo": "bar"}]}',
+            ],
+            'Response without data' => [
+                'body' => '{"errors": [{"foo": "bar"}]}',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider buildValidGraphqlJsonWithErrorsProvider
+     */
+    public function testBuildValidGraphqlJsonWithErrors(string $body)
     {
         $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
 
         $mockHttpResponse->expects($this->once())
             ->method('getBody')
-            ->willReturn('{"data": null, "errors": [{"foo": "bar"}]}');
+            ->willReturn($body);
 
         $builder = new ResponseBuilder();
         $response = $builder->build($mockHttpResponse);
