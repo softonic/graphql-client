@@ -38,7 +38,7 @@ class ResponseBuilder
         $error = json_last_error();
         if (JSON_ERROR_NONE !== $error) {
             throw new \UnexpectedValueException(
-                'Invalid JSON response. Response body: ' . json_encode($response)
+                'Invalid JSON response. Response body: ' . $body
             );
         }
 
