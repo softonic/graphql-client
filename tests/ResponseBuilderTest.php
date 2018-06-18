@@ -15,7 +15,7 @@ class ResponseBuilderTest extends TestCase
             ->willReturn('malformed response');
 
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('Invalid JSON response.');
+        $this->expectExceptionMessage('Invalid JSON response. Response body: ');
 
         $builder = new ResponseBuilder();
         $builder->build($mockHttpResponse);
@@ -45,7 +45,7 @@ class ResponseBuilderTest extends TestCase
             ->willReturn($body);
 
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('Invalid GraphQL JSON response.');
+        $this->expectExceptionMessage('Invalid GraphQL JSON response. Response body: ');
 
         $builder = new ResponseBuilder();
         $builder->build($mockHttpResponse);
