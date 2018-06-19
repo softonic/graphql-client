@@ -9,7 +9,7 @@ class ResponseBuilder
     public function build(ResponseInterface $httpResponse)
     {
         $body = $httpResponse->getBody();
-        
+
         $normalizedResponse = $this->getNormalizedResponse($body);
 
         return new Response($normalizedResponse['data'], $normalizedResponse['errors']);
@@ -18,9 +18,11 @@ class ResponseBuilder
     private function getNormalizedResponse(string $body)
     {
         $decodedResponse = $this->getJsonDecodedResponse($body);
-        
-        if (!array_key_exists('data', $decodedResponse)) {
-            throw new \UnexpectedValueException('Invalid GraphQL JSON response.');
+
+        if (false === array_key_exists('data', $decodedResponse) && empty($decodedResponse['errors'])) {
+            throw new \UnexpectedValueException(
+                'Invalid GraphQL JSON response. Response body: ' . json_encode($decodedResponse)
+            );
         }
 
         return [
@@ -35,8 +37,11 @@ class ResponseBuilder
 
         $error = json_last_error();
         if (JSON_ERROR_NONE !== $error) {
-            throw new \UnexpectedValueException('Invalid JSON response.');
+            throw new \UnexpectedValueException(
+                'Invalid JSON response. Response body: ' . $body
+            );
         }
+
         return $response;
     }
 }
