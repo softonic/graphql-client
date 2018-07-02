@@ -10,6 +10,14 @@ PHP GraphQL Client
 
 PHP Client for [GraphQL](http://graphql.org/)
 
+Installation
+-------
+
+Via composer:
+```
+composer require softonic/graphql-client
+```
+
 Documentation
 -------
 
