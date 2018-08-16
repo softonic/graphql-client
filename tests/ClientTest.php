@@ -70,7 +70,6 @@ class ClientTest extends TestCase
                 [
                     'json' => [
                         'query' => $query,
-                        'variables' => [],
                     ],
                 ]
             )
@@ -109,7 +108,6 @@ class ClientTest extends TestCase
                 [
                     'json' => [
                         'query' => $query,
-                        'variables' => [],
                     ],
                 ]
             )
