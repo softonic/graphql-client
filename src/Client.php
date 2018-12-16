@@ -39,4 +39,36 @@ class Client
 
         return $this->responseBuilder->build($response);
     }
+
+    public function uploadFile(string $query, array $variables = null, string $file, string $fileName): Response
+    {
+        $options = [
+            'multipart' => 
+              [
+                [
+                    'name'     => 'query',
+                    'contents' => $query,
+
+                ],
+                [
+                    'name'     => 'variables',
+                    'contents' => json_encode($variables)
+                ],
+                [
+                    'name'     => 'file',
+                    'contents' => $file,
+                    'filename' => $fileName,
+                ]
+              ]
+
+        ];
+
+        try {
+            $response = $this->httpClient->request('POST', '', $options);
+        } catch (TransferException $e) {
+            throw new \RuntimeException('Network Error.' . $e->getMessage(), 0, $e);
+        }
+
+        return $this->responseBuilder->build($response);
+    }
 }
