@@ -44,6 +44,7 @@ $client = \Softonic\GraphQL\ClientBuilder::buildWithOAuth2Provider(
     $cache
 );
 
+// Query Example
 $query = <<<'QUERY'
 query GetFooBar($idFoo: String, $idBar: String) {
   foo(id: $idFoo) {
@@ -56,6 +57,24 @@ query GetFooBar($idFoo: String, $idBar: String) {
 QUERY;
 $variables = ['idFoo' => 'foo', 'idBar' => 'bar'];
 $response = $client->query($query, $variables);
+
+// Mutation Example
+$mutation = <<<'MUTATION'
+mutation ($foo: ObjectInput!){
+  CreateObjectMutation (object: $foo) {
+    status
+  }
+}
+MUTATION;
+$variables = [
+    'foo' => [
+        'id_foo' => 'foo', 
+        'bar' => [
+            'id_bar' => 'bar'
+        ]
+    ]
+];
+$response = $client->query($mutation, $variables);
 ```
 
 To instantiate a client without OAuth2:
