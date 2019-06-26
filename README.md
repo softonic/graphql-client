@@ -59,7 +59,7 @@ $variables = ['idFoo' => 'foo', 'idBar' => 'bar'];
 $response = $client->query($query, $variables);
 
 // Mutation Example
-$query = <<<'MUTATION'
+$mutation = <<<'MUTATION'
 mutation ($foo: ObjectInput!){
   CreateObjectMutation (object: $foo) {
     status
@@ -74,7 +74,7 @@ $variables = [
         ]
     ]
 ];
-$response = $client->query($query, $variables);
+$response = $client->query($mutation, $variables);
 ```
 
 To instantiate a client without OAuth2:
