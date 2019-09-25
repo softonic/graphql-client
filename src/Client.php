@@ -17,10 +17,14 @@ class Client
     }
 
     /**
+     * @param string $query
+     * @param array|null $variables
+     * @param $uri
+     * @return Response
      * @throws \UnexpectedValueException When response body is not a valid json
      * @throws \RuntimeException         When there are transfer errors
      */
-    public function query(string $query, array $variables = null): Response
+    public function query(string $query, array $variables = null, $uri = ''): Response
     {
         $options = [
             'json' => [
@@ -32,7 +36,7 @@ class Client
         }
 
         try {
-            $response = $this->httpClient->request('POST', '', $options);
+            $response = $this->httpClient->request('POST', $uri, $options);
         } catch (TransferException $e) {
             throw new \RuntimeException('Network Error.' . $e->getMessage(), 0, $e);
         }
