@@ -1,9 +1,8 @@
 <?php
 
-namespace Softonic\GraphQL\Test;
+namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
-use Softonic\GraphQL\Client;
 
 class ClientTest extends TestCase
 {

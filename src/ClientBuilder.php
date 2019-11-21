@@ -13,7 +13,7 @@ class ClientBuilder
 
         return new \Softonic\GraphQL\Client(
             new \GuzzleHttp\Client($guzzleOptions),
-            new \Softonic\GraphQL\ResponseBuilder()
+            new \Softonic\GraphQL\ResponseBuilder(new \Softonic\GraphQL\DataObjectBuilder())
         );
     }
 
@@ -34,7 +34,7 @@ class ClientBuilder
                 $cache,
                 $guzzleOptions
             ),
-            new \Softonic\GraphQL\ResponseBuilder()
+            new \Softonic\GraphQL\ResponseBuilder(new \Softonic\GraphQL\DataObjectBuilder())
         );
     }
 }

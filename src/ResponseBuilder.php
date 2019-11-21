@@ -6,13 +6,24 @@ use Psr\Http\Message\ResponseInterface;
 
 class ResponseBuilder
 {
+    private $dataObjectBuilder;
+
+    public function __construct(DataObjectBuilder $dataObjectBuilder)
+    {
+        $this->dataObjectBuilder = $dataObjectBuilder;
+    }
+
     public function build(ResponseInterface $httpResponse)
     {
         $body = $httpResponse->getBody();
 
         $normalizedResponse = $this->getNormalizedResponse($body);
 
-        return new Response($normalizedResponse['data'], $normalizedResponse['errors']);
+        return new Response(
+            $normalizedResponse['data'],
+            $normalizedResponse['dataObject'],
+            $normalizedResponse['errors']
+        );
     }
 
     private function getNormalizedResponse(string $body)
@@ -26,8 +37,9 @@ class ResponseBuilder
         }
 
         return [
-            'data' => $decodedResponse['data'] ?? [],
-            'errors' => $decodedResponse['errors'] ?? [],
+            'data'       => $decodedResponse['data'] ?? [],
+            'dataObject' => $this->dataObjectBuilder->build($decodedResponse['data'] ?? []),
+            'errors'     => $decodedResponse['errors'] ?? [],
         ];
     }
 
