@@ -2,16 +2,25 @@
 
 namespace Softonic\GraphQL\Mutation;
 
-use Softonic\GraphQL\Traits\JsonSerializer;
+use Softonic\GraphQL\Mutation\Traits\MutationObjectHandler;
 
 class FilteredCollection implements MutationObject, \JsonSerializable
 {
-    use JsonSerializer;
+    use MutationObjectHandler;
 
+    /**
+     * @var array<Item>
+     */
     protected $arguments = [];
 
+    /**
+     * @var array
+     */
     protected $config;
 
+    /**
+     * @var bool
+     */
     private $hasChanged = false;
 
     public function __construct(array $arguments = [], array $config = [], bool $hasChanged = false)
@@ -21,41 +30,31 @@ class FilteredCollection implements MutationObject, \JsonSerializable
         $this->hasChanged = $hasChanged;
     }
 
-    public function __get(string $key)
+    public function __get(string $key): Collection
     {
         $items = [];
-
         foreach ($this->arguments as $argument) {
-
             $items[] = $argument->{$key};
         }
 
         return new Collection($items, $this->config[$key]->children);
     }
 
-    public function set(array $data)
+    public function set(array $data): void
     {
         foreach ($this->arguments as $argument) {
-            if ($argument instanceof Collection) {
-                $argument->set($data);
-            } else {
-                $this->setItemData($argument, $data);
-            }
+            $argument->set($data);
         }
     }
 
-    public function filter(array $filters)
+    public function filter(array $filters): FilteredCollection
     {
         $filteredData = [];
-        if (!empty($this->arguments[0]) && $this->arguments[0] instanceof Collection) {
+        if ($this->areAllArgumentsCollections()) {
             foreach ($this->arguments as $argument) {
-                $argumentCopy = clone $argument;
+                $filteredItems = $this->filterItems($argument->arguments, $filters);
 
-                $filteredItems = $this->filterItems($argumentCopy->arguments, $filters);
-
-                $argumentCopy->arguments = $filteredItems;
-
-                $filteredData[] = $argumentCopy;
+                $filteredData[] = new FilteredCollection($filteredItems, $this->config);
             }
         } else {
             $filteredItems = $this->filterItems($this->arguments, $filters);
@@ -66,56 +65,33 @@ class FilteredCollection implements MutationObject, \JsonSerializable
         return new FilteredCollection($filteredData, $this->config);
     }
 
-    public function hasChanged(): bool
-    {
-        foreach ($this->arguments as $argument) {
-            if ($argument instanceof MutationObject && $argument->hasChanged()) {
-                $this->hasChanged = true;
-            }
-        }
-
-        return $this->hasChanged;
-    }
-
     public function jsonSerialize(): array
     {
         $items = [];
         foreach ($this->arguments as $item) {
             if ($item->hasChanged()) {
-                if ($item instanceof \JsonSerializable) {
-                    $items[] = $item->jsonSerialize();
-                } else {
-                    $items[] = $item;
-                }
+                $items[] = $item->jsonSerialize();
             }
         }
 
         return $items;
     }
 
-    private function setItemData(Item $item, array $data)
+    private function areAllArgumentsCollections(): bool
     {
-        foreach ($data as $key => $value) {
-            $item->{$key} = $value;
-        }
+        return (!empty($this->arguments[0]) && $this->arguments[0] instanceof Collection);
     }
 
     private function filterItems(array $arguments, array $filters): array
     {
         return array_filter($arguments, function ($item) use ($filters) {
             foreach ($filters as $filterKey => $filterValue) {
-                if (!$this->matchesFilter($item, $filterKey, $filterValue)) {
+                if (!($item->{$filterKey} == $filterValue)) {
                     return false;
                 }
             }
 
             return true;
         });
-    }
-
-    private function matchesFilter($item, string $filterKey, $filterValue): bool
-    {
-        return (is_null($filterValue) && is_null($item->{$filterKey})
-            || !is_null($item->{$filterKey}) && $item->{$filterKey} == $filterValue);
     }
 }

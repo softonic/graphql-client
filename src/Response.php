@@ -4,10 +4,19 @@ namespace Softonic\GraphQL;
 
 class Response
 {
+    /**
+     * @var array
+     */
     private $data;
 
+    /**
+     * @var array
+     */
     private $dataObject;
 
+    /**
+     * @var array
+     */
     private $errors;
 
     public function __construct(array $data, array $dataObject, array $errors = [])

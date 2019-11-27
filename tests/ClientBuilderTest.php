@@ -25,11 +25,11 @@ class ClientBuilderTest extends TestCase
 
     public function testBuildWithOAuth2Provider()
     {
-        $mockCache = $this->createMock(\Psr\Cache\CacheItemPoolInterface::class);
-        $mockProvider = $this->createMock(\League\OAuth2\Client\Provider\AbstractProvider::class);
+        $mockCache        = $this->createMock(\Psr\Cache\CacheItemPoolInterface::class);
+        $mockProvider     = $this->createMock(\League\OAuth2\Client\Provider\AbstractProvider::class);
         $mockTokenOptions = [
             'grant_type' => 'client_credentials',
-            'scope' => 'myscope',
+            'scope'      => 'myscope',
         ];
 
         $client = ClientBuilder::buildWithOAuth2Provider(
@@ -43,11 +43,11 @@ class ClientBuilderTest extends TestCase
 
     public function testBuildWithOAuth2ProviderAndGuzzleOptions()
     {
-        $mockCache = $this->createMock(\Psr\Cache\CacheItemPoolInterface::class);
-        $mockProvider = $this->createMock(\League\OAuth2\Client\Provider\AbstractProvider::class);
+        $mockCache        = $this->createMock(\Psr\Cache\CacheItemPoolInterface::class);
+        $mockProvider     = $this->createMock(\League\OAuth2\Client\Provider\AbstractProvider::class);
         $mockTokenOptions = [
             'grant_type' => 'client_credentials',
-            'scope' => 'myscope',
+            'scope'      => 'myscope',
         ];
 
         $guzzleOptions = [

@@ -15,27 +15,21 @@ class DataObjectBuilderTest extends TestCase
         $this->builder = new DataObjectBuilder();
     }
 
-    /**
-     * @test
-     */
-    public function whenDataIsNull()
+    public function testWhenDataIsNull()
     {
         $data = [
-            'program' => null,
+            'book' => null,
         ];
 
         $dataObject = $this->builder->build($data);
 
         $expectedDataObject = [
-            'program' => null,
+            'book' => null,
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    /**
-     * @test
-     */
-    public function whenDataIsAnEmptyArray()
+    public function testWhenDataIsAnEmptyArray()
     {
         $data = [
             'search' => [],
@@ -49,47 +43,41 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    /**
-     * @test
-     */
-    public function whenDataHasAnItem()
+    public function testWhenDataHasAnItem()
     {
         $data = [
-            'program' => [
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_developer' => null,
-                'id_category'  => 'games',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
             ],
         ];
 
         $dataObject = $this->builder->build($data);
 
         $expectedDataObject = [
-            'program' => new Item([
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_developer' => null,
-                'id_category'  => 'games',
+            'book' => new Item([
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
             ]),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    /**
-     * @test
-     */
-    public function whenDataHasAnArrayOfItems()
+    public function testWhenDataHasAnArrayOfItems()
     {
         $data = [
             'search' => [
                 [
-                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_developer' => null,
-                    'id_category'  => 'games',
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
                 ],
                 [
-                    'id_program'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
-                    'id_developer' => 'dev',
-                    'id_category'  => 'tools',
+                    'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                    'id_author' => 1122,
+                    'genre'     => 'drama',
                 ],
             ],
         ];
@@ -97,69 +85,63 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->build($data);
 
         $expectedDataObject = [
-            'search' => [
+            'search' => new Collection([
                 new Item([
-                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_developer' => null,
-                    'id_category'  => 'games',
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
                 ]),
                 new Item([
-                    'id_program'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
-                    'id_developer' => 'dev',
-                    'id_category'  => 'tools',
+                    'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                    'id_author' => 1122,
+                    'genre'     => 'drama',
                 ]),
-            ],
+            ]),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    /**
-     * @test
-     */
-    public function whenDataHasAnItemWithEmptySecondLevel()
+    public function testWhenDataHasAnItemWithEmptySecondLevel()
     {
         $data = [
-            'program' => [
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_developer' => null,
-                'id_category'  => 'games',
-                'versions'     => [],
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [],
             ],
         ];
 
         $dataObject = $this->builder->build($data);
 
         $expectedDataObject = [
-            'program' => new Item([
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_developer' => null,
-                'id_category'  => 'games',
-                'versions'     => new Collection([]),
+            'book' => new Item([
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => new Collection([]),
             ]),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    /**
-     * @test
-     */
-    public function whenDataHasAnItemWithSecondLevel()
+    public function testWhenDataHasAnItemWithSecondLevel()
     {
         $data = [
-            'program' => [
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_developer' => null,
-                'id_category'  => 'games',
-                'versions'     => [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
                     [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name 1',
                     ],
                     [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 2,
+                        'name'       => 'Chapter name 2',
                     ],
                 ],
             ],
@@ -168,20 +150,20 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->build($data);
 
         $expectedDataObject = [
-            'program' => new Item([
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_developer' => null,
-                'id_category'  => 'games',
-                'versions'     => new Collection([
+            'book' => new Item([
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => new Collection([
                     new Item([
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name 1',
                     ]),
                     new Item([
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 2,
+                        'name'       => 'Chapter name 2',
                     ]),
                 ]),
             ]),
@@ -189,41 +171,38 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    /**
-     * @test
-     */
-    public function whenDataHasAnItemWithThirdLevel()
+    public function testWhenDataHasAnItemWithThirdLevel()
     {
         $data = [
-            'program' => [
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_developer' => null,
-                'id_category'  => 'games',
-                'versions'     => [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
                     [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'locales'    => [
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name 1',
+                        'pages'      => [
                             [
-                                'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                'id_version' => '2.0',
-                                'id_locale'  => 'en',
-                                'status'     => 'online',
+                                'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter'        => 1,
+                                'id_page'           => 1,
+                                'has_illustrations' => false,
                             ],
                             [
-                                'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                'id_version' => '2.0',
-                                'id_locale'  => 'it',
-                                'status'     => 'online',
+                                'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter'        => 1,
+                                'id_page'           => 2,
+                                'has_illustrations' => false,
                             ],
                         ],
                     ],
                     [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'locales'    => [],
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 2,
+                        'name'       => 'Chapter name 2',
+                        'pages'      => [],
                     ],
                 ],
             ],
@@ -232,35 +211,35 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->build($data);
 
         $expectedDataObject = [
-            'program' => new Item([
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_developer' => null,
-                'id_category'  => 'games',
-                'versions'     => new Collection([
+            'book' => new Item([
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => new Collection([
                     new Item([
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'locales'    => new Collection([
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name 1',
+                        'pages'      => new Collection([
                             new Item([
-                                'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                'id_version' => '2.0',
-                                'id_locale'  => 'en',
-                                'status'     => 'online',
+                                'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter'        => 1,
+                                'id_page'           => 1,
+                                'has_illustrations' => false,
                             ]),
                             new Item([
-                                'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                'id_version' => '2.0',
-                                'id_locale'  => 'it',
-                                'status'     => 'online',
+                                'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter'        => 1,
+                                'id_page'           => 2,
+                                'has_illustrations' => false,
                             ]),
                         ]),
                     ]),
                     new Item([
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'locales'    => new Collection([]),
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 2,
+                        'name'       => 'Chapter name 2',
+                        'pages'      => new Collection([]),
                     ]),
                 ]),
             ]),

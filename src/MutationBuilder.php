@@ -2,7 +2,7 @@
 
 namespace Softonic\GraphQL;
 
-use Softonic\GraphQL\Config\MutationConfigObject;
+use Softonic\GraphQL\Config\MutationTypeConfig;
 use Softonic\GraphQL\Mutation\Collection as MutationCollection;
 use Softonic\GraphQL\Mutation\Item as MutationItem;
 use Softonic\GraphQL\Mutation\MutationObject;
@@ -23,7 +23,10 @@ class MutationBuilder
 
     private $source;
 
-    public function __construct(MutationConfigObject $config, QueryItem $source)
+    /**
+     * @param array<MutationTypeConfig> $config
+     */
+    public function __construct(array $config, QueryItem $source)
     {
         $this->config = $config;
         $this->source = $source;
@@ -31,21 +34,27 @@ class MutationBuilder
 
     public function build(): MutationItem
     {
-        $path   = $this->config->linksTo;
-        $config = $this->config->get($path);
+        $mutationVariables = [];
 
-        $mutationType = $this->getMutationType($config, $this->source);
-        $arguments    = $this->generateMutationArguments($config, $this->source, $path);
+        foreach ($this->config as $variableName => $configObject) {
+            $path   = $configObject->linksTo;
+            $config = $configObject->get($path);
 
-        return new $mutationType($arguments, $config->children);
+            $mutationTypeClass = $this->getMutationTypeClass($config, $this->source);
+            $arguments         = $this->generateMutationArguments($config, $this->source, $path);
+
+            $mutationVariables[$variableName] = new $mutationTypeClass($arguments, $config->children);
+        }
+
+        return new MutationItem($mutationVariables, $this->config);
     }
 
-    private function getMutationType(MutationConfigObject $config, ReadObject $source): string
+    private function getMutationTypeClass(MutationTypeConfig $config, ReadObject $source): string
     {
         return !empty($config->linksTo) ? self::MUTATION_TYPE_MAP[get_class($source)] : self::DEFAULT_MUTATION_TYPE;
     }
 
-    private function generateMutationArguments(MutationConfigObject $config, ReadObject $source, string $path): array
+    private function generateMutationArguments(MutationTypeConfig $config, ReadObject $source, string $path): array
     {
         $arguments = [];
         foreach ($source as $sourceKey => $sourceValue) {
@@ -66,14 +75,14 @@ class MutationBuilder
         return ('.' === $parent) ? ".{$child}" : "{$parent}.{$child}";
     }
 
-    private function mutateChild(MutationConfigObject $config, ReadObject $source, string $path): MutationObject
+    private function mutateChild(MutationTypeConfig $config, ReadObject $source, string $path): MutationObject
     {
         if (is_null($config->linksTo)) {
             $arguments = [];
             foreach ($config->children as $key => $childConfig) {
                 $childArguments = [];
                 foreach ($source as $sourceKey => $sourceValue) {
-                    $childChildrenType      = $this->getMutationType($childConfig, $sourceValue);
+                    $childChildrenType      = $this->getMutationTypeClass($childConfig, $sourceValue);
                     $childChildrenArguments = $this->generateMutationArguments($childConfig, $sourceValue, $path);
 
                     $childArguments[$sourceKey] = new $childChildrenType(
@@ -82,13 +91,13 @@ class MutationBuilder
                     );
                 }
 
-                $childType = $this->getMutationType($childConfig, $source);
+                $childType = $this->getMutationTypeClass($childConfig, $source);
 
                 $arguments[$key] = new $childType($childArguments, $childConfig->children);
             }
         }
 
-        $type = $this->getMutationType($config, $source);
+        $type = $this->getMutationTypeClass($config, $source);
 
         return new $type($arguments, $config->children);
     }

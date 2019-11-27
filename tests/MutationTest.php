@@ -3,7 +3,8 @@
 namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
-use Softonic\GraphQL\Config\MutationConfig;
+use Softonic\GraphQL\Config\MutationsConfig;
+use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 use Softonic\GraphQL\Mutation\Collection as MutationCollection;
 use Softonic\GraphQL\Mutation\Item as MutationItem;
 use Softonic\GraphQL\Query\Collection as QueryCollection;
@@ -15,153 +16,163 @@ class MutationTest extends TestCase
 
     public function setUp()
     {
-        $this->configMock = $this->getConfigMock()->get('ReplaceProgram');
+        $this->configMock = $this->getConfigMock()->get('ReplaceBook');
     }
 
-    /**
-     * @test
-     */
-    public function whenThereAreNoChanges()
+    public function testWhenThereAreNoChanges()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
         $expectedMutationData = [];
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenThereAreChangesInRootLevel()
+    public function testWhenThereAreChangesInRootLevel()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->id_developer = 'google';
+        $mutation->book->genre = 'adventure';
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => 'google',
-            'id_category'  => 'games',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => 'adventure',
+            ],
         ];
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenThereAreVariousChangesInRootLevelSettingPropertiesNotInRead()
+    public function testWhenTryingToUpdateAnItemWithTheSameValueItAlreadyHas()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->id_developer      = 'google';
-        $mutation->google_compliance = true;
+        $mutation->book->id_author = 1234;
+        $mutation->book->genre     = null;
+
+        $expectedMutationData = [];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenThereAreVariousChangesInRootLevelSettingPropertiesNotInRead()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+        ]);
+
+        $mutation = new Mutation($this->configMock, $book);
+
+        $mutation->book->genre = 'adventure';
+        $mutation->book->title = 'Book title';
 
         $expectedMutationData = [
-            'id_program'        => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer'      => 'google',
-            'id_category'       => 'games',
-            'google_compliance' => true,
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => 'adventure',
+                'title'     => 'Book title',
+            ],
         ];
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenThereAreChangesInRootLevelWithSecondLevelInput()
+    public function testWhenThereAreChangesInRootLevelWithSecondLevelInput()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->id_developer = 'google';
+        $mutation->book->genre = 'adventure';
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => 'google',
-            'id_category'  => 'games',
-            'versions'     => [],
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => 'adventure',
+                'chapters'  => [],
+            ],
         ];
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenANewItemIsAddedToACollection()
+    public function testWhenANewItemIsAddedToACollection()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->add(
+        $mutation->book->chapters->upsert->add(
             [
-                'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_version' => '3.0',
-                'id_license' => 'VF',
+                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter' => 3,
+                'name'       => 'Chapter name',
             ]
         );
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '3.0',
-                        'id_license' => 'VF',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 3,
+                            'name'       => 'Chapter name',
+                        ],
                     ],
                 ],
             ],
@@ -169,237 +180,50 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenANewItemIsAddedToACollectionNotPresentInTheQuery()
+    public function testWhenANewItemIsAddedToACollectionNotPresentInTheQuery()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->add(
+        $mutation->book->chapters->upsert->add(
             [
-                'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_version' => '3.0',
-                'id_license' => 'VF',
+                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter' => 1,
+                'name'       => 'Chapter name',
             ]
         );
-        $mutation->platforms->upsert->add(
+        $mutation->book->languages->upsert->add(
             [
-                'id_program'  => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_platform' => 'windows',
-            ]
-        );
-
-        $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '3.0',
-                        'id_license' => 'VF',
-                    ],
-                ],
-            ],
-            'platforms'    => [
-                'upsert' => [
-                    [
-                        'id_program'  => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_platform' => 'windows',
-                    ],
-                ],
-            ],
-        ];
-        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
-    }
-
-    /**
-     * @test
-     */
-    public function whenChangesAreDoneToAllTheItemsFromACollection()
-    {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
-                new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                ]),
-                new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                ]),
-            ]),
-        ]);
-
-        $mutation = new Mutation($this->configMock, $program);
-
-        $mutation->versions->upsert->set(['age' => 15]);
-
-        $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'age'        => 15,
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => 15,
-                    ],
-                ],
-            ],
-        ];
-        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
-    }
-
-    /**
-     * @test
-     */
-    public function whenFilteredItemsFromACollectionAreUpdated()
-    {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
-                new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '3.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                ]),
-                new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                ]),
-                new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                ]),
-            ]),
-        ]);
-
-        $mutation = new Mutation($this->configMock, $program);
-
-        $mutation->versions->upsert->filter(['age' => null])->set([
-            'id_license' => 'Fw',
-            'age'        => 15,
-        ]);
-
-        $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '3.0',
-                        'id_license' => 'Fw',
-                        'age'        => 15,
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'Fw',
-                        'age'        => 15,
-                    ],
-                ],
-            ],
-        ];
-        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
-    }
-
-    /**
-     * @test
-     */
-    public function whenAnItemIsAddedAndAFilterIsAppliedToUpdateTheFilteredItemsAndFinallyAnotherItemIsAdded()
-    {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
-                new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                ]),
-                new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                ]),
-            ]),
-        ]);
-
-        $mutation = new Mutation($this->configMock, $program);
-
-        $mutation->versions->upsert->add(
-            [
-                'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_version' => '3.0',
-                'id_license' => 'VF',
-            ]
-        );
-        $mutation->versions->upsert->filter(['age' => null])->set(['id_license' => 'Fw']);
-        $mutation->versions->upsert->add(
-            [
-                'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_version' => '4.0',
-                'id_license' => 'VF',
+                'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_language' => 'english',
             ]
         );
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'Fw',
-                        'age'        => null,
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                        ],
                     ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '3.0',
-                        'id_license' => 'Fw',
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '4.0',
-                        'id_license' => 'VF',
+                ],
+                'languages' => [
+                    'upsert' => [
+                        [
+                            'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_language' => 'english',
+                        ],
                     ],
                 ],
             ],
@@ -407,71 +231,182 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenFilterToUpdateAndAddAnotherItemAndAFilterToUpdate()
+    public function testWhenChangesAreDoneToAllTheItemsFromACollection()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version'    => '2.0',
-                    'id_license'    => 'VF',
-                    'age'           => 18,
-                    'about_license' => 'About2',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
                 ]),
                 new QueryItem([
-                    'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version'    => '1.0',
-                    'id_license'    => 'VF',
-                    'age'           => null,
-                    'about_license' => 'About1',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->filter(['age' => null])->set(['id_license' => 'Fw']);
-        $mutation->versions->upsert->add(
+        $mutation->book->chapters->upsert->set(['pov' => 'third person']);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'third person',
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'third person',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenFilteredItemsFromACollectionAreUpdated()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 3,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->configMock, $book);
+
+        $mutation->book->chapters->upsert->filter(['pov' => null])->set([
+            'name' => 'Test chapter',
+            'pov'  => 'third person',
+        ]);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Test chapter',
+                            'pov'        => 'third person',
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 3,
+                            'name'       => 'Test chapter',
+                            'pov'        => 'third person',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenAnItemIsAddedAndAFilterIsAppliedToUpdateTheFilteredItemsAndFinallyAnotherItemIsAdded()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->configMock, $book);
+
+        $mutation->book->chapters->upsert->add(
             [
-                'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_version'    => '3.0',
-                'id_license'    => 'VF',
-                'about_license' => 'About3',
+                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter' => 3,
+                'name'       => 'Chapter name',
             ]
         );
-        $mutation->versions->upsert->filter(['id_license' => 'VF'])->set(['about_license' => 'AboutNew']);
+        $mutation->book->chapters->upsert->filter(['pov' => null])->set(['name' => 'Test chapter']);
+        $mutation->book->chapters->upsert->add(
+            [
+                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter' => 4,
+                'name'       => 'Chapter name',
+            ]
+        );
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version'    => '2.0',
-                        'id_license'    => 'VF',
-                        'age'           => 18,
-                        'about_license' => 'AboutNew',
-                    ],
-                    [
-                        'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version'    => '1.0',
-                        'id_license'    => 'Fw',
-                        'age'           => null,
-                        'about_license' => 'About1',
-                    ],
-                    [
-                        'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version'    => '3.0',
-                        'id_license'    => 'VF',
-                        'about_license' => 'AboutNew',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Test chapter',
+                            'pov'        => null,
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 3,
+                            'name'       => 'Test chapter',
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 4,
+                            'name'       => 'Chapter name',
+                        ],
                     ],
                 ],
             ],
@@ -479,65 +414,72 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenAFilterIsAppliedToUpdateAndAnotherFilteredIsAppliedToUpdateToTheFirstFilteredItems()
+    public function testWhenFilterToUpdateAndAddAnotherItemAndAFilterToUpdate()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version'    => '3.0',
-                    'id_license'    => 'VF',
-                    'age'           => 18,
-                    'about_license' => null,
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'header'     => 'Header 1',
                 ]),
                 new QueryItem([
-                    'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version'    => '2.0',
-                    'id_license'    => 'VF',
-                    'age'           => 18,
-                    'about_license' => 'something',
-                ]),
-                new QueryItem([
-                    'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version'    => '1.0',
-                    'id_license'    => 'VF',
-                    'age'           => null,
-                    'about_license' => 'something',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'header'     => 'Header 2',
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $versionsFiltered = $mutation->versions->upsert->filter(['age' => 18]);
-        $versionsFiltered->set(['id_license' => 'Fw']);
-        $versionsFiltered->filter(['about_license' => 'something'])->set(['about_license' => 'aboutnew']);
+        $mutation->book->chapters->upsert->filter(['pov' => null])->set(['name' => 'Test chapter']);
+        $mutation->book->chapters->upsert->add(
+            [
+                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter' => 3,
+                'name'       => 'Chapter name',
+                'pov'        => null,
+                'header'     => 'Header 3',
+            ]
+        );
+        $mutation->book->chapters->upsert->filter(['name' => 'Chapter name'])->set(['header' => 'Header new']);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version'    => '3.0',
-                        'id_license'    => 'Fw',
-                        'age'           => 18,
-                        'about_license' => null,
-                    ],
-                    [
-                        'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version'    => '2.0',
-                        'id_license'    => 'Fw',
-                        'age'           => 18,
-                        'about_license' => 'aboutnew',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'header'     => 'Header new',
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Test chapter',
+                            'pov'        => null,
+                            'header'     => 'Header 2',
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 3,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'header'     => 'Header new',
+                        ],
                     ],
                 ],
             ],
@@ -545,71 +487,64 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenTwoFiltersAreAppliedToUpdateInSeparateActions()
+    public function testWhenAFilterIsAppliedToUpdateAndAnotherFilteredIsAppliedToUpdateToTheFirstFilteredItems()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version'    => '3.0',
-                    'id_license'    => 'VF',
-                    'age'           => 18,
-                    'about_license' => null,
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'header'     => null,
                 ]),
                 new QueryItem([
-                    'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version'    => '2.0',
-                    'id_license'    => 'VF',
-                    'age'           => 18,
-                    'about_license' => 'something',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'header'     => 'something',
                 ]),
                 new QueryItem([
-                    'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version'    => '1.0',
-                    'id_license'    => 'VF',
-                    'age'           => null,
-                    'about_license' => 'something',
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 3,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'header'     => 'something',
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->filter(['age' => 18])->set(['id_license' => 'Fw']);
-        $mutation->versions->upsert->filter(['about_license' => 'something'])->set(['about_license' => 'aboutnew']);
+        $chaptersFiltered = $mutation->book->chapters->upsert->filter(['pov' => 'first person']);
+        $chaptersFiltered->set(['name' => 'Test chapter']);
+        $chaptersFiltered->filter(['header' => 'something'])->set(['header' => 'Header new']);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version'    => '3.0',
-                        'id_license'    => 'Fw',
-                        'age'           => 18,
-                        'about_license' => null,
-                    ],
-                    [
-                        'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version'    => '2.0',
-                        'id_license'    => 'Fw',
-                        'age'           => 18,
-                        'about_license' => 'aboutnew',
-                    ],
-                    [
-                        'id_program'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version'    => '1.0',
-                        'id_license'    => 'VF',
-                        'age'           => null,
-                        'about_license' => 'aboutnew',
+            'book' => [
+                'genre'     => null,
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Test chapter',
+                            'pov'        => 'first person',
+                            'header'     => null,
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Test chapter',
+                            'pov'        => 'first person',
+                            'header'     => 'Header new',
+                        ],
                     ],
                 ],
             ],
@@ -617,71 +552,137 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenThirdLevelItemsAreUpdated()
+    public function testWhenTwoFiltersAreAppliedToUpdateInSeparateActions()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'header'     => null,
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'header'     => 'something',
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 3,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'header'     => 'something',
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->configMock, $book);
+
+        $mutation->book->chapters->upsert->filter(['pov' => 'first person'])->set(['name' => 'Test chapter']);
+        $mutation->book->chapters->upsert->filter(['header' => 'something'])->set(['header' => 'Header new']);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Test chapter',
+                            'pov'        => 'first person',
+                            'header'     => null,
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Test chapter',
+                            'pov'        => 'first person',
+                            'header'     => 'Header new',
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 3,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'header'     => 'Header new',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenThirdLevelItemsAreUpdated()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 1 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'de',
-                            'program_name' => 'Test 1 DE',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 4,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->locales->upsert->set(['status' => 'hidden']);
+        $mutation->book->chapters->upsert->pages->upsert->set(['has_illustrations' => true]);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => null,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test 1 EN',
-                                    'status'       => 'hidden',
-                                ],
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'de',
-                                    'program_name' => 'Test 1 DE',
-                                    'status'       => 'hidden',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => true,
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 4,
+                                        'has_illustrations' => true,
+                                    ],
                                 ],
                             ],
                         ],
@@ -692,117 +693,108 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenThirdLevelItemsAreUpdatedForTwoSecondLevelItems()
+    public function testWhenThirdLevelItemsAreUpdatedForTwoSecondLevelItems()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 2 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'fr',
-                            'program_name' => 'Test 2 FR',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 1 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'de',
-                            'program_name' => 'Test 1 DE',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->locales->upsert->set(['status' => 'hidden']);
+        $mutation->book->chapters->upsert->pages->upsert->set(['has_illustrations' => true]);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '2.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test 2 EN',
-                                    'status'       => 'hidden',
-                                ],
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '2.0',
-                                    'id_locale'    => 'fr',
-                                    'program_name' => 'Test 2 FR',
-                                    'status'       => 'hidden',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => true,
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => true,
+                                    ],
                                 ],
                             ],
                         ],
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => null,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test 1 EN',
-                                    'status'       => 'hidden',
-                                ],
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'de',
-                                    'program_name' => 'Test 1 DE',
-                                    'status'       => 'hidden',
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => true,
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => true,
+                                    ],
                                 ],
                             ],
                         ],
@@ -813,103 +805,96 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenThirdLevelItemsFilteredAreUpdated()
+    public function testWhenThirdLevelItemsFilteredAreUpdated()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 2 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'fr',
-                            'program_name' => 'Test 2 FR',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 1 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'de',
-                            'program_name' => 'Test 1 DE',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->locales->upsert->filter(['id_locale' => 'en'])->set(['program_name' => 'Test EN new']);
+        $mutation->book->chapters->upsert->pages->upsert->filter(['id_page' => 1])->set(['has_illustrations' => true]);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '2.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test EN new',
-                                    'status'       => 'online',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => true,
+                                    ],
                                 ],
                             ],
                         ],
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => null,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test EN new',
-                                    'status'       => 'online',
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => true,
+                                    ],
                                 ],
                             ],
                         ],
@@ -920,107 +905,99 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenANewItemIsTriedToBeAddedToAThirdLevelCollectionWhichParentIsNotPresentInTheQuery()
+    public function testWhenANewItemIsTriedToBeAddedToAThirdLevelCollectionWhichParentIsNotPresentInTheQuery()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => null,
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(InaccessibleArgumentException::class);
         $this->expectExceptionMessage('You cannot access a non existing collection');
 
-        $mutation->versions->upsert->locales->upsert->add(
+        $mutation->book->chapters->upsert->pages->upsert->add(
             [
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_version'   => '1.0',
-                'id_locale'    => 'en',
-                'program_name' => 'Test 1 EN',
-                'status'       => 'online',
+                'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter'        => 1,
+                'id_page'           => 1,
+                'has_illustrations' => false,
             ]
         );
     }
 
-    /**
-     * @test
-     */
-    public function whenANewItemIsTriedToBeAddedToAThirdLevelCollectionWhichParentIsPresentInTheQueryButKeyIsNot()
+    public function testWhenANewItemIsTriedToBeAddedToAThirdLevelCollectionWhichParentIsPresentInTheQueryButKeyIsNot()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->locales->upsert->add(
+        $mutation->book->chapters->upsert->pages->upsert->add(
             [
-                'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_version'   => '1.0',
-                'id_locale'    => 'en',
-                'program_name' => 'Test 1 EN',
-                'status'       => 'online',
+                'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter'        => 1,
+                'id_page'           => 1,
+                'has_illustrations' => false,
             ]
         );
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test 1 EN',
-                                    'status'       => 'online',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                    ],
                                 ],
                             ],
                         ],
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test 1 EN',
-                                    'status'       => 'online',
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                    ],
                                 ],
                             ],
                         ],
@@ -1031,130 +1008,122 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenThirdLevelItemsHaveDifferentUpdates()
+    public function testWhenThirdLevelItemsHaveDifferentUpdates()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 2 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'fr',
-                            'program_name' => 'Test 2 FR',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'it',
-                            'program_name' => 'Test 2 IT',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 3,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 1 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'de',
-                            'program_name' => 'Test 1 DE',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->locales->upsert->filter(['id_locale' => 'en'])->set(['program_name' => 'Test EN new']);
-        $mutation->versions->upsert->filter(['id_version' => '1.0'])->locales->upsert->set(['status' => 'hidden']);
-        $mutation->versions->upsert->locales->upsert->filter([
-            'id_version' => '2.0',
-            'id_locale'  => 'fr',
-        ])->set(['id_binary' => '1234567890123456789012345678901234567890']);
+        $mutation->book->chapters->upsert->pages->upsert->filter(['id_page' => 1])->set(['glossary' => 'Test']);
+        $mutation->book->chapters->upsert->filter(['id_chapter' => 2])->pages->upsert->set(['has_illustrations' => true]);
+        $mutation->book->chapters->upsert->pages->upsert->filter([
+            'id_chapter' => 1,
+            'id_page'    => 3,
+        ])->set(['new_property' => 'something']);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '2.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test EN new',
-                                    'status'       => 'online',
-                                ],
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '2.0',
-                                    'id_locale'    => 'fr',
-                                    'program_name' => 'Test 2 FR',
-                                    'status'       => 'online',
-                                    'id_binary'    => '1234567890123456789012345678901234567890',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                        'glossary'          => 'Test',
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 3,
+                                        'has_illustrations' => false,
+                                        'new_property'      => 'something',
+                                    ],
                                 ],
                             ],
                         ],
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => null,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test EN new',
-                                    'status'       => 'hidden',
-                                ],
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'de',
-                                    'program_name' => 'Test 1 DE',
-                                    'status'       => 'hidden',
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => true,
+                                        'glossary'          => 'Test',
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => true,
+                                    ],
                                 ],
                             ],
                         ],
@@ -1165,178 +1134,162 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenAnItemIsTriedToBeAddedToAFilteredCollection()
+    public function testWhenAnItemIsTriedToBeAddedToAFilteredCollection()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 2 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'fr',
-                            'program_name' => 'Test 2 FR',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 1 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'de',
-                            'program_name' => 'Test 1 DE',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
         $this->expectException(\Error::class);
 
-        $mutation->versions->upsert->locales->upsert->filter(['id_version' => '1.0'])->add([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_version'   => '1.0',
-            'id_locale'    => 'es',
-            'program_name' => 'Test 1 ES',
-            'status'       => 'online',
+        $mutation->book->chapters->upsert->pages->upsert->filter(['id_chapter' => 1])->add([
+            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_chapter'        => 1,
+            'id_page'           => 3,
+            'has_illustrations' => false,
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function whenThirdLevelItemsAreAdded()
+    public function testWhenThirdLevelItemsAreAdded()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                    'locales'    => new QueryCollection([]),
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([]),
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 1 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'de',
-                            'program_name' => 'Test 1 DE',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->filter(['id_version' => '1.0'])->locales->upsert->add([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_version'   => '1.0',
-            'id_locale'    => 'es',
-            'program_name' => 'Test 1 ES',
-            'status'       => 'online',
+        $mutation->book->chapters->upsert->filter(['id_chapter' => 2])->pages->upsert->add([
+            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_chapter'        => 2,
+            'id_page'           => 3,
+            'has_illustrations' => false,
         ]);
-        $mutation->versions->upsert->locales->upsert->add([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_version'   => 'last',
-            'id_locale'    => 'it',
-            'program_name' => 'Test last IT',
-            'status'       => 'online',
+        $mutation->book->chapters->upsert->pages->upsert->add([
+            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_chapter'        => 'last',
+            'id_page'           => 4,
+            'has_illustrations' => false,
         ]);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => 'last',
-                                    'id_locale'    => 'it',
-                                    'program_name' => 'Test last IT',
-                                    'status'       => 'online',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 'last',
+                                        'id_page'           => 4,
+                                        'has_illustrations' => false,
+                                    ],
                                 ],
                             ],
                         ],
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => null,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'es',
-                                    'program_name' => 'Test 1 ES',
-                                    'status'       => 'online',
-                                ],
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => 'last',
-                                    'id_locale'    => 'it',
-                                    'program_name' => 'Test last IT',
-                                    'status'       => 'online',
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 3,
+                                        'has_illustrations' => false,
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 'last',
+                                        'id_page'           => 4,
+                                        'has_illustrations' => false,
+                                    ],
                                 ],
                             ],
                         ],
@@ -1347,55 +1300,52 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenThirdLevelItemsAreAddedAndThereWereNoneBeforeInTheCollection()
+    public function testWhenThirdLevelItemsAreAddedAndThereWereNoneBeforeInTheCollection()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                    'locales'    => new QueryCollection([]),
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([]),
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->locales->upsert->add([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_version'   => 'last',
-            'id_locale'    => 'it',
-            'program_name' => 'Test last IT',
-            'status'       => 'online',
+        $mutation->book->chapters->upsert->pages->upsert->add([
+            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_chapter'        => 1,
+            'id_page'           => 1,
+            'has_illustrations' => false,
         ]);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => 'last',
-                                    'id_locale'    => 'it',
-                                    'program_name' => 'Test last IT',
-                                    'status'       => 'online',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                    ],
                                 ],
                             ],
                         ],
@@ -1406,130 +1356,123 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenFourthLevelItemsAreAdded()
+    public function testWhenFourthLevelItemsAreAdded()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '2.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 2 EN',
-                            'status'       => 'online',
-                            'urltypes'     => new QueryCollection([]),
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([]),
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '2.0',
-                            'id_locale'    => 'fr',
-                            'program_name' => 'Test 2 FR',
-                            'status'       => 'online',
-                            'urltypes'     => new QueryCollection([]),
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([]),
                         ]),
                     ]),
                 ]),
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => null,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 1 EN',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
                         ]),
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'de',
-                            'program_name' => 'Test 1 DE',
-                            'status'       => 'online',
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
                         ]),
                     ]),
                 ]),
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->locales->upsert->filter(['id_locale' => 'en'])->urltypes->upsert->add([
-            'id_program'  => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_version'  => '1.0',
-            'id_locale'   => 'en',
-            'id_url_type' => 'publisher_url',
-            'id_url'      => 'ff8c77fa-7015-45f5-a108-11a9997edc3f',
+        $mutation->book->chapters->upsert->pages->upsert->filter(['id_page' => 1])->lines->upsert->add([
+            'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_chapter'  => 1,
+            'id_page'     => 1,
+            'id_line'     => 1,
+            'words_count' => 30,
         ]);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '2.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '2.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test 2 EN',
-                                    'status'       => 'online',
-                                    'urltypes'     => [
-                                        'upsert' => [
-                                            [
-                                                'id_program'  => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                                'id_version'  => '1.0',
-                                                'id_locale'   => 'en',
-                                                'id_url_type' => 'publisher_url',
-                                                'id_url'      => 'ff8c77fa-7015-45f5-a108-11a9997edc3f',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter'  => 1,
+                                                    'id_page'     => 1,
+                                                    'id_line'     => 1,
+                                                    'words_count' => 30,
+                                                ],
                                             ],
                                         ],
                                     ],
                                 ],
                             ],
                         ],
-                    ],
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => null,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test 1 EN',
-                                    'status'       => 'online',
-                                    'urltypes'     => [
-                                        'upsert' => [
-                                            [
-                                                'id_program'  => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                                'id_version'  => '1.0',
-                                                'id_locale'   => 'en',
-                                                'id_url_type' => 'publisher_url',
-                                                'id_url'      => 'ff8c77fa-7015-45f5-a108-11a9997edc3f',
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter'  => 1,
+                                                    'id_page'     => 1,
+                                                    'id_line'     => 1,
+                                                    'words_count' => 30,
+                                                ],
                                             ],
                                         ],
                                     ],
@@ -1543,35 +1486,31 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    /**
-     * @test
-     */
-    public function whenFourthLevelItemsAreUpdated()
+    public function testWhenFourthLevelItemsAreUpdated()
     {
-        $program = new QueryItem([
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => new QueryCollection([
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
                 new QueryItem([
-                    'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_version' => '1.0',
-                    'id_license' => 'VF',
-                    'age'        => 18,
-                    'locales'    => new QueryCollection([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
                         new QueryItem([
-                            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_version'   => '1.0',
-                            'id_locale'    => 'en',
-                            'program_name' => 'Test 1 EN',
-                            'status'       => 'online',
-                            'urltypes'     => new QueryCollection([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
                                 new QueryItem([
-                                    'id_program'  => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'  => '1.0',
-                                    'id_locale'   => 'en',
-                                    'id_url_type' => 'publisher_url',
-                                    'id_url'      => 'ff8c77fa-7015-45f5-a108-11a9997edc3f',
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 30,
                                 ]),
                             ]),
                         ]),
@@ -1580,37 +1519,38 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $program);
+        $mutation = new Mutation($this->configMock, $book);
 
-        $mutation->versions->upsert->locales->upsert->urltypes->upsert->set(['id_url' => '9e1a848e-af78-4bcb-8d81-bf3e8aded379']);
+        $mutation->book->chapters->upsert->pages->upsert->lines->upsert->set(['words_count' => 35]);
 
         $expectedMutationData = [
-            'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-            'id_developer' => null,
-            'id_category'  => 'games',
-            'versions'     => [
-                'upsert' => [
-                    [
-                        'id_program' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_version' => '1.0',
-                        'id_license' => 'VF',
-                        'age'        => 18,
-                        'locales'    => [
-                            'upsert' => [
-                                [
-                                    'id_program'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                    'id_version'   => '1.0',
-                                    'id_locale'    => 'en',
-                                    'program_name' => 'Test 1 EN',
-                                    'status'       => 'online',
-                                    'urltypes'     => [
-                                        'upsert' => [
-                                            [
-                                                'id_program'  => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                                'id_version'  => '1.0',
-                                                'id_locale'   => 'en',
-                                                'id_url_type' => 'publisher_url',
-                                                'id_url'      => '9e1a848e-af78-4bcb-8d81-bf3e8aded379',
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter'  => 1,
+                                                    'id_page'     => 1,
+                                                    'id_line'     => 1,
+                                                    'words_count' => 35,
+                                                ],
                                             ],
                                         ],
                                     ],
@@ -1626,32 +1566,32 @@ class MutationTest extends TestCase
 
     private function getConfigMock()
     {
-        return new MutationConfig(
+        return new MutationsConfig(
             [
-                'ReplaceProgram' => [
-                    'program' => [
+                'ReplaceBook' => [
+                    'book' => [
                         'linksTo'  => '.',
                         'type'     => MutationItem::class,
                         'children' => [
-                            'versions'  => [
+                            'chapters'  => [
                                 'type'     => MutationItem::class,
                                 'children' => [
                                     'upsert' => [
-                                        'linksTo'  => '.versions',
+                                        'linksTo'  => '.chapters',
                                         'type'     => MutationCollection::class,
                                         'children' => [
-                                            'locales' => [
+                                            'pages' => [
                                                 'type'     => MutationItem::class,
                                                 'children' => [
                                                     'upsert' => [
-                                                        'linksTo'  => '.versions.locales',
+                                                        'linksTo'  => '.chapters.pages',
                                                         'type'     => MutationCollection::class,
                                                         'children' => [
-                                                            'urltypes' => [
+                                                            'lines' => [
                                                                 'type'     => MutationItem::class,
                                                                 'children' => [
                                                                     'upsert' => [
-                                                                        'linksTo' => '.versions.locales.urltypes',
+                                                                        'linksTo' => '.chapters.pages.lines',
                                                                         'type'    => MutationCollection::class,
                                                                     ],
                                                                 ],
@@ -1664,11 +1604,11 @@ class MutationTest extends TestCase
                                     ],
                                 ],
                             ],
-                            'platforms' => [
+                            'languages' => [
                                 'type'     => MutationItem::class,
                                 'children' => [
                                     'upsert' => [
-                                        'linksTo' => '.platforms',
+                                        'linksTo' => '.languages',
                                         'type'    => MutationCollection::class,
                                     ],
                                 ],

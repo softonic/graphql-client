@@ -13,9 +13,12 @@ class DataObjectBuilder
         foreach ($data as $queryName => $objectsData) {
             if (is_array($objectsData) && !empty($objectsData)) {
                 if ($this->isAList($objectsData)) {
+                    $items = [];
                     foreach ($objectsData as $objectData) {
-                        $dataObject[$queryName][] = $this->buildItem($objectData);
+                        $items[] = $this->buildItem($objectData);
                     }
+
+                    $dataObject[$queryName] = new Collection($items);
                 } else {
                     $dataObject[$queryName] = $this->buildItem($objectsData);
                 }

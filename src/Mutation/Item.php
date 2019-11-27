@@ -2,11 +2,11 @@
 
 namespace Softonic\GraphQL\Mutation;
 
-use Softonic\GraphQL\Traits\JsonSerializer;
+use Softonic\GraphQL\Mutation\Traits\MutationObjectHandler;
 
 class Item implements MutationObject, \JsonSerializable
 {
-    use JsonSerializer;
+    use MutationObjectHandler;
 
     private $arguments;
 
@@ -24,29 +24,41 @@ class Item implements MutationObject, \JsonSerializable
     public function __get(string $key)
     {
         if (is_null($this->arguments[$key]) && array_key_exists($key, $this->config)) {
-            $mutationType = $this->config[$key]->type;
+            $mutationTypeClass = $this->config[$key]->type;
 
-            $this->arguments[$key] = new $mutationType([], $this->config[$key]->children);
+            $this->arguments[$key] = new $mutationTypeClass([], $this->config[$key]->children);
         }
 
         return $this->arguments[$key];
     }
 
-    public function __set(string $key, $value)
+    public function __set(string $key, $value): void
     {
-        $this->arguments[$key] = $value;
+        if ($this->arguments[$key] !== $value) {
+            $this->arguments[$key] = $value;
 
-        $this->hasChanged = true;
+            $this->hasChanged = true;
+        }
     }
 
-    public function hasChanged(): bool
+    public function set(array $data): void
     {
-        foreach ($this->arguments as $argument) {
-            if ($argument instanceof MutationObject && $argument->hasChanged()) {
-                return true;
-            }
+        foreach ($data as $key => $value) {
+            $this->{$key} = $value;
+        }
+    }
+
+    public function jsonSerialize(): array
+    {
+        if (!$this->hasChanged()) {
+            return [];
         }
 
-        return $this->hasChanged;
+        $item = [];
+        foreach ($this->arguments as $key => $value) {
+            $item[$key] = $value instanceof \JsonSerializable ? $value->jsonSerialize() : $value;
+        }
+
+        return $item;
     }
 }

@@ -2,36 +2,30 @@
 
 namespace Softonic\GraphQL;
 
-use Softonic\GraphQL\Config\MutationConfigObject;
-use Softonic\GraphQL\Mutation\Item;
+use Softonic\GraphQL\Config\MutationTypeConfig;
+use Softonic\GraphQL\Mutation\Item as MutationItem;
 use Softonic\GraphQL\Query\Item as QueryItem;
 
-class Mutation
+class Mutation implements \JsonSerializable
 {
+    /**
+     * @var MutationItem
+     */
     private $mutation;
 
-    private $config;
-
     /**
-     * @param array<MutationConfigObject> $mutationConfig
+     * @param array<MutationTypeConfig> $config
      */
-    public function __construct(array $mutationConfig, QueryItem $source)
+    public function __construct(array $config, QueryItem $source)
     {
-        $this->config = $mutationConfig['program'];
-
-        $mutationBuilder = new MutationBuilder($this->config, $source);
+        $mutationBuilder = new MutationBuilder($config, $source);
 
         $this->mutation = $mutationBuilder->build();
     }
 
-    public function __get(string $key): Item
+    public function __get(string $key): MutationItem
     {
         return $this->mutation->{$key};
-    }
-
-    public function __set(string $key, $value)
-    {
-        $this->mutation->{$key} = $value;
     }
 
     public function jsonSerialize(): array

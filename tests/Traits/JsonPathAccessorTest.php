@@ -1,30 +1,24 @@
 <?php
 
-
 namespace Softonic\GraphQL\Traits;
 
 use PHPUnit\Framework\TestCase;
 
-class TestObject {
+class TestObject
+{
     use JsonPathAccessor;
 }
 
-class ObjectAccessorTest extends TestCase
+class JsonPathAccessorTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function getRoot()
+    public function testWhenRootIsRetrieved()
     {
         $obj = new TestObject();
 
         $this->assertSame($obj, $obj->get('.'));
     }
 
-    /**
-     * @test
-     */
-    public function getSimplePath()
+    public function testWhenSimplePathIsRetrieved()
     {
         $obj = new TestObject();
         $obj->foo = 'bar';
@@ -32,10 +26,7 @@ class ObjectAccessorTest extends TestCase
         $this->assertEquals('bar', $obj->get('.foo'));
     }
 
-    /**
-     * @test
-     */
-    public function getSecondLevelPath()
+    public function testWhenSecondLevelPathIsRetrieved()
     {
         $obj = new TestObject();
         $obj->foo = new TestObject();

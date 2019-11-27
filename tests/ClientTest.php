@@ -7,14 +7,16 @@ use PHPUnit\Framework\TestCase;
 class ClientTest extends TestCase
 {
     private $httpClient;
+
     private $mockGraphqlResponseBuilder;
+
     private $client;
 
     public function setUp()
     {
-        $this->httpClient = $this->createMock(\GuzzleHttp\ClientInterface::class);
+        $this->httpClient                 = $this->createMock(\GuzzleHttp\ClientInterface::class);
         $this->mockGraphqlResponseBuilder = $this->createMock(\Softonic\GraphQL\ResponseBuilder::class);
-        $this->client = new Client($this->httpClient, $this->mockGraphqlResponseBuilder);
+        $this->client                     = new Client($this->httpClient, $this->mockGraphqlResponseBuilder);
     }
 
     public function testSimpleQueryWhenHasNetworkErrors()
@@ -82,18 +84,18 @@ class ClientTest extends TestCase
 
     public function testSimpleQuery()
     {
-        $mockResponse = $this->createMock(\Softonic\GraphQL\Response::class);
+        $mockResponse     = $this->createMock(\Softonic\GraphQL\Response::class);
         $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
 
-        $response = [
+        $response     = [
             'data' => [
-                'program' => [
+                'book' => [
                     'id_appstore' => null,
                 ],
             ],
         ];
         $expectedData = $response['data'];
-        $query = $this->getSimpleQuery();
+        $query        = $this->getSimpleQuery();
 
         $this->mockGraphqlResponseBuilder->expects($this->once())
             ->method('build')
@@ -118,21 +120,21 @@ class ClientTest extends TestCase
 
     public function testQueryWithVariables()
     {
-        $mockResponse = $this->createMock(\Softonic\GraphQL\Response::class);
+        $mockResponse     = $this->createMock(\Softonic\GraphQL\Response::class);
         $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
-        
+
         $response = [
             'data' => [
-                'program' => [
+                'book' => [
                     'id_appstore' => null,
                 ],
             ],
         ];
 
-        $query = $this->getQueryWithVariables();
+        $query     = $this->getQueryWithVariables();
         $variables = [
             'idProgram' => '642e69c0-9b2e-11e6-9850-00163ed833e7',
-            'locale'    => 'nl',
+            'page'      => 'nl',
         ];
 
         $this->mockGraphqlResponseBuilder->expects($this->once())
@@ -146,7 +148,7 @@ class ClientTest extends TestCase
                 '',
                 [
                     'json' => [
-                        'query' => $query,
+                        'query'     => $query,
                         'variables' => $variables,
                     ],
                 ]

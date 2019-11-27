@@ -3,14 +3,15 @@
 namespace Softonic\GraphQL\Query;
 
 use Softonic\GraphQL\Traits\GqlIterator;
-use Softonic\GraphQL\Traits\JsonPathAccessor;
-use Softonic\GraphQL\Traits\JsonSerializer;
 
-class Item implements ReadObject, \JsonSerializable, \Iterator
+class Item implements ReadObject, \Iterator
 {
-    use GqlIterator, JsonPathAccessor, JsonSerializer;
+    use GqlIterator;
 
-    private $arguments;
+    /**
+     * @var array
+     */
+    private $arguments = [];
 
     public function __construct(array $arguments = [])
     {

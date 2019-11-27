@@ -4,8 +4,6 @@ namespace Softonic\GraphQL\Traits;
 
 trait GqlIterator
 {
-    private $arguments;
-
     public function rewind()
     {
         reset($this->arguments);
