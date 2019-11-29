@@ -30,7 +30,7 @@ class Item implements MutationObject, \JsonSerializable
             $this->arguments[$key] = new $mutationTypeClass([], $this->config[$key]->children);
         }
 
-        return $this->arguments[$key];
+        return array_key_exists($key, $this->arguments) ? $this->arguments[$key] : null;
     }
 
     public function __set(string $key, $value): void
