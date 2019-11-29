@@ -57,12 +57,30 @@ class FilteredCollection implements MutationObject, \JsonSerializable
                 $filteredData[] = new FilteredCollection($filteredItems, $this->config);
             }
         } else {
-            $filteredItems = $this->filterItems($this->arguments, $filters);
-
-            $filteredData = $filteredItems;
+            $filteredData = $this->filterItems($this->arguments, $filters);
         }
 
         return new FilteredCollection($filteredData, $this->config);
+    }
+
+    private function areAllArgumentsCollections(): bool
+    {
+        return (!empty($this->arguments[0]) && $this->arguments[0] instanceof Collection);
+    }
+
+    private function filterItems(array $arguments, array $filters): array
+    {
+        $filteredItems = array_filter($arguments, function ($item) use ($filters) {
+            foreach ($filters as $filterKey => $filterValue) {
+                if (!($item->{$filterKey} == $filterValue)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        return array_values($filteredItems);
     }
 
     public function jsonSerialize(): array
@@ -75,23 +93,5 @@ class FilteredCollection implements MutationObject, \JsonSerializable
         }
 
         return $items;
-    }
-
-    private function areAllArgumentsCollections(): bool
-    {
-        return (!empty($this->arguments[0]) && $this->arguments[0] instanceof Collection);
-    }
-
-    private function filterItems(array $arguments, array $filters): array
-    {
-        return array_filter($arguments, function ($item) use ($filters) {
-            foreach ($filters as $filterKey => $filterValue) {
-                if (!($item->{$filterKey} == $filterValue)) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
     }
 }

@@ -9,7 +9,7 @@ class Collection extends FilteredCollection
     public function __get(string $key): Collection
     {
         if (empty($this->arguments)) {
-            throw new InaccessibleArgumentException('You cannot access a non existing collection');
+            throw InaccessibleArgumentException::fromEmptyArguments();
         }
 
         return parent::__get($key);

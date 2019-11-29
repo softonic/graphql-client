@@ -12,11 +12,20 @@ use Softonic\GraphQL\Query\Item as QueryItem;
 
 class MutationTest extends TestCase
 {
-    private $configMock;
+    /**
+     * @var array
+     */
+    private $itemConfigMock;
+
+    /**
+     * @var array
+     */
+    private $collectionConfigMock;
 
     public function setUp()
     {
-        $this->configMock = $this->getConfigMock()->get('ReplaceBook');
+        $this->itemConfigMock       = $this->getConfigMock()->get('ReplaceBook');
+        $this->collectionConfigMock = $this->getConfigMock()->get('ReplaceBooks');
     }
 
     public function testWhenThereAreNoChanges()
@@ -27,7 +36,7 @@ class MutationTest extends TestCase
             'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $expectedMutationData = [];
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
@@ -41,7 +50,7 @@ class MutationTest extends TestCase
             'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->genre = 'adventure';
 
@@ -63,7 +72,7 @@ class MutationTest extends TestCase
             'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->id_author = 1234;
         $mutation->book->genre     = null;
@@ -80,7 +89,7 @@ class MutationTest extends TestCase
             'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->genre = 'adventure';
         $mutation->book->title = 'Book title';
@@ -116,7 +125,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->genre = 'adventure';
 
@@ -151,7 +160,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->add(
             [
@@ -188,7 +197,7 @@ class MutationTest extends TestCase
             'genre'     => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->add(
             [
@@ -253,7 +262,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->set(['pov' => 'third person']);
 
@@ -311,7 +320,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->filter(['pov' => null])->set([
             'name' => 'Test chapter',
@@ -366,7 +375,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->add(
             [
@@ -438,7 +447,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->filter(['pov' => null])->set(['name' => 'Test chapter']);
         $mutation->book->chapters->upsert->add(
@@ -518,7 +527,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $chaptersFiltered = $mutation->book->chapters->upsert->filter(['pov' => 'first person']);
         $chaptersFiltered->set(['name' => 'Test chapter']);
@@ -583,7 +592,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->filter(['pov' => 'first person'])->set(['name' => 'Test chapter']);
         $mutation->book->chapters->upsert->filter(['header' => 'something'])->set(['header' => 'Header new']);
@@ -653,7 +662,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->pages->upsert->set(['has_illustrations' => true]);
 
@@ -743,7 +752,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->pages->upsert->set(['has_illustrations' => true]);
 
@@ -855,7 +864,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->pages->upsert->filter(['id_page' => 1])->set(['has_illustrations' => true]);
 
@@ -914,7 +923,7 @@ class MutationTest extends TestCase
             'chapters'  => null,
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $this->expectException(InaccessibleArgumentException::class);
         $this->expectExceptionMessage('You cannot access a non existing collection');
@@ -951,7 +960,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->pages->upsert->add(
             [
@@ -1064,7 +1073,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->pages->upsert->filter(['id_page' => 1])->set(['glossary' => 'Test']);
         $mutation->book->chapters->upsert->filter(['id_chapter' => 2])->pages->upsert->set(['has_illustrations' => true]);
@@ -1184,7 +1193,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $this->expectException(\Error::class);
 
@@ -1233,7 +1242,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->filter(['id_chapter' => 2])->pages->upsert->add([
             'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1317,7 +1326,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->pages->upsert->add([
             'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1408,7 +1417,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->pages->upsert->filter(['id_page' => 1])->lines->upsert->add([
             'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1519,7 +1528,7 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $mutation = new Mutation($this->configMock, $book);
+        $mutation = new Mutation($this->itemConfigMock, $book);
 
         $mutation->book->chapters->upsert->pages->upsert->lines->upsert->set(['words_count' => 35]);
 
@@ -1564,11 +1573,42 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
+    public function testWhenThereAreChangesInARootLevelCollectionForOneItem()
+    {
+        $books = new QueryCollection([
+            new QueryItem([
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+            ]),
+            new QueryItem([
+                'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                'id_author' => 1122,
+                'genre'     => 'drama',
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->collectionConfigMock, $books);
+
+        $mutation->books->filter(['id_book' => 'a53493b0-4a24-40c4-b786-317f8dfdf897'])->set(['genre' => 'adventure']);
+
+        $expectedMutationData = [
+            'books' => [
+                [
+                    'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                    'id_author' => 1122,
+                    'genre'     => 'adventure',
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
     private function getConfigMock()
     {
         return new MutationsConfig(
             [
-                'ReplaceBook' => [
+                'ReplaceBook'  => [
                     'book' => [
                         'linksTo'  => '.',
                         'type'     => MutationItem::class,
@@ -1614,6 +1654,12 @@ class MutationTest extends TestCase
                                 ],
                             ],
                         ],
+                    ],
+                ],
+                'ReplaceBooks' => [
+                    'books' => [
+                        'linksTo' => '.',
+                        'type'    => MutationCollection::class,
                     ],
                 ],
             ]

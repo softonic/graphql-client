@@ -152,8 +152,47 @@ $data = $response->getDataObject();
  */
 ```
 
-The we can generate the mutation variables object from the previous query results. This is build using a mutation config.
-The config specifies the mutation object type (Item or Collection), the location in the query result object where the data can be obtained and the possible children it has.
+We can also filter the results in order to work with less data later. GraphQL queries may not have all the filters imaginable.
+
+``` php
+$data->chapters = $data->chapters->filter(['pov' => 'third person']);
+
+/**
+ * $data = new QueryItem([
+ *      'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *      'id_author' => 1234,
+ *      'genre'     => 'adventure',
+ *      'chapters'  => new QueryCollection([
+ *          new QueryItem([
+ *              'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *              'id_chapter' => 2,
+ *              'name'       => 'Chapter two',
+ *              'pov'        => 'third person',
+ *              'pages'      => new QueryCollection([
+ *                  new QueryItem([
+ *                      'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                      'id_chapter'        => 2,
+ *                      'id_page'           => 1,
+ *                      'has_illustrations' => false,
+ *                  ]),
+ *                  new QueryItem([
+ *                      'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                      'id_chapter'        => 2,
+ *                      'id_page'           => 2,
+ *                      'has_illustrations' => false,
+ *                  ]),
+ *              ]),
+ *          ]),
+ *      ]),
+ *  ]);
+ */
+```
+
+Then we can generate the mutation variables object from the previous query results. This is build using a mutation config.
+The config for each type has the following parameters:
+* linksTo: the location in the query result object where the data can be obtained for that type.
+* type: mutation object type (Item or Collection).
+* children: if the mutation has a key which value is another mutation type.
 
 ``` php
 $mutationConfig = [
@@ -188,31 +227,31 @@ $mutationConfig = [
 $mutation = new Mutation($mutationConfig, $data);
 
 /**
- * $data = new QueryMutation([
+ * $data = new MutationItem([
  *      'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *      'id_author' => 1234,
  *      'genre'     => 'adventure',
- *      'chapters'  => new QueryCollection([
- *          new QueryMutation([
+ *      'chapters'  => new MutationCollection([
+ *          new MutationItem([
  *              'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *              'id_chapter' => 1,
  *              'name'       => 'Chapter One',
  *              'pov'        => 'first person',
- *              'pages'      => new QueryCollection([]),
+ *              'pages'      => new MutationCollection([]),
  *          ]),
- *          new QueryMutation([
+ *          new MutationItem([
  *              'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *              'id_chapter' => 2,
  *              'name'       => 'Chapter two',
  *              'pov'        => 'third person',
- *              'pages'      => new QueryCollection([
- *                  new QueryMutation([
+ *              'pages'      => new MutationCollection([
+ *                  new MutationItem([
  *                      'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *                      'id_chapter'        => 2,
  *                      'id_page'           => 1,
  *                      'has_illustrations' => false,
  *                  ]),
- *                  new QueryMutation([
+ *                  new MutationItem([
  *                      'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *                      'id_chapter'        => 2,
  *                      'id_page'           => 2,
@@ -225,10 +264,10 @@ $mutation = new Mutation($mutationConfig, $data);
  */
 ```
 
-Now we can modify the mutation data using the methods add(), set() and filter().
+Now we can modify the mutation data using the following methods:
 * add(): Adds an Item to a Collection.
-* set(): Updates some values of an Item.
-* filter(): Filters the Items of the Collection.
+* set(): Updates some values of an Item. It also works on Collections, updating all its Items.
+* filter(): Filters the Items of a Collection.
 
 ``` php
 $mutation->book->chapters->upsert->filter(['id_chapter' => 2])->pages->upsert->add([
@@ -306,7 +345,8 @@ QUERY;
 $client->query($mutationQuery, $mutation);
 ```
 
-NOTE: When the query is executed, the mutation variables are encoded using json_encode(). This modifies the mutation data just returning the items changed and its parents.
+NOTE: When the query is executed, the mutation variables are encoded using json_encode().
+This modifies the mutation data just returning the items changed and its parents.
 So the final variables sent to the query would be:
 
 ``` php
@@ -346,6 +386,8 @@ So the final variables sent to the query would be:
  * ];
  */
 ```
+
+NOTE 2: The example has been done for a root Item "book", but it also works for a Collection an root object.
 
 ## Testing
 

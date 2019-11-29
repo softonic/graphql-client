@@ -4,19 +4,33 @@ namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
 use Softonic\GraphQL\Config\MutationsConfig;
+use Softonic\GraphQL\Mutation\Collection as MutationCollection;
+use Softonic\GraphQL\Mutation\Item as MutationItem;
 use Softonic\GraphQL\Query\Collection as QueryCollection;
 use Softonic\GraphQL\Query\Item as QueryItem;
 
 class MutationBuilderTest extends TestCase
 {
+    /**
+     * @var array
+     */
     private $simpleConfigMock;
 
+    /**
+     * @var array
+     */
     private $complexConfigMock;
+
+    /**
+     * @var array
+     */
+    private $collectionConfigMock;
 
     public function setUp()
     {
-        $this->simpleConfigMock  = $this->getConfigMock()->get('ReplaceBookSimple');
-        $this->complexConfigMock = $this->getConfigMock()->get('ReplaceBookComplex');
+        $this->simpleConfigMock     = $this->getConfigMock()->get('ReplaceBookSimple');
+        $this->complexConfigMock    = $this->getConfigMock()->get('ReplaceBookComplex');
+        $this->collectionConfigMock = $this->getConfigMock()->get('ReplaceBooks');
     }
 
     public function testWhenThereAreOnlyArguments()
@@ -57,15 +71,13 @@ class MutationBuilderTest extends TestCase
                 'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                 'id_author' => 1234,
                 'genre'     => null,
-                'chapters'  => [
-                    'upsert' => [],
-                ],
+                'chapters'  => [],
             ],
         ];
         $this->assertEquals($expectedMutationArguments, $mutation->toArray());
     }
 
-    public function testWhenThereAreChildren()
+    public function testWhenThereAreChildrenWithSimpleConfig()
     {
         $queryItem = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -86,6 +98,51 @@ class MutationBuilderTest extends TestCase
         ]);
 
         $mutationBuilder = new MutationBuilder($this->simpleConfigMock, $queryItem);
+        $mutation        = $mutationBuilder->build();
+
+        $expectedMutationArguments = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    [
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name 1',
+                    ],
+                    [
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 2,
+                        'name'       => 'Chapter name 2',
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+    }
+
+    public function testWhenThereAreChildrenWithComplexConfig()
+    {
+        $queryItem = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name 1',
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name 2',
+                ]),
+            ]),
+        ]);
+
+        $mutationBuilder = new MutationBuilder($this->complexConfigMock, $queryItem);
         $mutation        = $mutationBuilder->build();
 
         $expectedMutationArguments = [
@@ -471,6 +528,104 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->toArray());
     }
 
+    public function testWhenRootIsACollectionWithoutChildren()
+    {
+        $queryCollection = new QueryCollection([
+            new QueryItem([
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+            ]),
+            new QueryItem([
+                'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                'id_author' => 1122,
+                'genre'     => 'drama',
+            ]),
+        ]);
+
+        $mutationBuilder = new MutationBuilder($this->collectionConfigMock, $queryCollection);
+        $mutation        = $mutationBuilder->build();
+
+        $expectedMutationArguments = [
+            'books' => [
+                [
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
+                ],
+                [
+                    'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                    'id_author' => 1122,
+                    'genre'     => 'drama',
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+    }
+
+    public function testWhenRootIsACollectionWithChildren()
+    {
+        $queryCollection = new QueryCollection([
+            new QueryItem([
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => new QueryCollection([
+                    new QueryItem([
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name 1',
+                    ]),
+                ]),
+            ]),
+            new QueryItem([
+                'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                'id_author' => 1122,
+                'genre'     => 'drama',
+                'chapters'  => new QueryCollection([
+                    new QueryItem([
+                        'id_book'    => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name 1',
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutationBuilder = new MutationBuilder($this->collectionConfigMock, $queryCollection);
+        $mutation        = $mutationBuilder->build();
+
+        $expectedMutationArguments = [
+            'books' => [
+                [
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
+                    'chapters'  => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name 1',
+                        ],
+                    ],
+                ],
+                [
+                    'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                    'id_author' => 1122,
+                    'genre'     => 'drama',
+                    'chapters'  => [
+                        [
+                            'id_book'    => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name 1',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+    }
+
     private function getConfigMock()
     {
         return new MutationsConfig(
@@ -478,13 +633,11 @@ class MutationBuilderTest extends TestCase
                 'ReplaceBookSimple'  => [
                     'book' => [
                         'linksTo'  => '.',
+                        'type'     => MutationItem::class,
                         'children' => [
                             'chapters' => [
-                                'children' => [
-                                    'upsert' => [
-                                        'linksTo' => '.chapters',
-                                    ],
-                                ],
+                                'linksTo' => '.chapters',
+                                'type'    => MutationCollection::class,
                             ],
                         ],
                     ],
@@ -492,21 +645,28 @@ class MutationBuilderTest extends TestCase
                 'ReplaceBookComplex' => [
                     'book' => [
                         'linksTo'  => '.',
+                        'type'     => MutationItem::class,
                         'children' => [
                             'chapters'  => [
+                                'type'     => MutationItem::class,
                                 'children' => [
                                     'upsert' => [
                                         'linksTo'  => '.chapters',
+                                        'type'     => MutationCollection::class,
                                         'children' => [
                                             'pages' => [
+                                                'type'     => MutationItem::class,
                                                 'children' => [
                                                     'upsert' => [
                                                         'linksTo'  => '.chapters.pages',
+                                                        'type'     => MutationCollection::class,
                                                         'children' => [
                                                             'lines' => [
+                                                                'type'     => MutationItem::class,
                                                                 'children' => [
                                                                     'upsert' => [
                                                                         'linksTo' => '.chapters.pages.lines',
+                                                                        'type'    => MutationCollection::class,
                                                                     ],
                                                                 ],
                                                             ],
@@ -519,11 +679,25 @@ class MutationBuilderTest extends TestCase
                                 ],
                             ],
                             'languages' => [
+                                'type'     => MutationItem::class,
                                 'children' => [
                                     'upsert' => [
                                         'linksTo' => '.languages',
+                                        'type'    => MutationCollection::class,
                                     ],
                                 ],
+                            ],
+                        ],
+                    ],
+                ],
+                'ReplaceBooks'       => [
+                    'books' => [
+                        'linksTo'  => '.',
+                        'type'     => MutationCollection::class,
+                        'children' => [
+                            'chapters' => [
+                                'linksTo' => '.chapters',
+                                'type'    => MutationCollection::class,
                             ],
                         ],
                     ],

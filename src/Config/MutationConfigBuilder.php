@@ -4,6 +4,8 @@ namespace Softonic\GraphQL\Config;
 
 class MutationConfigBuilder
 {
+    const CHILDREN_PROPERTY_NAME = 'children';
+
     public function build(array $config): array
     {
         $mutationConfig = [];
@@ -30,7 +32,7 @@ class MutationConfigBuilder
         string $propertyName,
         $propertyValue
     ): void {
-        if ($propertyName === 'children') {
+        if ($propertyName === self::CHILDREN_PROPERTY_NAME) {
             foreach ($propertyValue as $childName => $childConfig) {
                 $mutationTypeConfig->children[$childName] = $this->buildMutationTypeConfig($childConfig);
             }

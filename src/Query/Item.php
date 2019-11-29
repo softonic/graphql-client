@@ -22,4 +22,9 @@ class Item implements ReadObject, \Iterator
     {
         return $this->arguments[$key];
     }
+
+    public function __set($key, $value)
+    {
+        $this->arguments[$key] = $value;
+    }
 }
