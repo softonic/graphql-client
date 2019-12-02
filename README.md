@@ -190,7 +190,7 @@ $data->chapters = $data->chapters->filter(['pov' => 'third person']);
 
 Then we can generate the mutation variables object from the previous query results. This is build using a mutation config.
 The config for each type has the following parameters:
-* linksTo: the location in the query result object where the data can be obtained for that type.
+* linksTo: the location in the query result object where the data can be obtained for that type. If not present, it means it's a level that has no data from the source.
 * type: mutation object type (Item or Collection).
 * children: if the mutation has a key which value is another mutation type.
 
@@ -332,6 +332,8 @@ $mutation->book->chapters->upsert->pages->upsert->filter([
 ```
 
 Finally, the modified mutation data can be passed to the GraphQL client to execute the mutation.
+When the query is executed, the mutation variables are encoded using json_encode().
+This modifies the mutation data just returning the items changed and its parents.
 
 ``` php
 $mutationQuery = <<<'QUERY'
@@ -345,8 +347,6 @@ QUERY;
 $client->query($mutationQuery, $mutation);
 ```
 
-NOTE: When the query is executed, the mutation variables are encoded using json_encode().
-This modifies the mutation data just returning the items changed and its parents.
 So the final variables sent to the query would be:
 
 ``` php
@@ -387,7 +387,7 @@ So the final variables sent to the query would be:
  */
 ```
 
-NOTE 2: The example has been done for a root Item "book", but it also works for a Collection an root object.
+NOTE 2: The example has been done for a root Item "book", but it also works for a Collection as root object.
 
 ## Testing
 
