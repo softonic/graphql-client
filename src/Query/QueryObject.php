@@ -2,6 +2,6 @@
 
 namespace Softonic\GraphQL\Query;
 
-interface ReadObject
+interface QueryObject
 {
 }

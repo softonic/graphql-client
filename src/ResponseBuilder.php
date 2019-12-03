@@ -38,7 +38,7 @@ class ResponseBuilder
 
         return [
             'data'       => $decodedResponse['data'] ?? [],
-            'dataObject' => $this->dataObjectBuilder->build($decodedResponse['data'] ?? []),
+            'dataObject' => $this->dataObjectBuilder->buildQuery($decodedResponse['data'] ?? []),
             'errors'     => $decodedResponse['errors'] ?? [],
         ];
     }

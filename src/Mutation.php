@@ -4,7 +4,7 @@ namespace Softonic\GraphQL;
 
 use Softonic\GraphQL\Config\MutationTypeConfig;
 use Softonic\GraphQL\Mutation\MutationObject;
-use Softonic\GraphQL\Query\ReadObject;
+use Softonic\GraphQL\Query\QueryObject;
 
 class Mutation implements \JsonSerializable
 {
@@ -16,7 +16,7 @@ class Mutation implements \JsonSerializable
     /**
      * @param array<MutationTypeConfig> $config
      */
-    public function __construct(array $config, ReadObject $source)
+    public function __construct(array $config, QueryObject $source)
     {
         $mutationBuilder = new MutationBuilder($config, $source);
 

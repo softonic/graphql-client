@@ -8,7 +8,7 @@ use Softonic\GraphQL\Mutation\Item as MutationItem;
 use Softonic\GraphQL\Mutation\MutationObject;
 use Softonic\GraphQL\Query\Collection as QueryCollection;
 use Softonic\GraphQL\Query\Item as QueryItem;
-use Softonic\GraphQL\Query\ReadObject;
+use Softonic\GraphQL\Query\QueryObject;
 
 class MutationBuilder
 {
@@ -20,7 +20,7 @@ class MutationBuilder
     private $config;
 
     /**
-     * @var ReadObject
+     * @var QueryObject
      */
     private $source;
 
@@ -32,7 +32,7 @@ class MutationBuilder
     /**
      * @param array<MutationTypeConfig> $config
      */
-    public function __construct(array $config, ReadObject $source)
+    public function __construct(array $config, QueryObject $source)
     {
         $this->config = $config;
         $this->source = $source;

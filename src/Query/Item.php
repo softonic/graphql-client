@@ -4,7 +4,7 @@ namespace Softonic\GraphQL\Query;
 
 use Softonic\GraphQL\Traits\GqlIterator;
 
-class Item implements ReadObject, \Iterator
+class Item implements QueryObject, \Iterator
 {
     use GqlIterator;
 
