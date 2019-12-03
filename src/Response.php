@@ -12,28 +12,23 @@ class Response
     /**
      * @var array
      */
-    private $dataObject;
+    private $errors;
 
     /**
      * @var array
      */
-    private $errors;
+    private $dataObject;
 
-    public function __construct(array $data, array $dataObject, array $errors = [])
+    public function __construct(array $data, array $errors = [], array $dataObject = [])
     {
         $this->data       = $data;
-        $this->dataObject = $dataObject;
         $this->errors     = $errors;
+        $this->dataObject = $dataObject;
     }
 
     public function getData(): array
     {
         return $this->data;
-    }
-
-    public function getDataObject(): array
-    {
-        return $this->dataObject;
     }
 
     public function getErrors(): array
@@ -44,5 +39,10 @@ class Response
     public function hasErrors(): bool
     {
         return !empty($this->errors);
+    }
+
+    public function getDataObject(): array
+    {
+        return $this->dataObject;
     }
 }
