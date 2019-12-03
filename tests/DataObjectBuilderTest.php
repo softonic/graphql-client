@@ -45,7 +45,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAnQueryItem()
+    public function testWhenDataHasAQueryItem()
     {
         $data = [
             'book' => [
@@ -103,7 +103,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAnQueryItemWithEmptySecondLevel()
+    public function testWhenDataHasAQueryItemWithEmptySecondLevel()
     {
         $data = [
             'book' => [
@@ -127,7 +127,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAnQueryItemWithSecondLevel()
+    public function testWhenDataHasAQueryItemWithSecondLevel()
     {
         $data = [
             'book' => [
@@ -173,7 +173,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAnQueryItemWithThirdLevel()
+    public function testWhenDataHasAQueryItemWithThirdLevel()
     {
         $data = [
             'book' => [
@@ -249,7 +249,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAnQueryItemInsideAnotherQueryItem()
+    public function testWhenDataHasAQueryItemInsideAnotherQueryItem()
     {
         $data = [
             'book' => [
