@@ -17,6 +17,8 @@ class Client
     }
 
     /**
+     * @param mixed $variables Variables can be in array or MutationObject formats.
+     *
      * @throws \UnexpectedValueException When response body is not a valid json
      * @throws \RuntimeException         When there are transfer errors
      */
