@@ -1722,6 +1722,130 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
+    public function testWhenSourceContainsMutationData()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryItem([
+                'upsert' => new QueryCollection([
+                    new QueryItem([
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name',
+                        'pov'        => 'first person',
+                        'pages'      => new QueryItem([
+                            'upsert' => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'        => 1,
+                                    'id_page'           => 1,
+                                    'has_illustrations' => false,
+                                    'lines'             => new QueryCollection([]),
+                                ]),
+                                new QueryItem([
+                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'        => 1,
+                                    'id_page'           => 2,
+                                    'has_illustrations' => false,
+                                    'lines'             => new QueryCollection([]),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                    new QueryItem([
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 2,
+                        'name'       => 'Chapter name',
+                        'pov'        => null,
+                        'pages'      => new QueryItem([
+                            'upsert' => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'        => 2,
+                                    'id_page'           => 1,
+                                    'has_illustrations' => false,
+                                ]),
+                                new QueryItem([
+                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'        => 2,
+                                    'id_page'           => 2,
+                                    'has_illustrations' => false,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book, true);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [],
+                                        ],
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => false,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
     private function getConfigMock()
     {
         return new MutationsConfig(

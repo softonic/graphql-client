@@ -16,9 +16,9 @@ class Mutation implements \JsonSerializable
     /**
      * @param array<MutationTypeConfig> $config
      */
-    public function __construct(array $config, QueryObject $source)
+    public function __construct(array $config, QueryObject $source, bool $fromMutation = false)
     {
-        $mutationBuilder = new MutationBuilder($config, $source);
+        $mutationBuilder = new MutationBuilder($config, $source, $fromMutation);
 
         $this->mutation = $mutationBuilder->build();
     }

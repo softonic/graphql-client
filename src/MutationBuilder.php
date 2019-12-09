@@ -30,12 +30,18 @@ class MutationBuilder
     private $mutationTypeConfig;
 
     /**
+     * @var bool
+     */
+    private $hasChanged;
+
+    /**
      * @param array<MutationTypeConfig> $config
      */
-    public function __construct(array $config, QueryObject $source)
+    public function __construct(array $config, QueryObject $source, bool $fromMutation = false)
     {
-        $this->config = $config;
-        $this->source = $source;
+        $this->config     = $config;
+        $this->source     = $source;
+        $this->hasChanged = $fromMutation;
     }
 
     public function build(): MutationObject
@@ -50,18 +56,18 @@ class MutationBuilder
                 foreach ($this->source as $sourceItem) {
                     $mutationItemArguments = $this->generateMutationArguments($sourceItem, $path);
 
-                    $arguments[] = new MutationItem($mutationItemArguments, $config->children);
+                    $arguments[] = new MutationItem($mutationItemArguments, $config->children, $this->hasChanged);
                 }
 
-                $mutationVariables[$variableName] = new $config->type($arguments, $config->children);
+                $mutationVariables[$variableName] = new $config->type($arguments, $config->children, $this->hasChanged);
             } else {
                 $arguments = $this->generateMutationArguments($this->source, $path);
 
-                $mutationVariables[$variableName] = new $config->type($arguments, $config->children);
+                $mutationVariables[$variableName] = new $config->type($arguments, $config->children, $this->hasChanged);
             }
         }
 
-        return new MutationItem($mutationVariables, $this->config);
+        return new MutationItem($mutationVariables, $this->config, $this->hasChanged);
     }
 
     private function generateMutationArguments(QueryItem $source, string $path): array
@@ -77,7 +83,11 @@ class MutationBuilder
                 } else {
                     $mutationItemArguments = $this->generateMutationArguments($sourceValue, $childPath);
 
-                    $arguments[$sourceKey] = new MutationItem($mutationItemArguments, $childConfig->children);
+                    $arguments[$sourceKey] = new MutationItem(
+                        $mutationItemArguments,
+                        $childConfig->children,
+                        $this->hasChanged
+                    );
                 }
             } else {
                 $arguments[$sourceKey] = $sourceValue;
@@ -107,10 +117,10 @@ class MutationBuilder
             foreach ($sourceCollection as $sourceItem) {
                 $itemArguments = $this->generateMutationArguments($sourceItem, $path);
 
-                $arguments[] = new MutationItem($itemArguments, $config->children);
+                $arguments[] = new MutationItem($itemArguments, $config->children, $this->hasChanged);
             }
         }
 
-        return new $config->type($arguments, $config->children);
+        return new $config->type($arguments, $config->children, $this->hasChanged);
     }
 }
