@@ -4,14 +4,14 @@ namespace Softonic\GraphQL\Mutation;
 
 use Softonic\GraphQL\Mutation\Traits\MutationObjectHandler;
 
-class FilteredCollection implements MutationObject, \JsonSerializable
+class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSerializable
 {
     use MutationObjectHandler;
 
     /**
      * @var array<Item>
      */
-    protected $arguments = [];
+    public $arguments = [];
 
     /**
      * @var array
@@ -45,6 +45,33 @@ class FilteredCollection implements MutationObject, \JsonSerializable
         foreach ($this->arguments as $argument) {
             $argument->set($data);
         }
+    }
+
+    public function getIterator()
+    {
+        $iterator = new \RecursiveIteratorIterator(new class($this->arguments) extends \RecursiveArrayIterator {
+            public function hasChildren(): bool
+            {
+                $current = $this->current();
+                if ($current instanceof Item) {
+                    return false;
+                }
+
+                if (is_array($current)) {
+                    return true;
+                }
+
+                foreach ($current->arguments as $argument) {
+                    if ($argument instanceof MutationObject) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
+
+        return $iterator;
     }
 
     public function filter(array $filters): FilteredCollection

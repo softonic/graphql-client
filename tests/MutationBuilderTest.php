@@ -528,6 +528,55 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->toArray());
     }
 
+    public function testWhenTheSourceHasItemsWithItemArguments()
+    {
+        $queryItem = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryItem([
+                'upsert' => new QueryCollection([
+                    new QueryItem([
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name 1',
+                    ]),
+                    new QueryItem([
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 2,
+                        'name'       => 'Chapter name 2',
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutationBuilder = new MutationBuilder($this->complexConfigMock, $queryItem);
+        $mutation        = $mutationBuilder->build();
+
+        $expectedMutationArguments = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name 1',
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name 2',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+    }
+
     public function testWhenRootIsACollectionWithoutChildren()
     {
         $queryCollection = new QueryCollection([

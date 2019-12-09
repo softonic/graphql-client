@@ -8,10 +8,19 @@ class Item implements MutationObject, \JsonSerializable
 {
     use MutationObjectHandler;
 
-    private $arguments;
+    /**
+     * @var array
+     */
+    public $arguments;
 
+    /**
+     * @var array
+     */
     private $config;
 
+    /**
+     * @var bool
+     */
     private $hasChanged = false;
 
     public function __construct(array $arguments = [], array $config = [], bool $hasChanged = false)

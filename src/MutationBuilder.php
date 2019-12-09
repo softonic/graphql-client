@@ -68,12 +68,17 @@ class MutationBuilder
     {
         $arguments = [];
         foreach ($source as $sourceKey => $sourceValue) {
-            // Having a property that is an item is not handled.
-            if ($sourceValue instanceof QueryCollection) {
+            if ($sourceValue instanceof QueryObject) {
                 $childPath   = $this->createPathFromParent($path, $sourceKey);
                 $childConfig = $this->mutationTypeConfig->get($childPath);
 
-                $arguments[$sourceKey] = $this->mutateChild($childConfig, $sourceValue, $childPath);
+                if ($sourceValue instanceof QueryCollection) {
+                    $arguments[$sourceKey] = $this->mutateChild($childConfig, $sourceValue, $childPath);
+                } else {
+                    $mutationItemArguments = $this->generateMutationArguments($sourceValue, $childPath);
+
+                    $arguments[$sourceKey] = new MutationItem($mutationItemArguments, $childConfig->children);
+                }
             } else {
                 $arguments[$sourceKey] = $sourceValue;
             }
