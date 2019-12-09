@@ -61,17 +61,22 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
                     return true;
                 }
 
-                foreach ($current->arguments as $argument) {
-                    if ($argument instanceof MutationObject) {
-                        return true;
-                    }
-                }
-
-                return false;
+                return $current->hasChildren();
             }
         });
 
         return $iterator;
+    }
+
+    public function hasChildren()
+    {
+        foreach ($this->arguments as $argument) {
+            if ($argument instanceof MutationObject) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function filter(array $filters): FilteredCollection
