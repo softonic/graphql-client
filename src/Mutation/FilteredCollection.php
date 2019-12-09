@@ -49,31 +49,7 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
 
     public function getIterator()
     {
-        return new \RecursiveIteratorIterator($this->getRecursiveArrayIterator());
-    }
-
-    public function getRecursiveArrayIterator(): \RecursiveArrayIterator
-    {
-        return new class($this->arguments) extends \RecursiveArrayIterator {
-            public function hasChildren(): bool
-            {
-                $current = $this->current();
-                if ($current instanceof Item) {
-                    return false;
-                }
-
-                if (is_array($current)) {
-                    return true;
-                }
-
-                return $current->hasChildren();
-            }
-
-            public function getChildren()
-            {
-                return parent::current()->getRecursiveArrayIterator();
-            }
-        };
+        return new \RecursiveIteratorIterator(new CollectionIterator($this->arguments));
     }
 
     public function hasChildren()
