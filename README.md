@@ -344,7 +344,7 @@ mutation ($book: BookInput!){
 }
 QUERY;
 
-$client->query($mutationQuery, $mutation);
+$client->mutate($mutationQuery, $mutation);
 ```
 
 So the final variables sent to the query would be:
