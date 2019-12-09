@@ -11,7 +11,7 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
     /**
      * @var array<Item>
      */
-    public $arguments = [];
+    protected $arguments = [];
 
     /**
      * @var array
@@ -21,7 +21,7 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
     /**
      * @var bool
      */
-    private $hasChanged = false;
+    protected $hasChanged = false;
 
     public function __construct(array $arguments = [], array $config = [], bool $hasChanged = false)
     {
@@ -49,7 +49,12 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
 
     public function getIterator()
     {
-        $iterator = new \RecursiveIteratorIterator(new class($this->arguments) extends \RecursiveArrayIterator {
+        return new \RecursiveIteratorIterator($this->getRecursiveArrayIterator());
+    }
+
+    public function getRecursiveArrayIterator(): \RecursiveArrayIterator
+    {
+        return new class($this->arguments) extends \RecursiveArrayIterator {
             public function hasChildren(): bool
             {
                 $current = $this->current();
@@ -63,9 +68,12 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
 
                 return $current->hasChildren();
             }
-        });
 
-        return $iterator;
+            public function getChildren()
+            {
+                return parent::current()->getRecursiveArrayIterator();
+            }
+        };
     }
 
     public function hasChildren()

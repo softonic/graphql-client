@@ -1684,6 +1684,8 @@ class MutationTest extends TestCase
             ],
         ];
 
+        $this->assertCount(4, $mutation->book->chapters->upsert->pages->upsert->lines->upsert);
+
         $i = 0;
         foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $line) {
             $this->assertEquals($expectedLines[$i], $line->toArray());

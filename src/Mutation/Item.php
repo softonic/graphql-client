@@ -11,7 +11,7 @@ class Item implements MutationObject, \JsonSerializable
     /**
      * @var array
      */
-    public $arguments;
+    private $arguments;
 
     /**
      * @var array
