@@ -105,6 +105,27 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
+    public function testWhenAnArgumentIsUnset()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book);
+
+        unset($mutation->book->id_author);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'genre'   => null,
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
     public function testWhenThereAreChangesInRootLevelWithSecondLevelInput()
     {
         $book = new QueryItem([

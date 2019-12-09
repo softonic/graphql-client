@@ -60,6 +60,13 @@ class Item implements MutationObject, \JsonSerializable
         $this->hasChanged = true;
     }
 
+    public function __unset($key): void
+    {
+        unset($this->arguments[$key]);
+
+        $this->hasChanged = true;
+    }
+
     public function set(array $data): void
     {
         foreach ($data as $key => $value) {
