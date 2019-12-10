@@ -75,7 +75,7 @@ class ResponseBuilderTest extends TestCase
             ],
         ];
         $this->dataObjectBuilder->expects($this->once())
-            ->method('build')
+            ->method('buildQuery')
             ->with($expectedData)
             ->willReturn($dataObjectMock);
         $response = $this->responseBuilder->build($mockHttpResponse);
@@ -108,7 +108,7 @@ class ResponseBuilderTest extends TestCase
             ->willReturn($body);
 
         $this->dataObjectBuilder->expects($this->once())
-            ->method('build')
+            ->method('buildQuery')
             ->with([])
             ->willReturn([]);
 

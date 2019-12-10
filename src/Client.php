@@ -7,12 +7,19 @@ use GuzzleHttp\Exception\TransferException;
 
 class Client
 {
+    /**
+     * @var ClientInterface
+     */
     private $httpClient;
+
+    /**
+     * @var ResponseBuilder
+     */
     private $responseBuilder;
 
     public function __construct(ClientInterface $httpClient, ResponseBuilder $responseBuilder)
     {
-        $this->httpClient = $httpClient;
+        $this->httpClient      = $httpClient;
         $this->responseBuilder = $responseBuilder;
     }
 
@@ -21,6 +28,20 @@ class Client
      * @throws \RuntimeException         When there are transfer errors
      */
     public function query(string $query, array $variables = null): Response
+    {
+        return $this->executeQuery($query, $variables);
+    }
+
+    /**
+     * @throws \UnexpectedValueException When response body is not a valid json
+     * @throws \RuntimeException         When there are transfer errors
+     */
+    public function mutate(string $query, Mutation $mutation): Response
+    {
+        return $this->executeQuery($query, $mutation);
+    }
+
+    private function executeQuery(string $query, $variables): Response
     {
         $options = [
             'json' => [

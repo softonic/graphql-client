@@ -105,6 +105,28 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
+    public function testWhenAnArgumentIsUnset()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book);
+
+        unset($mutation->book->id_author);
+        unset($mutation->book->not_existent);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book' => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'genre'   => null,
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
     public function testWhenThereAreChangesInRootLevelWithSecondLevelInput()
     {
         $book = new QueryItem([
@@ -1573,6 +1595,209 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
+    public function testWhenFourthLevelItemsAreIterated()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 30,
+                                ]),
+                            ]),
+                        ]),
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 1,
+                                    'words_count' => 35,
+                                ]),
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 2,
+                                    'words_count' => 40,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 2,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 45,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book);
+
+        $expectedLines = [
+            [
+                'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter'  => 1,
+                'id_page'     => 1,
+                'id_line'     => 1,
+                'words_count' => 30,
+            ],
+            [
+                'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter'  => 1,
+                'id_page'     => 2,
+                'id_line'     => 1,
+                'words_count' => 35,
+            ],
+            [
+                'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter'  => 1,
+                'id_page'     => 2,
+                'id_line'     => 2,
+                'words_count' => 40,
+            ],
+            [
+                'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter'  => 2,
+                'id_page'     => 1,
+                'id_line'     => 1,
+                'words_count' => 45,
+            ],
+        ];
+
+        $this->assertCount(4, $mutation->book->chapters->upsert->pages->upsert->lines->upsert);
+
+        $i = 0;
+        foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $line) {
+            $this->assertEquals($expectedLines[$i], $line->toArray());
+            ++$i;
+        }
+    }
+
+    public function testWhenFourthLevelItemsAreCounted()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 30,
+                                ]),
+                            ]),
+                        ]),
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 1,
+                                    'words_count' => 35,
+                                ]),
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 2,
+                                    'words_count' => 40,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 2,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 45,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book);
+
+        $this->assertEquals(4, $mutation->book->chapters->upsert->pages->upsert->lines->upsert->count());
+    }
+
     public function testWhenThereAreChangesInARootLevelCollectionForOneItem()
     {
         $books = new QueryCollection([
@@ -1598,6 +1823,603 @@ class MutationTest extends TestCase
                     'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
                     'id_author' => 1122,
                     'genre'     => 'adventure',
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenSourceContainsMutationData()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryItem([
+                'upsert' => new QueryCollection([
+                    new QueryItem([
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 1,
+                        'name'       => 'Chapter name',
+                        'pov'        => 'first person',
+                        'pages'      => new QueryItem([
+                            'upsert' => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'        => 1,
+                                    'id_page'           => 1,
+                                    'has_illustrations' => false,
+                                    'lines'             => new QueryCollection([]),
+                                ]),
+                                new QueryItem([
+                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'        => 1,
+                                    'id_page'           => 2,
+                                    'has_illustrations' => false,
+                                    'lines'             => new QueryCollection([]),
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                    new QueryItem([
+                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                        'id_chapter' => 2,
+                        'name'       => 'Chapter name',
+                        'pov'        => null,
+                        'pages'      => new QueryItem([
+                            'upsert' => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'        => 2,
+                                    'id_page'           => 1,
+                                    'has_illustrations' => false,
+                                ]),
+                                new QueryItem([
+                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'        => 2,
+                                    'id_page'           => 2,
+                                    'has_illustrations' => false,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book, true);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [],
+                                        ],
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => null,
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => false,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenFourthLevelItemsPropertyIsUnset()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 30,
+                                ]),
+                            ]),
+                        ]),
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 1,
+                                    'words_count' => 35,
+                                ]),
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 2,
+                                    'words_count' => 40,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 2,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 45,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book, true);
+
+        unset($mutation->book->chapters->upsert->pages->upsert->has_illustrations);
+        unset($mutation->book->chapters->upsert->pages->upsert->lines->upsert->words_count);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter' => 1,
+                                        'id_page'    => 1,
+                                        'lines'      => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter' => 1,
+                                                    'id_page'    => 1,
+                                                    'id_line'    => 1,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter' => 1,
+                                        'id_page'    => 2,
+                                        'lines'      => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter' => 1,
+                                                    'id_page'    => 2,
+                                                    'id_line'    => 1,
+                                                ],
+                                                [
+                                                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter' => 1,
+                                                    'id_page'    => 2,
+                                                    'id_line'    => 2,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter' => 2,
+                                        'id_page'    => 1,
+                                        'lines'      => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter' => 2,
+                                                    'id_page'    => 1,
+                                                    'id_line'    => 1,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenFourthLevelItemsAreUnset()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 30,
+                                ]),
+                            ]),
+                        ]),
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 1,
+                                    'words_count' => 35,
+                                ]),
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 2,
+                                    'words_count' => 40,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 2,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 45,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book, true);
+
+        unset($mutation->book->chapters->upsert->pages->upsert->lines);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => false,
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenFourthLevelItemsAreRemoved()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 30,
+                                ]),
+                            ]),
+                        ]),
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 1,
+                                    'words_count' => 35,
+                                ]),
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 2,
+                                    'words_count' => 40,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 2,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 45,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book, true);
+
+        foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $key => $line) {
+            if (35 === $line->words_count) {
+                $mutation->book->chapters->upsert->pages->upsert->lines->upsert->remove($line);
+            }
+        }
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => [
+                    'upsert' => [
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 1,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter'  => 1,
+                                                    'id_page'     => 1,
+                                                    'id_line'     => 1,
+                                                    'words_count' => 30,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 1,
+                                        'id_page'           => 2,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter'  => 1,
+                                                    'id_page'     => 2,
+                                                    'id_line'     => 2,
+                                                    'words_count' => 40,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter' => 2,
+                            'name'       => 'Chapter name',
+                            'pov'        => 'first person',
+                            'pages'      => [
+                                'upsert' => [
+                                    [
+                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                        'id_chapter'        => 2,
+                                        'id_page'           => 1,
+                                        'has_illustrations' => false,
+                                        'lines'             => [
+                                            'upsert' => [
+                                                [
+                                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter'  => 2,
+                                                    'id_page'     => 1,
+                                                    'id_line'     => 1,
+                                                    'words_count' => 45,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];

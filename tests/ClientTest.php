@@ -3,6 +3,7 @@
 namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
+use Softonic\GraphQL\Query\Item;
 
 class ClientTest extends TestCase
 {
@@ -87,15 +88,7 @@ class ClientTest extends TestCase
         $mockResponse     = $this->createMock(\Softonic\GraphQL\Response::class);
         $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
 
-        $response     = [
-            'data' => [
-                'book' => [
-                    'id_appstore' => null,
-                ],
-            ],
-        ];
-        $expectedData = $response['data'];
-        $query        = $this->getSimpleQuery();
+        $query = $this->getSimpleQuery();
 
         $this->mockGraphqlResponseBuilder->expects($this->once())
             ->method('build')
@@ -122,14 +115,6 @@ class ClientTest extends TestCase
     {
         $mockResponse     = $this->createMock(\Softonic\GraphQL\Response::class);
         $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
-
-        $response = [
-            'data' => [
-                'book' => [
-                    'id_appstore' => null,
-                ],
-            ],
-        ];
 
         $query     = $this->getQueryWithVariables();
         $variables = [
@@ -159,6 +144,36 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(\Softonic\GraphQL\Response::class, $response);
     }
 
+    public function testMutate()
+    {
+        $mockResponse     = $this->createMock(\Softonic\GraphQL\Response::class);
+        $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+
+        $query     = $this->getMutationQuery();
+        $variables = new Mutation([], new Item(['idProgram' => '642e69c0-9b2e-11e6-9850-00163ed833e7']));
+
+        $this->mockGraphqlResponseBuilder->expects($this->once())
+            ->method('build')
+            ->with($mockHttpResponse)
+            ->willReturn($mockResponse);
+        $this->httpClient->expects($this->once())
+            ->method('request')
+            ->with(
+                'POST',
+                '',
+                [
+                    'json' => [
+                        'query'     => $query,
+                        'variables' => $variables,
+                    ],
+                ]
+            )
+            ->willReturn($mockHttpResponse);
+
+        $response = $this->client->mutate($query, $variables);
+        $this->assertInstanceOf(\Softonic\GraphQL\Response::class, $response);
+    }
+
     private function getSimpleQuery()
     {
         return <<<'QUERY'
@@ -179,6 +194,17 @@ query GetFooBar($idFoo: String, $idBar: String) {
     bar (id: $idBar) {
       id_bar
     }
+  }
+}
+QUERY;
+    }
+
+    private function getMutationQuery()
+    {
+        return <<<'QUERY'
+mutation replaceFoo($foo: FooInput!) {
+  replaceFoo(foo: $foo) {
+    status
   }
 }
 QUERY;

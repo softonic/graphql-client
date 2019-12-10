@@ -8,10 +8,19 @@ class Item implements MutationObject, \JsonSerializable
 {
     use MutationObjectHandler;
 
+    /**
+     * @var array
+     */
     private $arguments;
 
+    /**
+     * @var array
+     */
     private $config;
 
+    /**
+     * @var bool
+     */
     private $hasChanged = false;
 
     public function __construct(array $arguments = [], array $config = [], bool $hasChanged = false)
@@ -47,6 +56,13 @@ class Item implements MutationObject, \JsonSerializable
     private function setValue(string $key, $value): void
     {
         $this->arguments[$key] = $value;
+
+        $this->hasChanged = true;
+    }
+
+    public function __unset($key): void
+    {
+        unset($this->arguments[$key]);
 
         $this->hasChanged = true;
     }

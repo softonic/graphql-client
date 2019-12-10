@@ -2,28 +2,56 @@
 
 namespace Softonic\GraphQL;
 
-use Softonic\GraphQL\Query\Collection;
-use Softonic\GraphQL\Query\Item;
+use Softonic\GraphQL\Mutation\Collection as MutationCollection;
+use Softonic\GraphQL\Mutation\Item as MutationItem;
+use Softonic\GraphQL\Query\Collection as QueryCollection;
+use Softonic\GraphQL\Query\Item as QueryItem;
 
 class DataObjectBuilder
 {
-    public function build(array $data): array
+    const ITEM = 'item';
+
+    const COLLECTION = 'collection';
+
+    const QUERY_OBJECTS = [
+        self::ITEM       => QueryItem::class,
+        self::COLLECTION => QueryCollection::class,
+    ];
+
+    const MUTATION_OBJECTS = [
+        self::ITEM       => MutationItem::class,
+        self::COLLECTION => MutationCollection::class,
+    ];
+
+    public function buildQuery(array $data): array
+    {
+        return $this->build($data, self::QUERY_OBJECTS);
+    }
+
+    public function buildMutation(array $data): array
+    {
+        return $this->build($data, self::MUTATION_OBJECTS);
+    }
+
+    private function build(array $data, array $objects): array
     {
         $dataObject = [];
-        foreach ($data as $queryName => $objectsData) {
-            if (is_array($objectsData) && !empty($objectsData)) {
-                if ($this->isAList($objectsData)) {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                if ($this->isAList($value)) {
                     $items = [];
-                    foreach ($objectsData as $objectData) {
-                        $items[] = $this->buildItem($objectData);
+                    foreach ($value as $objectData) {
+                        $itemData = $this->build($objectData, $objects);
+                        $items[]  = (new $objects[self::ITEM]($itemData));
                     }
 
-                    $dataObject[$queryName] = new Collection($items);
+                    $dataObject[$key] = (new $objects[self::COLLECTION]($items));
                 } else {
-                    $dataObject[$queryName] = $this->buildItem($objectsData);
+                    $itemData         = $this->build($value, $objects);
+                    $dataObject[$key] = (new $objects[self::ITEM]($itemData));
                 }
             } else {
-                $dataObject[$queryName] = $objectsData;
+                $dataObject[$key] = $value;
             }
         }
 
@@ -33,24 +61,5 @@ class DataObjectBuilder
     private function isAList(array $data): bool
     {
         return array_values($data) === $data;
-    }
-
-    private function buildItem(array $data): Item
-    {
-        $itemData = [];
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $items = [];
-                foreach ($value as $valueItemData) {
-                    $items[] = $this->buildItem($valueItemData);
-                }
-
-                $itemData[$key] = new Collection($items);
-            } else {
-                $itemData[$key] = $value;
-            }
-        }
-
-        return new Item($itemData);
     }
 }

@@ -8,7 +8,7 @@ class ResponseBuilder
 {
     private $dataObjectBuilder;
 
-    public function __construct(DataObjectBuilder $dataObjectBuilder)
+    public function __construct(DataObjectBuilder $dataObjectBuilder = null)
     {
         $this->dataObjectBuilder = $dataObjectBuilder;
     }
@@ -19,10 +19,14 @@ class ResponseBuilder
 
         $normalizedResponse = $this->getNormalizedResponse($body);
 
+        $dataObject = array_key_exists('dataObject', $normalizedResponse)
+            ? $normalizedResponse['dataObject']
+            : [];
+
         return new Response(
             $normalizedResponse['data'],
-            $normalizedResponse['dataObject'],
-            $normalizedResponse['errors']
+            $normalizedResponse['errors'],
+            $dataObject
         );
     }
 
@@ -36,11 +40,16 @@ class ResponseBuilder
             );
         }
 
-        return [
-            'data'       => $decodedResponse['data'] ?? [],
-            'dataObject' => $this->dataObjectBuilder->build($decodedResponse['data'] ?? []),
-            'errors'     => $decodedResponse['errors'] ?? [],
+        $result = [
+            'data'   => $decodedResponse['data'] ?? [],
+            'errors' => $decodedResponse['errors'] ?? [],
         ];
+
+        if (!is_null($this->dataObjectBuilder)) {
+            $result['dataObject'] = $this->dataObjectBuilder->buildQuery($decodedResponse['data'] ?? []);
+        }
+
+        return $result;
     }
 
     private function getJsonDecodedResponse(string $body)
