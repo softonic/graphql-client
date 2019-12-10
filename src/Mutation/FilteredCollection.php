@@ -40,6 +40,13 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
         return new Collection($items, $this->config[$key]->children);
     }
 
+    public function __unset($key): void
+    {
+        foreach ($this->arguments as $argument) {
+            unset($argument->{$key});
+        }
+    }
+
     public function set(array $data): void
     {
         foreach ($this->arguments as $argument) {
@@ -97,6 +104,31 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
         });
 
         return array_values($filteredItems);
+    }
+
+    public function count(): int
+    {
+        $count = 0;
+        foreach ($this->arguments as $argument) {
+            if ($argument instanceof Collection) {
+                $count += $argument->count();
+            } elseif ($argument instanceof Item) {
+                ++$count;
+            }
+        }
+
+        return $count;
+    }
+
+    public function remove(Item $item): void
+    {
+        foreach ($this->arguments as $key => $argument) {
+            if ($argument instanceof Collection) {
+                $argument->remove($item);
+            } elseif ($argument === $item) {
+                unset($this->arguments[$key]);
+            }
+        }
     }
 
     public function jsonSerialize(): array

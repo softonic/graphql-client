@@ -268,6 +268,9 @@ Now we can modify the mutation data using the following methods:
 * add(): Adds an Item to a Collection.
 * set(): Updates some values of an Item. It also works on Collections, updating all its Items.
 * filter(): Filters the Items of a Collection.
+* count(): Counts the Items of a Collection.
+* remove(): Removes an Item from a Collection.
+* __unset(): Removes a property from an Item or from all the Items of a Collection.
 
 ``` php
 $mutation->book->chapters->upsert->filter(['id_chapter' => 2])->pages->upsert->add([
@@ -276,10 +279,21 @@ $mutation->book->chapters->upsert->filter(['id_chapter' => 2])->pages->upsert->a
     'id_page'           => 3,
     'has_illustrations' => false,
 ]);
+
 $mutation->book->chapters->upsert->pages->upsert->filter([
     'id_chapter' => 2,
     'id_page'    => 2,
 ])->set(['has_illustrations' => true]);
+
+$itemToRemove = new MutationItem([
+    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+    'id_chapter'        => 2,
+    'id_page'           => 1,
+    'has_illustrations' => false,
+]);
+$mutation->book->chapters->upsert->files->upsert->remove($itemToRemove);
+
+unset($mutation->book->chapters->upsert->pov);
 
 /**
  * $mutation = new MutationItem([
@@ -293,22 +307,14 @@ $mutation->book->chapters->upsert->pages->upsert->filter([
  *                     'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *                     'id_chapter' => 1,
  *                     'name'       => 'Chapter One',
- *                     'pov'        => 'first person',
  *                     'pages'      => new QueryCollection([]),
  *                 ]),
  *                 new MutationItem([
  *                     'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *                     'id_chapter' => 2,
  *                     'name'       => 'Chapter two',
- *                     'pov'        => 'third person',
  *                     'pages'      => new MutationItem([
  *                         'upsert' => new MutationCollection([
- *                             new MutationItem([
- *                                 'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *                                 'id_chapter'        => 2,
- *                                 'id_page'           => 1,
- *                                 'has_illustrations' => false,
- *                             ]),
  *                             new MutationItem([
  *                                 'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *                                 'id_chapter'        => 2,
@@ -362,7 +368,6 @@ So the final variables sent to the query would be:
  *                     'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *                     'id_chapter' => 2,
  *                     'name'       => 'Chapter two',
- *                     'pov'        => 'third person',
  *                     'pages'      => [
  *                         'upsert' => [
  *                             [
