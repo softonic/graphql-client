@@ -47,6 +47,17 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
         }
     }
 
+    public function has(array $itemData): bool
+    {
+        foreach ($this->arguments as $argument) {
+            if ($argument->has($itemData)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function set(array $data): void
     {
         foreach ($this->arguments as $argument) {
@@ -75,9 +86,7 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
         $filteredData = [];
         if ($this->areAllArgumentsCollections()) {
             foreach ($this->arguments as $argument) {
-                $filteredItems = $this->filterItems($argument->arguments, $filters);
-
-                $filteredData[] = new FilteredCollection($filteredItems, $this->config);
+                $filteredData[] = $argument->filter($filters);
             }
         } else {
             $filteredData = $this->filterItems($this->arguments, $filters);

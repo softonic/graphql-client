@@ -1715,6 +1715,50 @@ class MutationTest extends TestCase
         }
     }
 
+    public function testWhenIteratingACollectionAndOneItemIsEmpty()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([]),
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book);
+
+        $expectedLine = [
+            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_chapter'        => 2,
+            'id_page'           => 1,
+            'has_illustrations' => false,
+        ];
+        foreach ($mutation->book->chapters->upsert->pages->upsert as $line) {
+            $this->assertEquals($expectedLine, $line->toArray());
+        }
+    }
+
     public function testWhenFourthLevelItemsAreCounted()
     {
         $book = new QueryItem([
@@ -2119,6 +2163,106 @@ class MutationTest extends TestCase
             ],
         ];
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+    }
+
+    public function testWhenFourthLevelItemsExistenceIsChecked()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 30,
+                                ]),
+                            ]),
+                        ]),
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 2,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 1,
+                                    'words_count' => 35,
+                                ]),
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 1,
+                                    'id_page'     => 2,
+                                    'id_line'     => 2,
+                                    'words_count' => 40,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                            'lines'             => new QueryCollection([
+                                new QueryItem([
+                                    'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter'  => 2,
+                                    'id_page'     => 1,
+                                    'id_line'     => 1,
+                                    'words_count' => 45,
+                                ]),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = new Mutation($this->itemConfigMock, $book, true);
+
+        $lines = $mutation->book->chapters->upsert->pages->upsert->lines->upsert;
+
+        $itemDataThatExists = [
+            'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_chapter'  => 1,
+            'id_page'     => 2,
+            'id_line'     => 1,
+            'words_count' => 35,
+        ];
+        $this->assertTrue($lines->has($itemDataThatExists));
+        $itemDataThatDoesNotExist = [
+            'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_chapter'  => 2,
+            'id_page'     => 1,
+            'id_line'     => 2,
+            'words_count' => 50,
+        ];
+        $this->assertFalse($lines->has($itemDataThatDoesNotExist));
     }
 
     public function testWhenFourthLevelItemsAreUnset()

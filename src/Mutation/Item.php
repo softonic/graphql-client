@@ -67,6 +67,11 @@ class Item implements MutationObject, \JsonSerializable
         $this->hasChanged = true;
     }
 
+    public function has(array $data): bool
+    {
+        return $data === $this->arguments;
+    }
+
     public function set(array $data): void
     {
         foreach ($data as $key => $value) {
