@@ -118,8 +118,8 @@ class ClientTest extends TestCase
 
         $query     = $this->getQueryWithVariables();
         $variables = [
-            'idProgram' => '642e69c0-9b2e-11e6-9850-00163ed833e7',
-            'page'      => 'nl',
+            'idFoo' => '642e69c0-9b2e-11e6-9850-00163ed833e7',
+            'page'      => 1,
         ];
 
         $this->mockGraphqlResponseBuilder->expects($this->once())
@@ -150,7 +150,7 @@ class ClientTest extends TestCase
         $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
 
         $query     = $this->getMutationQuery();
-        $variables = new Mutation([], new Item(['idProgram' => '642e69c0-9b2e-11e6-9850-00163ed833e7']));
+        $variables = Mutation::build([], new Item(['idFoo' => '642e69c0-9b2e-11e6-9850-00163ed833e7']));
 
         $this->mockGraphqlResponseBuilder->expects($this->once())
             ->method('build')
