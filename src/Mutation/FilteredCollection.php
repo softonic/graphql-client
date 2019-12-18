@@ -37,6 +37,10 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
             $items[] = $argument->{$key};
         }
 
+        /*$childrenConfig = array_key_exists($key, $this->config) ? $this->config[$key]->children : [];
+
+        return new Collection($items, $childrenConfig);*/
+
         return new Collection($items, $this->config[$key]->children);
     }
 
@@ -50,7 +54,9 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
     public function has(array $itemData): bool
     {
         foreach ($this->arguments as $argument) {
-            if ($argument->has($itemData)) {
+            $method = $argument instanceof FilteredCollection ? 'has' : 'exists';
+
+            if ($argument->$method($itemData)) {
                 return true;
             }
         }
@@ -142,6 +148,10 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
 
     public function jsonSerialize(): array
     {
+        if (!$this->hasChildren()) {
+            return [];
+        }
+
         $items = [];
         foreach ($this->arguments as $item) {
             if ($item->hasChanged()) {

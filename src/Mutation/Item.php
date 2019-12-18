@@ -60,14 +60,19 @@ class Item implements MutationObject, \JsonSerializable
         $this->hasChanged = true;
     }
 
-    public function __unset($key): void
+    public function __unset(string $key): void
     {
         unset($this->arguments[$key]);
 
         $this->hasChanged = true;
     }
 
-    public function has(array $data): bool
+    public function has(string $key): bool
+    {
+        return array_key_exists($key, $this->arguments);
+    }
+
+    public function exists(array $data): bool
     {
         return $data === $this->arguments;
     }
@@ -87,7 +92,17 @@ class Item implements MutationObject, \JsonSerializable
 
         $item = [];
         foreach ($this->arguments as $key => $value) {
-            $item[$key] = $value instanceof \JsonSerializable ? $value->jsonSerialize() : $value;
+            if ($value instanceof FilteredCollection && !$value->hasChildren()) {
+                continue;
+            }
+
+            if ($value instanceof \JsonSerializable) {
+                if (!empty($valueSerialized = $value->jsonSerialize())) {
+                    $item[$key] = $valueSerialized;
+                }
+            } else {
+                $item[$key] = $value;
+            }
         }
 
         return $item;
