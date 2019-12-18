@@ -37,10 +37,6 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
             $items[] = $argument->{$key};
         }
 
-        /*$childrenConfig = array_key_exists($key, $this->config) ? $this->config[$key]->children : [];
-
-        return new Collection($items, $childrenConfig);*/
-
         return new Collection($items, $this->config[$key]->children);
     }
 
