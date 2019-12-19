@@ -962,7 +962,7 @@ class MutationTest extends TestCase
         $mutation = Mutation::build($this->itemConfigMock, $book);
 
         $this->expectException(InaccessibleArgumentException::class);
-        $this->expectExceptionMessage('You cannot access a non existing collection');
+        $this->expectExceptionMessage("You cannot access a non existing collection 'pages'");
 
         $mutation->book->chapters->upsert->pages->upsert->add(
             [
