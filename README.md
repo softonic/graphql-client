@@ -228,34 +228,42 @@ $mutation = Mutation::build($mutationConfig, $data);
 
 /**
  * $mutation = new MutationItem([
- *      'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *      'id_author' => 1234,
- *      'genre'     => 'adventure',
- *      'chapters'  => new MutationCollection([
- *          new MutationItem([
- *              'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *              'id_chapter' => 1,
- *              'name'       => 'Chapter One',
- *              'pov'        => 'first person',
- *              'pages'      => new MutationCollection([]),
- *          ]),
- *          new MutationItem([
- *              'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *              'id_chapter' => 2,
- *              'name'       => 'Chapter two',
- *              'pov'        => 'third person',
- *              'pages'      => new MutationCollection([
+ *     'book' => new MutationItem([
+ *          'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *          'id_author' => 1234,
+ *          'genre'     => 'adventure',
+ *          'chapters'  => new MutationItem([
+ *              'upsert' => new MutationCollection([
  *                  new MutationItem([
- *                      'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *                      'id_chapter'        => 2,
- *                      'id_page'           => 1,
- *                      'has_illustrations' => false,
+ *                      'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                      'id_chapter' => 1,
+ *                      'name'       => 'Chapter One',
+ *                      'pov'        => 'first person',
+ *                      'pages'      => new MutationItem([
+ *                          'upsert' => new MutationCollection([]),
+ *                      ]),
  *                  ]),
  *                  new MutationItem([
- *                      'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *                      'id_chapter'        => 2,
- *                      'id_page'           => 2,
- *                      'has_illustrations' => false,
+ *                      'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                      'id_chapter' => 2,
+ *                      'name'       => 'Chapter two',
+ *                      'pov'        => 'third person',
+ *                      'pages'      => new MutationItem([
+ *                         'upsert' => new MutationCollection([
+ *                              new MutationItem([
+ *                                  'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                                  'id_chapter'        => 2,
+ *                                  'id_page'           => 1,
+ *                                  'has_illustrations' => false,
+ *                              ]),
+ *                              new MutationItem([
+ *                                  'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                                  'id_chapter'        => 2,
+ *                                  'id_page'           => 2,
+ *                                  'has_illustrations' => false,
+ *                              ]),
+ *                          ]),
+ *                      ]),
  *                  ]),
  *              ]),
  *          ]),
@@ -308,7 +316,9 @@ unset($mutation->book->chapters->upsert->pov);
  *                     'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *                     'id_chapter' => 1,
  *                     'name'       => 'Chapter One',
- *                     'pages'      => new QueryCollection([]),
+ *                      'pages'      => new MutationItem([
+ *                          'upsert' => new MutationCollection([]),
+ *                      ]),
  *                 ]),
  *                 new MutationItem([
  *                     'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
