@@ -277,7 +277,8 @@ Now we can modify the mutation data using the following methods:
 * set(): Updates some values of an Item. It also works on Collections, updating all its Items.
 * filter(): Filters the Items of a Collection.
 * count(): Counts the Items of a Collection.
-* has(): Checks whether a Collection has an Item with the provided data or not. Or if an Item has an argument.
+* has(): Checks whether an Item has an argument or not. Works on Collections too. Dot notation is also allowed.
+* hasItem(): Checks whether a Collection has an Item with the provided data or not.
 * remove(): Removes an Item from a Collection.
 * __unset(): Removes a property from an Item or from all the Items of a Collection.
 

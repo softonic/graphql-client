@@ -668,6 +668,49 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
+    public function testHasMethodForThirdLevelItems()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 1,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 1,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        $mutation = Mutation::build($this->itemConfigMock, $book);
+
+        $this->assertTrue($mutation->book->has('chapters.upsert.pages'));
+        $this->assertFalse($mutation->book->has('chapters.upsert.invalid'));
+        $this->assertTrue($mutation->book->has('chapters.upsert.pages.upsert.has_illustrations'));
+        $this->assertFalse($mutation->book->has('chapters.upsert.pages.upsert.invalid'));
+        $this->assertTrue($mutation->book->chapters->has('upsert.pages.upsert.has_illustrations'));
+        $this->assertFalse($mutation->book->chapters->has('upsert.pages.upsert.invalid'));
+        $this->assertTrue($mutation->book->chapters->upsert->has('pages.upsert.has_illustrations'));
+        $this->assertFalse($mutation->book->chapters->upsert->has('pages.upsert.invalid'));
+        $this->assertFalse($mutation->book->has('not_existing.upsert.invalid'));
+    }
+
     public function testWhenThirdLevelItemsAreUpdated()
     {
         $book = new QueryItem([
@@ -2262,7 +2305,7 @@ class MutationTest extends TestCase
             'id_line'     => 1,
             'words_count' => 35,
         ];
-        $this->assertTrue($lines->has($itemDataThatExists));
+        $this->assertTrue($lines->hasItem($itemDataThatExists));
         $itemDataThatDoesNotExist = [
             'id_book'     => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
             'id_chapter'  => 2,
@@ -2270,7 +2313,7 @@ class MutationTest extends TestCase
             'id_line'     => 2,
             'words_count' => 50,
         ];
-        $this->assertFalse($lines->has($itemDataThatDoesNotExist));
+        $this->assertFalse($lines->hasItem($itemDataThatDoesNotExist));
     }
 
     public function testWhenFourthLevelItemsAreUnset()

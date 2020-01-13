@@ -69,7 +69,20 @@ class Item implements MutationObject, \JsonSerializable
 
     public function has(string $key): bool
     {
-        return array_key_exists($key, $this->arguments);
+        $keyPath  = explode('.', $key);
+        $firstKey = array_shift($keyPath);
+
+        if (!array_key_exists($firstKey, $this->arguments)) {
+            return false;
+        }
+
+        if (empty($keyPath)) {
+            return true;
+        }
+
+        $nextKey = implode('.', $keyPath);
+
+        return $this->arguments[$firstKey]->has($nextKey);
     }
 
     public function exists(array $data): bool
