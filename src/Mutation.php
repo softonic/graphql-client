@@ -3,33 +3,123 @@
 namespace Softonic\GraphQL;
 
 use Softonic\GraphQL\Config\MutationTypeConfig;
+use Softonic\GraphQL\Mutation\Collection as MutationCollection;
+use Softonic\GraphQL\Mutation\Item as MutationItem;
 use Softonic\GraphQL\Mutation\MutationObject;
+use Softonic\GraphQL\Query\Collection as QueryCollection;
+use Softonic\GraphQL\Query\Item as QueryItem;
 use Softonic\GraphQL\Query\QueryObject;
 
-class Mutation implements \JsonSerializable
+class Mutation
 {
+    const SOURCE_ROOT_PATH = '.';
+
     /**
-     * @var MutationObject
+     * @var array
      */
-    private $mutation;
+    private static $config;
+
+    /**
+     * @var bool
+     */
+    private static $hasChanged;
+
+    /**
+     * @var MutationTypeConfig
+     */
+    private static $mutationTypeConfig;
 
     /**
      * @param array<MutationTypeConfig> $config
      */
-    public function __construct(array $config, QueryObject $source, bool $fromMutation = false)
+    public static function build(array $config, QueryObject $source, bool $fromMutation = false): MutationObject
     {
-        $mutationBuilder = new MutationBuilder($config, $source, $fromMutation);
+        static::$config     = $config;
+        static::$hasChanged = $fromMutation;
 
-        $this->mutation = $mutationBuilder->build();
+        $mutationVariables = [];
+        foreach (static::$config as $variableName => $mutationTypeConfig) {
+            static::$mutationTypeConfig = $mutationTypeConfig;
+            $path                       = self::SOURCE_ROOT_PATH;
+            $config                     = $mutationTypeConfig->get($path);
+            if ($config->type === MutationCollection::class) {
+                $arguments = [];
+                foreach ($source as $sourceItem) {
+                    $mutationItemArguments = static::generateMutationArguments($sourceItem, $path);
+
+                    $arguments[] = new MutationItem($mutationItemArguments, $config->children, static::$hasChanged);
+                }
+
+                $mutationVariables[$variableName] = new $config->type(
+                    $arguments,
+                    $config->children,
+                    static::$hasChanged
+                );
+            } else {
+                $arguments = static::generateMutationArguments($source, $path);
+
+                $mutationVariables[$variableName] = new $config->type(
+                    $arguments,
+                    $config->children,
+                    static::$hasChanged
+                );
+            }
+        }
+
+        return new MutationItem($mutationVariables, static::$config, static::$hasChanged);
     }
 
-    public function __get(string $key): MutationObject
+    private static function generateMutationArguments(QueryItem $source, string $path): array
     {
-        return $this->mutation->{$key};
+        $arguments = [];
+        foreach ($source as $sourceKey => $sourceValue) {
+            if ($sourceValue instanceof QueryObject) {
+                $childPath   = static::createPathFromParent($path, $sourceKey);
+                $childConfig = static::$mutationTypeConfig->get($childPath);
+
+                if ($sourceValue instanceof QueryCollection) {
+                    $arguments[$sourceKey] = static::mutateChild($childConfig, $sourceValue, $childPath);
+                } else {
+                    $mutationItemArguments = static::generateMutationArguments($sourceValue, $childPath);
+
+                    $arguments[$sourceKey] = new MutationItem(
+                        $mutationItemArguments,
+                        $childConfig->children,
+                        static::$hasChanged
+                    );
+                }
+            } else {
+                $arguments[$sourceKey] = $sourceValue;
+            }
+        }
+
+        return $arguments;
     }
 
-    public function jsonSerialize(): array
+    private static function createPathFromParent(string $parent, string $child): string
     {
-        return $this->mutation->jsonSerialize();
+        return ('.' === $parent) ? ".{$child}" : "{$parent}.{$child}";
+    }
+
+    private static function mutateChild(
+        MutationTypeConfig $config,
+        QueryCollection $sourceCollection,
+        string $path
+    ): MutationObject {
+        $arguments = [];
+        if (is_null($config->linksTo)) {
+            foreach ($config->children as $key => $childConfig) {
+                $childPath       = static::createPathFromParent($path, $key);
+                $arguments[$key] = static::mutateChild($childConfig, $sourceCollection, $childPath);
+            }
+        } else {
+            foreach ($sourceCollection as $sourceItem) {
+                $itemArguments = static::generateMutationArguments($sourceItem, $path);
+
+                $arguments[] = new MutationItem($itemArguments, $config->children, static::$hasChanged);
+            }
+        }
+
+        return new $config->type($arguments, $config->children, static::$hasChanged);
     }
 }

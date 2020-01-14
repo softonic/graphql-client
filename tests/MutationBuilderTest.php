@@ -41,8 +41,7 @@ class MutationBuilderTest extends TestCase
             'genre'     => null,
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->simpleConfigMock, $queryItem);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->simpleConfigMock, $queryItem);
 
         $expectedMutationArguments = [
             'book' => [
@@ -63,8 +62,7 @@ class MutationBuilderTest extends TestCase
             'chapters'  => new QueryCollection([]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->simpleConfigMock, $queryItem);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->simpleConfigMock, $queryItem);
 
         $expectedMutationArguments = [
             'book' => [
@@ -97,8 +95,7 @@ class MutationBuilderTest extends TestCase
             ]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->simpleConfigMock, $queryItem);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->simpleConfigMock, $queryItem);
 
         $expectedMutationArguments = [
             'book' => [
@@ -142,8 +139,7 @@ class MutationBuilderTest extends TestCase
             ]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->complexConfigMock, $queryItem);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
 
         $expectedMutationArguments = [
             'book' => [
@@ -199,8 +195,7 @@ class MutationBuilderTest extends TestCase
             ]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->complexConfigMock, $queryItem);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
 
         $expectedMutationArguments = [
             'book' => [
@@ -292,8 +287,7 @@ class MutationBuilderTest extends TestCase
             ]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->complexConfigMock, $queryItem);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
 
         $expectedMutationArguments = [
             'book' => [
@@ -434,8 +428,7 @@ class MutationBuilderTest extends TestCase
             ]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->complexConfigMock, $queryItem);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
 
         $expectedMutationArguments = [
             'book' => [
@@ -550,8 +543,7 @@ class MutationBuilderTest extends TestCase
             ]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->complexConfigMock, $queryItem);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
 
         $expectedMutationArguments = [
             'book' => [
@@ -592,8 +584,7 @@ class MutationBuilderTest extends TestCase
             ]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->collectionConfigMock, $queryCollection);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->collectionConfigMock, $queryCollection);
 
         $expectedMutationArguments = [
             'books' => [
@@ -641,8 +632,7 @@ class MutationBuilderTest extends TestCase
             ]),
         ]);
 
-        $mutationBuilder = new MutationBuilder($this->collectionConfigMock, $queryCollection);
-        $mutation        = $mutationBuilder->build();
+        $mutation = Mutation::build($this->collectionConfigMock, $queryCollection);
 
         $expectedMutationArguments = [
             'books' => [

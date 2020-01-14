@@ -4,9 +4,9 @@ namespace Softonic\GraphQL\Mutation;
 
 interface MutationObject
 {
-    public function has(array $data): bool;
-
     public function set(array $data): void;
+
+    public function has(string $key): bool;
 
     public function hasChanged(): bool;
 

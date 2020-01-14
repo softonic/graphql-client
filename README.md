@@ -224,38 +224,46 @@ $mutationConfig = [
     ],   
 ];
 
-$mutation = new Mutation($mutationConfig, $data);
+$mutation = Mutation::build($mutationConfig, $data);
 
 /**
  * $mutation = new MutationItem([
- *      'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *      'id_author' => 1234,
- *      'genre'     => 'adventure',
- *      'chapters'  => new MutationCollection([
- *          new MutationItem([
- *              'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *              'id_chapter' => 1,
- *              'name'       => 'Chapter One',
- *              'pov'        => 'first person',
- *              'pages'      => new MutationCollection([]),
- *          ]),
- *          new MutationItem([
- *              'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *              'id_chapter' => 2,
- *              'name'       => 'Chapter two',
- *              'pov'        => 'third person',
- *              'pages'      => new MutationCollection([
+ *     'book' => new MutationItem([
+ *          'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *          'id_author' => 1234,
+ *          'genre'     => 'adventure',
+ *          'chapters'  => new MutationItem([
+ *              'upsert' => new MutationCollection([
  *                  new MutationItem([
- *                      'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *                      'id_chapter'        => 2,
- *                      'id_page'           => 1,
- *                      'has_illustrations' => false,
+ *                      'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                      'id_chapter' => 1,
+ *                      'name'       => 'Chapter One',
+ *                      'pov'        => 'first person',
+ *                      'pages'      => new MutationItem([
+ *                          'upsert' => new MutationCollection([]),
+ *                      ]),
  *                  ]),
  *                  new MutationItem([
- *                      'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
- *                      'id_chapter'        => 2,
- *                      'id_page'           => 2,
- *                      'has_illustrations' => false,
+ *                      'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                      'id_chapter' => 2,
+ *                      'name'       => 'Chapter two',
+ *                      'pov'        => 'third person',
+ *                      'pages'      => new MutationItem([
+ *                         'upsert' => new MutationCollection([
+ *                              new MutationItem([
+ *                                  'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                                  'id_chapter'        => 2,
+ *                                  'id_page'           => 1,
+ *                                  'has_illustrations' => false,
+ *                              ]),
+ *                              new MutationItem([
+ *                                  'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+ *                                  'id_chapter'        => 2,
+ *                                  'id_page'           => 2,
+ *                                  'has_illustrations' => false,
+ *                              ]),
+ *                          ]),
+ *                      ]),
  *                  ]),
  *              ]),
  *          ]),
@@ -269,7 +277,8 @@ Now we can modify the mutation data using the following methods:
 * set(): Updates some values of an Item. It also works on Collections, updating all its Items.
 * filter(): Filters the Items of a Collection.
 * count(): Counts the Items of a Collection.
-* has(): Checks whether a Collection has an Item with the provided data or not.
+* has(): Checks whether an Item has an argument or not. Works on Collections too. Dot notation is also allowed.
+* hasItem(): Checks whether a Collection has an Item with the provided data or not.
 * remove(): Removes an Item from a Collection.
 * __unset(): Removes a property from an Item or from all the Items of a Collection.
 
@@ -308,7 +317,9 @@ unset($mutation->book->chapters->upsert->pov);
  *                     'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
  *                     'id_chapter' => 1,
  *                     'name'       => 'Chapter One',
- *                     'pages'      => new QueryCollection([]),
+ *                      'pages'      => new MutationItem([
+ *                          'upsert' => new MutationCollection([]),
+ *                      ]),
  *                 ]),
  *                 new MutationItem([
  *                     'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
