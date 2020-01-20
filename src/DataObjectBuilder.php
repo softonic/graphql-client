@@ -39,13 +39,17 @@ class DataObjectBuilder
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 if ($this->isAList($value)) {
-                    $items = [];
-                    foreach ($value as $objectData) {
-                        $itemData = $this->build($objectData, $objects);
-                        $items[]  = (new $objects[self::ITEM]($itemData));
-                    }
+                    if (empty($value) || is_array($value[0])) {
+                        $items = [];
+                        foreach ($value as $objectData) {
+                            $itemData = $this->build($objectData, $objects);
+                            $items[]  = (new $objects[self::ITEM]($itemData));
+                        }
 
-                    $dataObject[$key] = (new $objects[self::COLLECTION]($items));
+                        $dataObject[$key] = (new $objects[self::COLLECTION]($items));
+                    } else {
+                        $dataObject[$key] = $value;
+                    }
                 } else {
                     $itemData         = $this->build($value, $objects);
                     $dataObject[$key] = (new $objects[self::ITEM]($itemData));
