@@ -67,6 +67,30 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
+    public function testWhenDataHasAQueryItemWithAnArrayOfStringsArgument()
+    {
+        $data = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'comments'  => ['Good', 'Bad'],
+            ],
+        ];
+
+        $dataObject = $this->builder->buildQuery($data);
+
+        $expectedDataObject = [
+            'book' => new QueryItem([
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'comments'  => ['Good', 'Bad'],
+            ]),
+        ];
+        $this->assertEquals($expectedDataObject, $dataObject);
+    }
+
     public function testWhenDataHasAnArrayOfQueryItems()
     {
         $data = [
