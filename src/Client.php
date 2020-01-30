@@ -23,6 +23,7 @@ class Client
     public function query(string $query, array $variables = null): Response
     {
         $options = [
+            'http_errors' => false,
             'json' => [
                 'query' => $query,
             ],
