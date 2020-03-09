@@ -31,6 +31,6 @@ class MutationTypeConfig
             return $this->{$propertyName};
         }
 
-        return $this->children[$propertyName];
+        return $this->children[$propertyName] ?? null;
     }
 }
