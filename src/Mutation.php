@@ -76,6 +76,10 @@ class Mutation
             $childPath   = static::createPathFromParent($path, $sourceKey);
             $childConfig = static::$mutationTypeConfig->get($childPath);
 
+            if (is_null($childConfig)) {
+                break;
+            }
+
             if ($sourceValue instanceof QueryObject) {
                 if ($sourceValue instanceof QueryCollection) {
                     $arguments[$sourceKey] = static::mutateChild($childConfig, $sourceValue, $childPath);
