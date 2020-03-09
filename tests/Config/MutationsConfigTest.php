@@ -26,6 +26,9 @@ class MutationsConfigTest extends TestCase
                                     ],
                                 ],
                             ],
+                            'title'    => [
+                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                            ],
                         ],
                     ],
                 ],
@@ -40,10 +43,16 @@ class MutationsConfigTest extends TestCase
         $chaptersConfig->type     = Item::class;
         $chaptersConfig->children = ['upsert' => $upsertConfig];
 
+        $titleConfig       = new MutationTypeConfig();
+        $titleConfig->type = MutationTypeConfig::SCALAR_DATA_TYPE;
+
         $bookConfig           = new MutationTypeConfig();
         $bookConfig->type     = Item::class;
         $bookConfig->linksTo  = '.';
-        $bookConfig->children = ['chapters' => $chaptersConfig];
+        $bookConfig->children = [
+            'chapters' => $chaptersConfig,
+            'title'    => $titleConfig,
+        ];
 
         $this->assertEquals(['book' => $bookConfig], $mutationsConfig->get('ReplaceBook'));
     }

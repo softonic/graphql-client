@@ -4,6 +4,7 @@ namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
 use Softonic\GraphQL\Config\MutationsConfig;
+use Softonic\GraphQL\Config\MutationTypeConfig;
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 use Softonic\GraphQL\Mutation\Collection as MutationCollection;
 use Softonic\GraphQL\Mutation\Item as MutationItem;
@@ -2630,6 +2631,15 @@ class MutationTest extends TestCase
                         'linksTo'  => '.',
                         'type'     => MutationItem::class,
                         'children' => [
+                            'id_book'   => [
+                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                            ],
+                            'id_author' => [
+                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                            ],
+                            'genre'     => [
+                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                            ],
                             'chapters'  => [
                                 'type'     => MutationItem::class,
                                 'children' => [
@@ -2637,19 +2647,63 @@ class MutationTest extends TestCase
                                         'linksTo'  => '.chapters',
                                         'type'     => MutationCollection::class,
                                         'children' => [
-                                            'pages' => [
+                                            'id_book'    => [
+                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                            ],
+                                            'id_chapter' => [
+                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                            ],
+                                            'name'       => [
+                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                            ],
+                                            'pov'        => [
+                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                            ],
+                                            'header'        => [
+                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                            ],
+                                            'pages'      => [
                                                 'type'     => MutationItem::class,
                                                 'children' => [
                                                     'upsert' => [
                                                         'linksTo'  => '.chapters.pages',
                                                         'type'     => MutationCollection::class,
                                                         'children' => [
-                                                            'lines' => [
+                                                            'id_book'           => [
+                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                            ],
+                                                            'id_chapter'        => [
+                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                            ],
+                                                            'id_page'           => [
+                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                            ],
+                                                            'has_illustrations' => [
+                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                            ],
+                                                            'lines'             => [
                                                                 'type'     => MutationItem::class,
                                                                 'children' => [
                                                                     'upsert' => [
-                                                                        'linksTo' => '.chapters.pages.lines',
-                                                                        'type'    => MutationCollection::class,
+                                                                        'linksTo'  => '.chapters.pages.lines',
+                                                                        'type'     => MutationCollection::class,
+                                                                        'children' => [
+                                                                            'id_book'     => [
+                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                                            ],
+                                                                            'id_chapter'  => [
+                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                                            ],
+                                                                            'id_page'     => [
+                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                                            ],
+                                                                            'id_line'     => [
+                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                                            ],
+                                                                            'words_count' => [
+                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                                                            ],
+                                                                        ],
                                                                     ],
                                                                 ],
                                                             ],
@@ -2665,8 +2719,16 @@ class MutationTest extends TestCase
                                 'type'     => MutationItem::class,
                                 'children' => [
                                     'upsert' => [
-                                        'linksTo' => '.languages',
-                                        'type'    => MutationCollection::class,
+                                        'linksTo'  => '.languages',
+                                        'type'     => MutationCollection::class,
+                                        'children' => [
+                                            'id_book'     => [
+                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                            ],
+                                            'id_language' => [
+                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],
@@ -2675,8 +2737,40 @@ class MutationTest extends TestCase
                 ],
                 'ReplaceBooks' => [
                     'books' => [
-                        'linksTo' => '.',
-                        'type'    => MutationCollection::class,
+                        'linksTo'  => '.',
+                        'type'     => MutationCollection::class,
+                        'children' => [
+                            'id_book'   => [
+                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                            ],
+                            'id_author' => [
+                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                            ],
+                            'genre'     => [
+                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                            ],
+                            'chapters'  => [
+                                'linksTo'  => '.chapters',
+                                'type'     => MutationCollection::class,
+                                'children' => [
+                                    'id_book'    => [
+                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                    ],
+                                    'id_chapter' => [
+                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                    ],
+                                    'name'       => [
+                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                    ],
+                                    'pov'        => [
+                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                    ],
+                                    'header'        => [
+                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ]
