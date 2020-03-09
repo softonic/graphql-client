@@ -8,6 +8,8 @@ class MutationTypeConfig
 {
     use JsonPathAccessor;
 
+    const SCALAR_DATA_TYPE = 'scalar';
+
     /**
      * @var string
      */
@@ -29,6 +31,6 @@ class MutationTypeConfig
             return $this->{$propertyName};
         }
 
-        return $this->children[$propertyName];
+        return $this->children[$propertyName] ?? null;
     }
 }

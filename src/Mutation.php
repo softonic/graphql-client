@@ -73,10 +73,14 @@ class Mutation
     {
         $arguments = [];
         foreach ($source as $sourceKey => $sourceValue) {
-            if ($sourceValue instanceof QueryObject) {
-                $childPath   = static::createPathFromParent($path, $sourceKey);
-                $childConfig = static::$mutationTypeConfig->get($childPath);
+            $childPath   = static::createPathFromParent($path, $sourceKey);
+            $childConfig = static::$mutationTypeConfig->get($childPath);
 
+            if (is_null($childConfig)) {
+                break;
+            }
+
+            if ($sourceValue instanceof QueryObject) {
                 if ($sourceValue instanceof QueryCollection) {
                     $arguments[$sourceKey] = static::mutateChild($childConfig, $sourceValue, $childPath);
                 } else {
@@ -88,7 +92,7 @@ class Mutation
                         static::$hasChanged
                     );
                 }
-            } else {
+            } elseif ($childConfig->type === MutationTypeConfig::SCALAR_DATA_TYPE) {
                 $arguments[$sourceKey] = $sourceValue;
             }
         }
