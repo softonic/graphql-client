@@ -3,35 +3,54 @@
 namespace Softonic\GraphQL\Traits;
 
 use PHPUnit\Framework\TestCase;
-
-class TestObject
-{
-    use JsonPathAccessor;
-}
+use Softonic\GraphQL\Config\MutationTypeConfig;
+use Softonic\GraphQL\Mutation\Collection;
+use Softonic\GraphQL\Mutation\Item;
 
 class JsonPathAccessorTest extends TestCase
 {
     public function testWhenRootIsRetrieved()
     {
-        $obj = new TestObject();
+        $obj = new MutationTypeConfig();
 
         $this->assertSame($obj, $obj->get('.'));
     }
 
-    public function testWhenSimplePathIsRetrieved()
+    public function testWhenChildrenAreRetrieved()
     {
-        $obj = new TestObject();
-        $obj->foo = 'bar';
+        $upsertConfig          = new MutationTypeConfig();
+        $upsertConfig->type    = Collection::class;
+        $upsertConfig->linksTo = '.chapters';
 
-        $this->assertEquals('bar', $obj->get('.foo'));
+        $chaptersConfig           = new MutationTypeConfig();
+        $chaptersConfig->type     = Item::class;
+        $chaptersConfig->children = ['upsert' => $upsertConfig];
+
+        $typeConfig       = new MutationTypeConfig();
+        $typeConfig->type = MutationTypeConfig::SCALAR_DATA_TYPE;
+
+        $bookConfig           = new MutationTypeConfig();
+        $bookConfig->type     = Item::class;
+        $bookConfig->linksTo  = '.';
+        $bookConfig->children = [
+            'chapters' => $chaptersConfig,
+            'type'     => $typeConfig,
+        ];
+
+        $this->assertEquals($chaptersConfig, $bookConfig->get('.chapters'));
+        $this->assertEquals($upsertConfig, $bookConfig->get('.chapters.upsert'));
+        // In this case, the child has the same name than a MutationTypeConfig attribute.
+        $this->assertEquals($typeConfig, $bookConfig->get('.type'));
     }
 
-    public function testWhenSecondLevelPathIsRetrieved()
+    public function testWhenObjectAttributesAreRetrieved()
     {
-        $obj = new TestObject();
-        $obj->foo = new TestObject();
-        $obj->foo->bar = 'bar';
+        $bookConfig           = new MutationTypeConfig();
+        $bookConfig->type     = Item::class;
+        $bookConfig->linksTo  = '.';
+        $bookConfig->children = [];
 
-        $this->assertEquals('bar', $obj->get('.foo.bar'));
+        $this->assertEquals(Item::class, $bookConfig->get('.type'));
+        $this->assertEquals('.', $bookConfig->get('.linksTo'));
     }
 }
