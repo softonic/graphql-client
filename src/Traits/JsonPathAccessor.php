@@ -14,7 +14,12 @@ trait JsonPathAccessor
         unset($attributes[0]);
 
         $attribute = array_shift($attributes);
-        $value     = $this->{$attribute};
+
+        /**
+         * This condition is needed because a child could have the same name than a MutationTypeConfig attribute
+         * (type, linksTo, children).
+         */
+        $value = $this->hasChild($attribute) ? $this->children[$attribute] : $this->{$attribute};
 
         if (!empty($attributes)) {
             $value = $value->get('.' . implode('.', $attributes));

@@ -33,4 +33,9 @@ class MutationTypeConfig
 
         return $this->children[$propertyName] ?? null;
     }
+
+    public function hasChild(string $key): bool
+    {
+        return array_key_exists($key, $this->children);
+    }
 }
