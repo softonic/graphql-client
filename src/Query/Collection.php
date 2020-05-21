@@ -32,4 +32,9 @@ class Collection implements QueryObject, \Iterator
 
         return new Collection(array_values($filteredItems));
     }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->arguments);
+    }
 }

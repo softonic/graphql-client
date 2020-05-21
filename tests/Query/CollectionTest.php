@@ -6,6 +6,30 @@ use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
 {
+    public function emptyCollectionProvider()
+    {
+        return [
+            'Empty collection' => [
+                'collection' => new Collection(),
+                'isEmpty'   => true,
+            ],
+            'Filled collection' => [
+                'collection' => new Collection(['key' => 'value']),
+                'isEmpty'   => false,
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider emptyCollectionProvider
+     */
+    public function checkEmptyCollection(Collection $collection, bool $isEmpty)
+    {
+        $this->assertSame($isEmpty, $collection->isEmpty());
+    }
+
     public function filterProvider()
     {
         return [
