@@ -4,6 +4,7 @@ namespace Softonic\GraphQL\DataObjects\Mutation;
 
 use Softonic\GraphQL\DataObjects\AbstractCollection;
 use Softonic\GraphQL\DataObjects\Mutation\Traits\MutationObjectHandler;
+use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
 class FilteredCollection extends AbstractCollection implements MutationObject, \IteratorAggregate, \JsonSerializable
 {
@@ -54,6 +55,10 @@ class FilteredCollection extends AbstractCollection implements MutationObject, \
 
     public function __get(string $key): Collection
     {
+        if (empty($this->arguments)) {
+            throw InaccessibleArgumentException::fromEmptyArguments($key);
+        }
+
         $items = [];
         foreach ($this->arguments as $argument) {
             $items[] = $argument->{$key};

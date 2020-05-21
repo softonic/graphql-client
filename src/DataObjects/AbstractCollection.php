@@ -14,8 +14,6 @@ abstract class AbstractCollection
         $this->arguments = $arguments;
     }
 
-//    abstract protected function newCollection($key);
-
     public function count(): int
     {
         $count = 0;
