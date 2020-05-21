@@ -6,7 +6,7 @@ use Softonic\GraphQL\Config\MutationTypeConfig;
 use Softonic\GraphQL\DataObjects\AbstractItem;
 use Softonic\GraphQL\DataObjects\Mutation\Traits\MutationObjectHandler;
 
-class Item extends AbstractItem implements MutationObject, \JsonSerializable
+class Item extends AbstractItem implements MutationObject
 {
     use MutationObjectHandler;
 
@@ -71,29 +71,6 @@ class Item extends AbstractItem implements MutationObject, \JsonSerializable
         $this->hasChanged = true;
     }
 
-    public function has(string $key): bool
-    {
-        $keyPath  = explode('.', $key);
-        $firstKey = array_shift($keyPath);
-
-        if (!array_key_exists($firstKey, $this->arguments)) {
-            return false;
-        }
-
-        if (empty($keyPath)) {
-            return true;
-        }
-
-        $nextKey = implode('.', $keyPath);
-
-        return $this->arguments[$firstKey]->has($nextKey);
-    }
-
-    public function exists(array $data): bool
-    {
-        return $data === $this->arguments;
-    }
-
     public function set(array $data): void
     {
         foreach ($data as $key => $value) {
@@ -107,21 +84,6 @@ class Item extends AbstractItem implements MutationObject, \JsonSerializable
             return [];
         }
 
-        $item = [];
-        foreach ($this->arguments as $key => $value) {
-            if ($value instanceof FilteredCollection && !$value->hasChildren()) {
-                continue;
-            }
-
-            if ($value instanceof \JsonSerializable) {
-                if (!empty($valueSerialized = $value->jsonSerialize())) {
-                    $item[$key] = $valueSerialized;
-                }
-            } else {
-                $item[$key] = $value;
-            }
-        }
-
-        return $item;
+        return parent::jsonSerialize();
     }
 }

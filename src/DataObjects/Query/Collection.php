@@ -3,7 +3,7 @@
 namespace Softonic\GraphQL\DataObjects\Query;
 
 use Softonic\GraphQL\DataObjects\AbstractCollection;
-use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
+use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 use Softonic\GraphQL\Traits\GqlIterator;
 
@@ -59,9 +59,7 @@ class Collection extends AbstractCollection implements QueryObject
 
         $items = [];
         foreach ($this->arguments as $item) {
-            if ($item->hasChanged()) {
-                $items[] = $item->jsonSerialize();
-            }
+            $items[] = $item->jsonSerialize();
         }
 
         return $items;
@@ -70,7 +68,7 @@ class Collection extends AbstractCollection implements QueryObject
     public function hasChildren(): bool
     {
         foreach ($this->arguments as $argument) {
-            if ($argument instanceof MutationObject) {
+            if ($argument instanceof DataObject) {
                 return true;
             }
         }

@@ -21,7 +21,7 @@ class Item extends AbstractItem implements QueryObject, \Iterator
 
     public function __get($key)
     {
-        return $this->arguments[$key];
+        return array_key_exists($key, $this->arguments) ? $this->arguments[$key] : null;
     }
 
     public function __set($key, $value)
