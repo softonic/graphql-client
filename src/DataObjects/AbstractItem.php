@@ -6,19 +6,9 @@ use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
 use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 use Softonic\GraphQL\DataObjects\Traits\ObjectHandler;
 
-class AbstractItem implements DataObject, \JsonSerializable
+abstract class AbstractItem extends AbstractObject implements DataObject
 {
     use ObjectHandler;
-
-    /**
-     * @var array
-     */
-    protected $arguments;
-
-    public function __construct(array $arguments)
-    {
-        $this->arguments = $arguments;
-    }
 
     public function has(string $key): bool
     {

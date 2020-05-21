@@ -7,19 +7,9 @@ use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 use Softonic\GraphQL\DataObjects\Traits\ObjectHandler;
 
-abstract class AbstractCollection implements DataObject, \IteratorAggregate, \JsonSerializable
+abstract class AbstractCollection extends AbstractObject implements DataObject, \IteratorAggregate
 {
     use ObjectHandler;
-
-    /**
-     * @var array
-     */
-    protected $arguments = [];
-
-    public function __construct(array $arguments = [])
-    {
-        $this->arguments = $arguments;
-    }
 
     public function count(): int
     {
@@ -115,6 +105,4 @@ abstract class AbstractCollection implements DataObject, \IteratorAggregate, \Js
 
         return array_values($filteredItems);
     }
-
-    abstract public function jsonSerialize(): array;
 }
