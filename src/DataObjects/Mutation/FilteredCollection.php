@@ -66,11 +66,6 @@ class FilteredCollection extends AbstractCollection implements MutationObject
         return $items;
     }
 
-    protected function buildFilteredCollection($data)
-    {
-        return new FilteredCollection($data, $this->config);
-    }
-
     public function __unset($key): void
     {
         foreach ($this->arguments as $argument) {
@@ -87,5 +82,10 @@ class FilteredCollection extends AbstractCollection implements MutationObject
                 unset($this->arguments[$key]);
             }
         }
+    }
+
+    protected function buildFilteredCollection($data)
+    {
+        return new FilteredCollection($data, $this->config);
     }
 }

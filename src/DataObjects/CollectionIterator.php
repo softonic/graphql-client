@@ -2,7 +2,9 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
-class CollectionIterator extends \RecursiveArrayIterator
+use RecursiveArrayIterator;
+
+class CollectionIterator extends RecursiveArrayIterator
 {
     public function valid(): bool
     {
@@ -32,6 +34,8 @@ class CollectionIterator extends \RecursiveArrayIterator
 
     public function getChildren()
     {
-        return parent::current()->getIterator()->getInnerIterator();
+        return parent::current()
+            ->getIterator()
+            ->getInnerIterator();
     }
 }

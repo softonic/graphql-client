@@ -2,6 +2,7 @@
 
 namespace Softonic\GraphQL\DataObjects\Query;
 
+use JsonSerializable;
 use Softonic\GraphQL\DataObjects\AbstractCollection;
 use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
@@ -36,11 +37,6 @@ class Collection extends AbstractCollection implements QueryObject
         return false;
     }
 
-    protected function buildFilteredCollection($data)
-    {
-        return new Collection($data);
-    }
-
     public function jsonSerialize(): array
     {
         if (!$this->hasChildren()) {
@@ -70,9 +66,14 @@ class Collection extends AbstractCollection implements QueryObject
     {
         $item = [];
         foreach ($this->arguments as $key => $value) {
-            $item[$key] = $value instanceof \JsonSerializable ? $value->toArray() : $value;
+            $item[$key] = $value instanceof JsonSerializable ? $value->toArray() : $value;
         }
 
         return $item;
+    }
+
+    protected function buildFilteredCollection($data)
+    {
+        return new Collection($data);
     }
 }

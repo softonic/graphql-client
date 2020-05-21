@@ -2,7 +2,10 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
-abstract class AbstractObject implements \JsonSerializable
+use JsonSerializable;
+use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
+
+abstract class AbstractObject implements JsonSerializable, DataObject
 {
     /**
      * @var array

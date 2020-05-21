@@ -2,14 +2,25 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
-use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
+use IteratorAggregate;
+use RecursiveIteratorIterator;
 use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 use Softonic\GraphQL\DataObjects\Traits\ObjectHandler;
 
-abstract class AbstractCollection extends AbstractObject implements DataObject, \IteratorAggregate
+abstract class AbstractCollection extends AbstractObject implements IteratorAggregate
 {
     use ObjectHandler;
+
+    public function getIterator(): RecursiveIteratorIterator
+    {
+        return new RecursiveIteratorIterator(new CollectionIterator($this->arguments));
+    }
+
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
+    }
 
     public function count(): int
     {
@@ -23,16 +34,6 @@ abstract class AbstractCollection extends AbstractObject implements DataObject, 
         }
 
         return $count;
-    }
-
-    public function getIterator(): \RecursiveIteratorIterator
-    {
-        return new \RecursiveIteratorIterator(new CollectionIterator($this->arguments));
-    }
-
-    public function isEmpty(): bool
-    {
-        return $this->count() === 0;
     }
 
     public function has(string $key): bool
@@ -84,8 +85,6 @@ abstract class AbstractCollection extends AbstractObject implements DataObject, 
         return $this->buildFilteredCollection($filteredData);
     }
 
-    abstract protected function buildFilteredCollection($data);
-
     private function areAllArgumentsCollections(): bool
     {
         return (!empty($this->arguments[0]) && $this->arguments[0] instanceof AbstractCollection);
@@ -93,16 +92,21 @@ abstract class AbstractCollection extends AbstractObject implements DataObject, 
 
     private function filterItems(array $arguments, array $filters): array
     {
-        $filteredItems = array_filter($arguments, function ($item) use ($filters) {
-            foreach ($filters as $filterKey => $filterValue) {
-                if (!($item->{$filterKey} == $filterValue)) {
-                    return false;
+        $filteredItems = array_filter(
+            $arguments,
+            function ($item) use ($filters) {
+                foreach ($filters as $filterKey => $filterValue) {
+                    if (!($item->{$filterKey} == $filterValue)) {
+                        return false;
+                    }
                 }
-            }
 
-            return true;
-        });
+                return true;
+            }
+        );
 
         return array_values($filteredItems);
     }
+
+    abstract protected function buildFilteredCollection($data);
 }

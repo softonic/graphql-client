@@ -2,11 +2,11 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
-use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
+use JsonSerializable;
 use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 use Softonic\GraphQL\DataObjects\Traits\ObjectHandler;
 
-abstract class AbstractItem extends AbstractObject implements DataObject
+abstract class AbstractItem extends AbstractObject
 {
     use ObjectHandler;
 
@@ -51,7 +51,7 @@ abstract class AbstractItem extends AbstractObject implements DataObject
                 continue;
             }
 
-            if ($value instanceof \JsonSerializable) {
+            if ($value instanceof JsonSerializable) {
                 if (!empty($valueSerialized = $value->jsonSerialize())) {
                     $item[$key] = $valueSerialized;
                 }
