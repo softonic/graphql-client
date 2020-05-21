@@ -4,11 +4,9 @@ namespace Softonic\GraphQL\DataObjects;
 
 use JsonSerializable;
 use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
-use Softonic\GraphQL\DataObjects\Traits\ObjectHandler;
 
 abstract class AbstractItem extends AbstractObject
 {
-    use ObjectHandler;
 
     public function has(string $key): bool
     {

@@ -6,11 +6,9 @@ use IteratorAggregate;
 use RecursiveIteratorIterator;
 use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
-use Softonic\GraphQL\DataObjects\Traits\ObjectHandler;
 
 abstract class AbstractCollection extends AbstractObject implements IteratorAggregate
 {
-    use ObjectHandler;
 
     public function getIterator(): RecursiveIteratorIterator
     {
