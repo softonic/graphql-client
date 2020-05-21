@@ -1,6 +1,6 @@
 <?php
 
-namespace Softonic\GraphQL\Query;
+namespace Softonic\GraphQL\DataObjects\Query;
 
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +14,7 @@ class CollectionTest extends TestCase
                 'isEmpty'   => true,
             ],
             'Filled collection' => [
-                'collection' => new Collection(['key' => 'value']),
+                'collection' => new Collection([new Item(['key' => 'value'])]),
                 'isEmpty'   => false,
             ],
         ];

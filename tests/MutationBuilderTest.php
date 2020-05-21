@@ -5,10 +5,10 @@ namespace Softonic\GraphQL;
 use PHPUnit\Framework\TestCase;
 use Softonic\GraphQL\Config\MutationsConfig;
 use Softonic\GraphQL\Config\MutationTypeConfig;
-use Softonic\GraphQL\Mutation\Collection as MutationCollection;
-use Softonic\GraphQL\Mutation\Item as MutationItem;
-use Softonic\GraphQL\Query\Collection as QueryCollection;
-use Softonic\GraphQL\Query\Item as QueryItem;
+use Softonic\GraphQL\DataObjects\Mutation\Collection as MutationCollection;
+use Softonic\GraphQL\DataObjects\Mutation\Item as MutationItem;
+use Softonic\GraphQL\DataObjects\Query\Collection as QueryCollection;
+use Softonic\GraphQL\DataObjects\Query\Item as QueryItem;
 
 class MutationBuilderTest extends TestCase
 {

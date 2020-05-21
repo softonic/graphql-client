@@ -1,10 +1,11 @@
 <?php
 
-namespace Softonic\GraphQL\Query;
+namespace Softonic\GraphQL\DataObjects\Query;
 
+use Softonic\GraphQL\DataObjects\AbstractItem;
 use Softonic\GraphQL\Traits\GqlIterator;
 
-class Item implements QueryObject, \Iterator
+class Item extends AbstractItem implements QueryObject, \Iterator
 {
     use GqlIterator;
 

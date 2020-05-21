@@ -1,6 +1,6 @@
 <?php
 
-namespace Softonic\GraphQL\Mutation;
+namespace Softonic\GraphQL\DataObjects\Mutation;
 
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 

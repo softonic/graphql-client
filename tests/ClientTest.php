@@ -3,7 +3,7 @@
 namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
-use Softonic\GraphQL\Query\Item;
+use Softonic\GraphQL\DataObjects\Query\Item;
 
 class ClientTest extends TestCase
 {

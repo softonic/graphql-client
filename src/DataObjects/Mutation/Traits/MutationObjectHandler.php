@@ -1,8 +1,8 @@
 <?php
 
-namespace Softonic\GraphQL\Mutation\Traits;
+namespace Softonic\GraphQL\DataObjects\Mutation\Traits;
 
-use Softonic\GraphQL\Mutation\MutationObject;
+use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 
 trait MutationObjectHandler
 {

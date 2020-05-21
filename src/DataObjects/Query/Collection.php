@@ -1,22 +1,13 @@
 <?php
 
-namespace Softonic\GraphQL\Query;
+namespace Softonic\GraphQL\DataObjects\Query;
 
+use Softonic\GraphQL\DataObjects\AbstractCollection;
 use Softonic\GraphQL\Traits\GqlIterator;
 
-class Collection implements QueryObject, \Iterator
+class Collection extends AbstractCollection implements QueryObject, \Iterator
 {
     use GqlIterator;
-
-    /**
-     * @var array
-     */
-    private $arguments = [];
-
-    public function __construct(array $arguments = [])
-    {
-        $this->arguments = $arguments;
-    }
 
     public function filter(array $filters): Collection
     {
@@ -31,10 +22,5 @@ class Collection implements QueryObject, \Iterator
         });
 
         return new Collection(array_values($filteredItems));
-    }
-
-    public function isEmpty(): bool
-    {
-        return empty($this->arguments);
     }
 }

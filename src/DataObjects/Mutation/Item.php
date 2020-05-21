@@ -1,11 +1,12 @@
 <?php
 
-namespace Softonic\GraphQL\Mutation;
+namespace Softonic\GraphQL\DataObjects\Mutation;
 
 use Softonic\GraphQL\Config\MutationTypeConfig;
-use Softonic\GraphQL\Mutation\Traits\MutationObjectHandler;
+use Softonic\GraphQL\DataObjects\AbstractItem;
+use Softonic\GraphQL\DataObjects\Mutation\Traits\MutationObjectHandler;
 
-class Item implements MutationObject, \JsonSerializable
+class Item extends AbstractItem implements MutationObject, \JsonSerializable
 {
     use MutationObjectHandler;
 

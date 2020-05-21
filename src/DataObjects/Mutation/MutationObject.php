@@ -1,6 +1,6 @@
 <?php
 
-namespace Softonic\GraphQL\Mutation;
+namespace Softonic\GraphQL\DataObjects\Mutation;
 
 interface MutationObject
 {
