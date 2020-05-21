@@ -32,4 +32,10 @@ abstract class AbstractCollection
     {
         return $this->count() === 0;
     }
+
+    abstract public function has(string $key): bool;
+
+    abstract public function toArray(): array;
+
+    abstract public function jsonSerialize(): array;
 }
