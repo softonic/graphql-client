@@ -13,11 +13,6 @@ class Item extends AbstractItem implements MutationObject
     /**
      * @var array
      */
-    protected $arguments;
-
-    /**
-     * @var array
-     */
     protected $config;
 
     /**
@@ -27,7 +22,8 @@ class Item extends AbstractItem implements MutationObject
 
     public function __construct(array $arguments = [], array $config = [], bool $hasChanged = false)
     {
-        $this->arguments  = $arguments;
+        parent::__construct($arguments);
+
         $this->config     = $config;
         $this->hasChanged = $hasChanged;
     }

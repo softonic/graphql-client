@@ -10,6 +10,16 @@ class AbstractItem implements DataObject, \JsonSerializable
 {
     use ObjectHandler;
 
+    /**
+     * @var array
+     */
+    protected $arguments;
+
+    public function __construct(array $arguments)
+    {
+        $this->arguments = $arguments;
+    }
+
     public function has(string $key): bool
     {
         $keyPath  = explode('.', $key);
@@ -26,6 +36,11 @@ class AbstractItem implements DataObject, \JsonSerializable
         $nextKey = implode('.', $keyPath);
 
         return $this->arguments[$firstKey]->has($nextKey);
+    }
+
+    public function __get(string $key)
+    {
+        return array_key_exists($key, $this->arguments) ? $this->arguments[$key] : null;
     }
 
     public function exists(array $data): bool
