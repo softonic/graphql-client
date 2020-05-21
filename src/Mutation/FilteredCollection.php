@@ -142,6 +142,11 @@ class FilteredCollection implements MutationObject, \IteratorAggregate, \JsonSer
         return $count;
     }
 
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
+    }
+
     public function remove(Item $item): void
     {
         foreach ($this->arguments as $key => $argument) {
