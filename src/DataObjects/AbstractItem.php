@@ -43,6 +43,11 @@ class AbstractItem implements DataObject, \JsonSerializable
         return array_key_exists($key, $this->arguments) ? $this->arguments[$key] : null;
     }
 
+    public function __set(string $key, $value): void
+    {
+        $this->arguments[$key] = $value;
+    }
+
     public function exists(array $data): bool
     {
         return $data === $this->arguments;

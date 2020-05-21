@@ -11,21 +11,6 @@ class Collection extends AbstractCollection implements QueryObject
 {
     use GqlIterator;
 
-    public function filter(array $filters): Collection
-    {
-        $filteredItems = array_filter($this->arguments, function ($item) use ($filters) {
-            foreach ($filters as $filterKey => $filterValue) {
-                if (!($item->{$filterKey} == $filterValue)) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-
-        return new Collection(array_values($filteredItems));
-    }
-
     public function __get(string $key): Collection
     {
         if (empty($this->arguments)) {
@@ -49,6 +34,11 @@ class Collection extends AbstractCollection implements QueryObject
         }
 
         return false;
+    }
+
+    protected function buildFilteredCollection($data)
+    {
+        return new Collection($data);
     }
 
     public function jsonSerialize(): array

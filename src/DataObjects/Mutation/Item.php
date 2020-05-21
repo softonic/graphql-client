@@ -39,25 +39,16 @@ class Item extends AbstractItem implements MutationObject
             $this->arguments[$key] = new $mutationTypeClass([], $this->config[$key]->children);
         }
 
-        return array_key_exists($key, $this->arguments) ? $this->arguments[$key] : null;
+        return parent::__get($key);
     }
 
     public function __set(string $key, $value): void
     {
-        if (array_key_exists($key, $this->arguments)) {
-            if ($this->arguments[$key] !== $value) {
-                $this->setValue($key, $value);
-            }
-        } else {
-            $this->setValue($key, $value);
+        if (!array_key_exists($key, $this->arguments) || $this->arguments[$key] !== $value) {
+            $this->hasChanged = true;
         }
-    }
 
-    private function setValue(string $key, $value): void
-    {
-        $this->arguments[$key] = $value;
-
-        $this->hasChanged = true;
+        parent::__set($key, $value);
     }
 
     public function __unset(string $key): void

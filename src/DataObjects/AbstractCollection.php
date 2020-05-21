@@ -80,5 +80,41 @@ abstract class AbstractCollection implements DataObject, \IteratorAggregate, \Js
         return false;
     }
 
+    public function filter(array $filters): AbstractCollection
+    {
+        $filteredData = [];
+        if ($this->areAllArgumentsCollections()) {
+            foreach ($this->arguments as $argument) {
+                $filteredData[] = $argument->filter($filters);
+            }
+        } else {
+            $filteredData = $this->filterItems($this->arguments, $filters);
+        }
+
+        return $this->buildFilteredCollection($filteredData);
+    }
+
+    abstract protected function buildFilteredCollection($data);
+
+    private function areAllArgumentsCollections(): bool
+    {
+        return (!empty($this->arguments[0]) && $this->arguments[0] instanceof AbstractCollection);
+    }
+
+    private function filterItems(array $arguments, array $filters): array
+    {
+        $filteredItems = array_filter($arguments, function ($item) use ($filters) {
+            foreach ($filters as $filterKey => $filterValue) {
+                if (!($item->{$filterKey} == $filterValue)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        return array_values($filteredItems);
+    }
+
     abstract public function jsonSerialize(): array;
 }
