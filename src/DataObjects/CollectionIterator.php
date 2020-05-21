@@ -1,13 +1,13 @@
 <?php
 
-namespace Softonic\GraphQL\DataObjects\Mutation;
+namespace Softonic\GraphQL\DataObjects;
 
 class CollectionIterator extends \RecursiveArrayIterator
 {
     public function valid(): bool
     {
         $isValid = parent::valid();
-        if ($isValid && !$this->hasChildren() && $this->current() instanceof FilteredCollection) {
+        if ($isValid && !$this->hasChildren() && $this->current() instanceof AbstractCollection) {
             $this->next();
 
             return $this->valid();
@@ -19,7 +19,7 @@ class CollectionIterator extends \RecursiveArrayIterator
     public function hasChildren(): bool
     {
         $current = $this->current();
-        if ($current instanceof Item) {
+        if ($current instanceof AbstractItem) {
             return false;
         }
 

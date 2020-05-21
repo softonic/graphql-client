@@ -6,7 +6,7 @@ use Softonic\GraphQL\DataObjects\AbstractCollection;
 use Softonic\GraphQL\DataObjects\Mutation\Traits\MutationObjectHandler;
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
-class FilteredCollection extends AbstractCollection implements MutationObject, \IteratorAggregate, \JsonSerializable
+class FilteredCollection extends AbstractCollection implements MutationObject
 {
     use MutationObjectHandler;
 
@@ -48,11 +48,6 @@ class FilteredCollection extends AbstractCollection implements MutationObject, \
         foreach ($this->arguments as $argument) {
             $argument->set($data);
         }
-    }
-
-    public function getIterator(): \RecursiveIteratorIterator
-    {
-        return new \RecursiveIteratorIterator(new CollectionIterator($this->arguments));
     }
 
     public function filter(array $filters): FilteredCollection

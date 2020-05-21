@@ -2,11 +2,12 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
+use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
 use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 use Softonic\GraphQL\DataObjects\Traits\ObjectHandler;
 
-abstract class AbstractCollection
+abstract class AbstractCollection implements DataObject, \IteratorAggregate, \JsonSerializable
 {
     use ObjectHandler;
 
@@ -32,6 +33,11 @@ abstract class AbstractCollection
         }
 
         return $count;
+    }
+
+    public function getIterator(): \RecursiveIteratorIterator
+    {
+        return new \RecursiveIteratorIterator(new CollectionIterator($this->arguments));
     }
 
     public function isEmpty(): bool

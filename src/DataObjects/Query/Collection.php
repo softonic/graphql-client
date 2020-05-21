@@ -4,9 +4,10 @@ namespace Softonic\GraphQL\DataObjects\Query;
 
 use Softonic\GraphQL\DataObjects\AbstractCollection;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
+use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 use Softonic\GraphQL\Traits\GqlIterator;
 
-class Collection extends AbstractCollection implements QueryObject, \Iterator
+class Collection extends AbstractCollection implements QueryObject
 {
     use GqlIterator;
 
@@ -23,6 +24,20 @@ class Collection extends AbstractCollection implements QueryObject, \Iterator
         });
 
         return new Collection(array_values($filteredItems));
+    }
+
+    public function __get(string $key): Collection
+    {
+        if (empty($this->arguments)) {
+            throw InaccessibleArgumentException::fromEmptyArguments($key);
+        }
+
+        $items = [];
+        foreach ($this->arguments as $argument) {
+            $items[] = $argument->{$key};
+        }
+
+        return new Collection($items);
     }
 
     public function has(string $key): bool
