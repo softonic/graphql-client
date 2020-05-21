@@ -13,12 +13,12 @@ class Item extends AbstractItem implements MutationObject, \JsonSerializable
     /**
      * @var array
      */
-    private $arguments;
+    protected $arguments;
 
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * @var bool

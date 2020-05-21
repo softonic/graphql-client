@@ -2,8 +2,14 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
+use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
+use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
+use Softonic\GraphQL\DataObjects\Traits\ObjectHandler;
+
 abstract class AbstractCollection
 {
+    use ObjectHandler;
+
     /**
      * @var array
      */
@@ -33,9 +39,40 @@ abstract class AbstractCollection
         return $this->count() === 0;
     }
 
-    abstract public function has(string $key): bool;
+    public function has(string $key): bool
+    {
+        foreach ($this->arguments as $argument) {
+            if ($argument->has($key)) {
+                return true;
+            }
+        }
 
-    abstract public function toArray(): array;
+        return false;
+    }
+
+    public function hasItem(array $itemData): bool
+    {
+        foreach ($this->arguments as $argument) {
+            $method = $argument instanceof FilteredCollection ? 'hasItem' : 'exists';
+
+            if ($argument->$method($itemData)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasChildren(): bool
+    {
+        foreach ($this->arguments as $argument) {
+            if ($argument instanceof MutationObject) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     abstract public function jsonSerialize(): array;
 }

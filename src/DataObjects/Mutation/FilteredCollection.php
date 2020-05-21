@@ -28,30 +28,6 @@ class FilteredCollection extends AbstractCollection implements MutationObject, \
         $this->hasChanged = $hasChanged;
     }
 
-    public function has(string $key): bool
-    {
-        foreach ($this->arguments as $argument) {
-            if ($argument->has($key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function hasItem(array $itemData): bool
-    {
-        foreach ($this->arguments as $argument) {
-            $method = $argument instanceof FilteredCollection ? 'hasItem' : 'exists';
-
-            if ($argument->$method($itemData)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 
     public function __get(string $key): Collection
     {
@@ -77,17 +53,6 @@ class FilteredCollection extends AbstractCollection implements MutationObject, \
     public function getIterator(): \RecursiveIteratorIterator
     {
         return new \RecursiveIteratorIterator(new CollectionIterator($this->arguments));
-    }
-
-    public function hasChildren(): bool
-    {
-        foreach ($this->arguments as $argument) {
-            if ($argument instanceof MutationObject) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public function filter(array $filters): FilteredCollection
