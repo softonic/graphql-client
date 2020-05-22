@@ -4,9 +4,12 @@ namespace Softonic\GraphQL\DataObjects;
 
 use JsonSerializable;
 use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
+use Softonic\GraphQL\Traits\ItemIterator;
 
-abstract class AbstractItem extends AbstractObject
+abstract class AbstractItem extends AbstractObject implements \Iterator
 {
+    use ItemIterator;
+
     public function has(string $key): bool
     {
         $keyPath  = explode('.', $key);

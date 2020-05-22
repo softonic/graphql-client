@@ -28,7 +28,6 @@ class FilteredCollection extends AbstractCollection implements MutationObject
         $this->hasChanged = $hasChanged;
     }
 
-
     public function __get(string $key): Collection
     {
         if (empty($this->arguments)) {
