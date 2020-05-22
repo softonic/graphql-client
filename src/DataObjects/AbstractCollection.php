@@ -4,7 +4,6 @@ namespace Softonic\GraphQL\DataObjects;
 
 use IteratorAggregate;
 use RecursiveIteratorIterator;
-use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 
 abstract class AbstractCollection extends AbstractObject implements IteratorAggregate
@@ -47,7 +46,7 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
     public function hasItem(array $itemData): bool
     {
         foreach ($this->arguments as $argument) {
-            $method = $argument instanceof FilteredCollection ? 'hasItem' : 'exists';
+            $method = $argument instanceof AbstractCollection ? 'hasItem' : 'exists';
 
             if ($argument->$method($itemData)) {
                 return true;
