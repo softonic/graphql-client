@@ -9,7 +9,6 @@ use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 
 abstract class AbstractCollection extends AbstractObject implements IteratorAggregate
 {
-
     public function getIterator(): RecursiveIteratorIterator
     {
         return new RecursiveIteratorIterator(new CollectionIterator($this->arguments));

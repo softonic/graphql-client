@@ -7,7 +7,6 @@ use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 
 abstract class AbstractItem extends AbstractObject
 {
-
     public function has(string $key): bool
     {
         $keyPath  = explode('.', $key);

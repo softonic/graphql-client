@@ -6,12 +6,9 @@ use JsonSerializable;
 use Softonic\GraphQL\DataObjects\AbstractCollection;
 use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
-use Softonic\GraphQL\Traits\GqlIterator;
 
 class Collection extends AbstractCollection implements QueryObject
 {
-    use GqlIterator;
-
     public function __get(string $key): Collection
     {
         if (empty($this->arguments)) {
