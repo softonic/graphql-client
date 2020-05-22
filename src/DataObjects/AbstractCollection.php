@@ -9,9 +9,34 @@ use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
 abstract class AbstractCollection extends AbstractObject implements IteratorAggregate
 {
+    public function has(string $key): bool
+    {
+        foreach ($this->arguments as $argument) {
+            if ($argument->has($key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getIterator(): RecursiveIteratorIterator
     {
         return new RecursiveIteratorIterator(new CollectionIterator($this->arguments));
+    }
+
+    public function count(): int
+    {
+        $count = 0;
+        foreach ($this->arguments as $argument) {
+            if ($argument instanceof AbstractCollection) {
+                $count += $argument->count();
+            } elseif ($argument instanceof AbstractItem) {
+                ++$count;
+            }
+        }
+
+        return $count;
     }
 
     public function isEmpty(): bool
@@ -33,35 +58,10 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
         return $this->buildSubCollection($items, $key);
     }
 
-    public function count(): int
-    {
-        $count = 0;
-        foreach ($this->arguments as $argument) {
-            if ($argument instanceof AbstractCollection) {
-                $count += $argument->count();
-            } elseif ($argument instanceof AbstractItem) {
-                ++$count;
-            }
-        }
-
-        return $count;
-    }
-
-    public function has(string $key): bool
-    {
-        foreach ($this->arguments as $argument) {
-            if ($argument->has($key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function hasItem(array $itemData): bool
     {
         foreach ($this->arguments as $argument) {
-            $method = $argument instanceof AbstractCollection ? 'hasItem' : 'exists';
+            $method = $argument instanceof AbstractCollection ? 'hasItem' : 'equals';
 
             if ($argument->$method($itemData)) {
                 return true;

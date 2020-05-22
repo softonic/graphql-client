@@ -14,4 +14,11 @@ class Collection extends FilteredCollection
             $this->arguments[] = new Item($itemData, $this->config, true);
         }
     }
+
+    public function __unset($key): void
+    {
+        foreach ($this->arguments as $argument) {
+            unset($argument->{$key});
+        }
+    }
 }

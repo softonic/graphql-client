@@ -38,7 +38,7 @@ abstract class AbstractItem extends AbstractObject implements \Iterator
         $this->arguments[$key] = $value;
     }
 
-    public function exists(array $data): bool
+    public function equals(array $data): bool
     {
         return $data === $this->arguments;
     }
