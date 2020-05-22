@@ -297,72 +297,24 @@ class CollectionTest extends TestCase
 
         $expectedResult = [
             [
-                [
-                    'id_book'    => 'ba828dd3-951f-4cb4-b731-b4601f19414f',
-                    'id_chapter' => 1,
-                    'name'       => 'Chapter one - Book one',
-                ],
+                'id_book'    => 'ba828dd3-951f-4cb4-b731-b4601f19414f',
+                'id_chapter' => 1,
+                'name'       => 'Chapter one - Book one',
             ],
             [
-                [
-                    'id_book'    => '2001fe69-e28a-4c2f-accf-7210d575051c',
-                    'id_chapter' => 1,
-                    'name'       => 'Chapter one - Book two',
-                ],
+                'id_book'    => '2001fe69-e28a-4c2f-accf-7210d575051c',
+                'id_chapter' => 1,
+                'name'       => 'Chapter one - Book two',
             ],
         ];
         $this->assertEquals($expectedResult, $chapters);
-    }
-
-    public function testGettingSpecificItemField()
-    {
-        $book = new Collection(
-            [
-                new Item(
-                    [
-                        'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_author' => 1234,
-                        'genre'     => null,
-                        'chapters'  => new Collection(
-                            [
-                                new Item(
-                                    [
-                                        'id_book'    => 'ba828dd3-951f-4cb4-b731-b4601f19414f',
-                                        'id_chapter' => 1,
-                                        'name'       => 'Chapter one - Book one',
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ]
-                ),
-                new Item(
-                    [
-                        'id_book'   => '0c72d70e-3e24-4975-b8c2-704ac1723f5f',
-                        'id_author' => 4321,
-                        'genre'     => null,
-                        'chapters'  => new Collection(
-                            [
-                                new Item(
-                                    [
-                                        'id_book'    => '2001fe69-e28a-4c2f-accf-7210d575051c',
-                                        'id_chapter' => 1,
-                                        'name'       => 'Chapter one - Book two',
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ]
-                ),
-            ]
-        );
 
         $this->assertEquals(
             [
                 'Chapter one - Book one',
                 'Chapter one - Book two',
             ],
-            $book->chapters->name
+            $book->chapters->name->toArray()
         );
     }
 

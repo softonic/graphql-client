@@ -5,6 +5,7 @@ namespace Softonic\GraphQL\DataObjects;
 use IteratorAggregate;
 use RecursiveIteratorIterator;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
+use Softonic\GraphQL\DataObjects\Query\Collection;
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
 abstract class AbstractCollection extends AbstractObject implements IteratorAggregate
@@ -52,7 +53,13 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
 
         $items = [];
         foreach ($this->arguments as $argument) {
-            $items[] = $argument->{$key};
+            if ($argument->{$key} instanceof Collection) {
+                foreach ($argument->{$key} as $item) {
+                    $items[] = $item;
+                }
+            } else {
+                $items[] = $argument->{$key};
+            }
         }
 
         return $this->buildSubCollection($items, $key);
