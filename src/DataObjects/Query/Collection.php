@@ -5,24 +5,9 @@ namespace Softonic\GraphQL\DataObjects\Query;
 use JsonSerializable;
 use Softonic\GraphQL\DataObjects\AbstractCollection;
 use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
-use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
 class Collection extends AbstractCollection implements QueryObject
 {
-    public function __get(string $key): Collection
-    {
-        if (empty($this->arguments)) {
-            throw InaccessibleArgumentException::fromEmptyArguments($key);
-        }
-
-        $items = [];
-        foreach ($this->arguments as $argument) {
-            $items[] = $argument->{$key};
-        }
-
-        return new Collection($items);
-    }
-
     public function has(string $key): bool
     {
         foreach ($this->arguments as $argument) {
@@ -69,8 +54,13 @@ class Collection extends AbstractCollection implements QueryObject
         return $item;
     }
 
-    protected function buildFilteredCollection($data)
+    protected function buildFilteredCollection($items)
     {
-        return new Collection($data);
+        return new Collection($items);
+    }
+
+    protected function buildSubCollection(array $items, string $key)
+    {
+        return new Collection($items);
     }
 }

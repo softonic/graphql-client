@@ -5,6 +5,7 @@ namespace Softonic\GraphQL\DataObjects;
 use IteratorAggregate;
 use RecursiveIteratorIterator;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
+use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
 abstract class AbstractCollection extends AbstractObject implements IteratorAggregate
 {
@@ -16,6 +17,20 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
     public function isEmpty(): bool
     {
         return $this->count() === 0;
+    }
+
+    public function __get(string $key): AbstractCollection
+    {
+        if (empty($this->arguments)) {
+            throw InaccessibleArgumentException::fromEmptyArguments($key);
+        }
+
+        $items = [];
+        foreach ($this->arguments as $argument) {
+            $items[] = $argument->{$key};
+        }
+
+        return $this->buildSubCollection($items, $key);
     }
 
     public function count(): int
@@ -104,5 +119,7 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
         return array_values($filteredItems);
     }
 
-    abstract protected function buildFilteredCollection($data);
+    abstract protected function buildFilteredCollection($items);
+
+    abstract protected function buildSubCollection(array $items, string $key);
 }

@@ -4,7 +4,6 @@ namespace Softonic\GraphQL\DataObjects\Mutation;
 
 use Softonic\GraphQL\DataObjects\AbstractCollection;
 use Softonic\GraphQL\DataObjects\Mutation\Traits\MutationObjectHandler;
-use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
 class FilteredCollection extends AbstractCollection implements MutationObject
 {
@@ -26,20 +25,6 @@ class FilteredCollection extends AbstractCollection implements MutationObject
 
         $this->config     = $config;
         $this->hasChanged = $hasChanged;
-    }
-
-    public function __get(string $key): Collection
-    {
-        if (empty($this->arguments)) {
-            throw InaccessibleArgumentException::fromEmptyArguments($key);
-        }
-
-        $items = [];
-        foreach ($this->arguments as $argument) {
-            $items[] = $argument->{$key};
-        }
-
-        return new Collection($items, $this->config[$key]->children);
     }
 
     public function set(array $data): void
@@ -83,8 +68,13 @@ class FilteredCollection extends AbstractCollection implements MutationObject
         }
     }
 
-    protected function buildFilteredCollection($data)
+    protected function buildFilteredCollection($items)
     {
-        return new FilteredCollection($data, $this->config);
+        return new FilteredCollection($items, $this->config);
+    }
+
+    protected function buildSubCollection(array $items, string $key)
+    {
+        return new Collection($items, $this->config[$key]->children);
     }
 }
