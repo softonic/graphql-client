@@ -3395,6 +3395,7 @@ class MutationTest extends TestCase
         foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $key => $line) {
             if (35 === $line->words_count) {
                 $mutation->book->chapters->upsert->pages->upsert->lines->upsert->remove($line);
+                break;
             }
         }
 

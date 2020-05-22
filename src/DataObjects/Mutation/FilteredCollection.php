@@ -50,9 +50,6 @@ class FilteredCollection extends AbstractCollection implements MutationObject
         return $items;
     }
 
-    /**
-     * @TODO: TEST remove leaf lvl3 o lvl4 from root.
-     */
     public function remove(Item $item): bool
     {
         foreach ($this->arguments as $key => $argument) {
@@ -61,9 +58,6 @@ class FilteredCollection extends AbstractCollection implements MutationObject
                     return true;
                 }
             } elseif ($argument === $item) {
-//                if (self instanceof FilteredCollection) {
-//                    throw new \Exception('no se puedeee, solo de hijos. Añadir test.');
-//                }
                 unset($this->arguments[$key]);
 
                 return true;
