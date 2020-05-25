@@ -14,7 +14,7 @@
     "issues": "https://github.com/softonic/graphql-client/issues"
   },
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.2",
     "guzzlehttp/guzzle": "^6.3",
     "softonic/guzzle-oauth2-middleware": "^1.1",
     "ext-json": "*",
