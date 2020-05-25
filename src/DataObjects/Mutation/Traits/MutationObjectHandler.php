@@ -1,8 +1,8 @@
 <?php
 
-namespace Softonic\GraphQL\Mutation\Traits;
+namespace Softonic\GraphQL\DataObjects\Mutation\Traits;
 
-use Softonic\GraphQL\Mutation\MutationObject;
+use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 
 trait MutationObjectHandler
 {
@@ -21,15 +21,5 @@ trait MutationObjectHandler
         }
 
         return false;
-    }
-
-    public function toArray(): array
-    {
-        $item = [];
-        foreach ($this->arguments as $key => $value) {
-            $item[$key] = $value instanceof \JsonSerializable ? $value->toArray() : $value;
-        }
-
-        return $item;
     }
 }

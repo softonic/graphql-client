@@ -2,7 +2,7 @@
 
 namespace Softonic\GraphQL\Traits;
 
-trait GqlIterator
+trait ItemIterator
 {
     public function rewind()
     {

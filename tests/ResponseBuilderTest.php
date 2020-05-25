@@ -3,6 +3,8 @@
 namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use UnexpectedValueException;
 
 class ResponseBuilderTest extends TestCase
 {
@@ -10,7 +12,7 @@ class ResponseBuilderTest extends TestCase
 
     private $responseBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dataObjectBuilder = $this->createMock(DataObjectBuilder::class);
 
@@ -19,12 +21,12 @@ class ResponseBuilderTest extends TestCase
 
     public function testBuildMalformedResponse()
     {
-        $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $mockHttpResponse = $this->createMock(ResponseInterface::class);
         $mockHttpResponse->expects($this->once())
             ->method('getBody')
             ->willReturn('malformed response');
 
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Invalid JSON response. Response body: ');
 
         $this->responseBuilder->build($mockHttpResponse);
@@ -47,13 +49,13 @@ class ResponseBuilderTest extends TestCase
      */
     public function testBuildInvalidGraphqlJsonResponse(string $body)
     {
-        $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $mockHttpResponse = $this->createMock(ResponseInterface::class);
 
         $mockHttpResponse->expects($this->once())
             ->method('getBody')
             ->willReturn($body);
 
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Invalid GraphQL JSON response. Response body: ');
 
         $this->responseBuilder->build($mockHttpResponse);
@@ -61,7 +63,7 @@ class ResponseBuilderTest extends TestCase
 
     public function testBuildValidGraphqlJsonWithoutErrors()
     {
-        $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $mockHttpResponse = $this->createMock(ResponseInterface::class);
 
         $mockHttpResponse->expects($this->once())
             ->method('getBody')
@@ -101,7 +103,7 @@ class ResponseBuilderTest extends TestCase
      */
     public function testBuildValidGraphqlJsonWithErrors(string $body)
     {
-        $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $mockHttpResponse = $this->createMock(ResponseInterface::class);
 
         $mockHttpResponse->expects($this->once())
             ->method('getBody')

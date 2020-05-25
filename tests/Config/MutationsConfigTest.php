@@ -3,8 +3,8 @@
 namespace Softonic\GraphQL\Config;
 
 use PHPUnit\Framework\TestCase;
-use Softonic\GraphQL\Mutation\Collection;
-use Softonic\GraphQL\Mutation\Item;
+use Softonic\GraphQL\DataObjects\Mutation\Collection;
+use Softonic\GraphQL\DataObjects\Mutation\Item;
 
 class MutationsConfigTest extends TestCase
 {

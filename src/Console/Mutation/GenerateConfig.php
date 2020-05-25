@@ -3,8 +3,8 @@
 namespace Softonic\GraphQL\Console\Mutation;
 
 use Softonic\GraphQL\Config\MutationTypeConfig;
-use Softonic\GraphQL\Mutation\Collection;
-use Softonic\GraphQL\Mutation\Item;
+use Softonic\GraphQL\DataObjects\Mutation\Collection;
+use Softonic\GraphQL\DataObjects\Mutation\Item;
 use stdClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

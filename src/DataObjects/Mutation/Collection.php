@@ -1,20 +1,9 @@
 <?php
 
-namespace Softonic\GraphQL\Mutation;
-
-use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
+namespace Softonic\GraphQL\DataObjects\Mutation;
 
 class Collection extends FilteredCollection
 {
-    public function __get(string $key): Collection
-    {
-        if (empty($this->arguments)) {
-            throw InaccessibleArgumentException::fromEmptyArguments($key);
-        }
-
-        return parent::__get($key);
-    }
-
     public function add(array $itemData): void
     {
         if (!empty($this->arguments[0]) && $this->arguments[0] instanceof Collection) {
@@ -23,6 +12,13 @@ class Collection extends FilteredCollection
             }
         } else {
             $this->arguments[] = new Item($itemData, $this->config, true);
+        }
+    }
+
+    public function __unset($key): void
+    {
+        foreach ($this->arguments as $argument) {
+            unset($argument->{$key});
         }
     }
 }

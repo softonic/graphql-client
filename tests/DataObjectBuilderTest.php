@@ -3,16 +3,16 @@
 namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
-use Softonic\GraphQL\Mutation\Collection as MutationCollection;
-use Softonic\GraphQL\Mutation\Item as MutationItem;
-use Softonic\GraphQL\Query\Collection as QueryCollection;
-use Softonic\GraphQL\Query\Item as QueryItem;
+use Softonic\GraphQL\DataObjects\Mutation\Collection as MutationCollection;
+use Softonic\GraphQL\DataObjects\Mutation\Item as MutationItem;
+use Softonic\GraphQL\DataObjects\Query\Collection as QueryCollection;
+use Softonic\GraphQL\DataObjects\Query\Item as QueryItem;
 
 class DataObjectBuilderTest extends TestCase
 {
     private $builder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->builder = new DataObjectBuilder();
     }
@@ -58,11 +58,13 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->buildQuery($data);
 
         $expectedDataObject = [
-            'book' => new QueryItem([
-                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_author' => 1234,
-                'genre'     => null,
-            ]),
+            'book' => new QueryItem(
+                [
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
+                ]
+            ),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
@@ -81,12 +83,14 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->buildQuery($data);
 
         $expectedDataObject = [
-            'book' => new QueryItem([
-                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_author' => 1234,
-                'genre'     => null,
-                'comments'  => ['Good', 'Bad'],
-            ]),
+            'book' => new QueryItem(
+                [
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
+                    'comments'  => ['Good', 'Bad'],
+                ]
+            ),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
@@ -111,18 +115,24 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->buildQuery($data);
 
         $expectedDataObject = [
-            'search' => new QueryCollection([
-                new QueryItem([
-                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                    'id_author' => 1234,
-                    'genre'     => null,
-                ]),
-                new QueryItem([
-                    'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
-                    'id_author' => 1122,
-                    'genre'     => 'drama',
-                ]),
-            ]),
+            'search' => new QueryCollection(
+                [
+                    new QueryItem(
+                        [
+                            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_author' => 1234,
+                            'genre'     => null,
+                        ]
+                    ),
+                    new QueryItem(
+                        [
+                            'id_book'   => 'a53493b0-4a24-40c4-b786-317f8dfdf897',
+                            'id_author' => 1122,
+                            'genre'     => 'drama',
+                        ]
+                    ),
+                ]
+            ),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
@@ -141,12 +151,14 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->buildQuery($data);
 
         $expectedDataObject = [
-            'book' => new QueryItem([
-                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_author' => 1234,
-                'genre'     => null,
-                'chapters'  => new QueryCollection([]),
-            ]),
+            'book' => new QueryItem(
+                [
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
+                    'chapters'  => new QueryCollection([]),
+                ]
+            ),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
@@ -176,23 +188,31 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->buildQuery($data);
 
         $expectedDataObject = [
-            'book' => new QueryItem([
-                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_author' => 1234,
-                'genre'     => null,
-                'chapters'  => new QueryCollection([
-                    new QueryItem([
-                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_chapter' => 1,
-                        'name'       => 'Chapter name 1',
-                    ]),
-                    new QueryItem([
-                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_chapter' => 2,
-                        'name'       => 'Chapter name 2',
-                    ]),
-                ]),
-            ]),
+            'book' => new QueryItem(
+                [
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
+                    'chapters'  => new QueryCollection(
+                        [
+                            new QueryItem(
+                                [
+                                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter' => 1,
+                                    'name'       => 'Chapter name 1',
+                                ]
+                            ),
+                            new QueryItem(
+                                [
+                                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter' => 2,
+                                    'name'       => 'Chapter name 2',
+                                ]
+                            ),
+                        ]
+                    ),
+                ]
+            ),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
@@ -237,38 +257,52 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->buildQuery($data);
 
         $expectedDataObject = [
-            'book' => new QueryItem([
-                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_author' => 1234,
-                'genre'     => null,
-                'chapters'  => new QueryCollection([
-                    new QueryItem([
-                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_chapter' => 1,
-                        'name'       => 'Chapter name 1',
-                        'pages'      => new QueryCollection([
-                            new QueryItem([
-                                'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                'id_chapter'        => 1,
-                                'id_page'           => 1,
-                                'has_illustrations' => false,
-                            ]),
-                            new QueryItem([
-                                'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                'id_chapter'        => 1,
-                                'id_page'           => 2,
-                                'has_illustrations' => false,
-                            ]),
-                        ]),
-                    ]),
-                    new QueryItem([
-                        'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                        'id_chapter' => 2,
-                        'name'       => 'Chapter name 2',
-                        'pages'      => new QueryCollection([]),
-                    ]),
-                ]),
-            ]),
+            'book' => new QueryItem(
+                [
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
+                    'chapters'  => new QueryCollection(
+                        [
+                            new QueryItem(
+                                [
+                                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter' => 1,
+                                    'name'       => 'Chapter name 1',
+                                    'pages'      => new QueryCollection(
+                                        [
+                                            new QueryItem(
+                                                [
+                                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter'        => 1,
+                                                    'id_page'           => 1,
+                                                    'has_illustrations' => false,
+                                                ]
+                                            ),
+                                            new QueryItem(
+                                                [
+                                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                    'id_chapter'        => 1,
+                                                    'id_page'           => 2,
+                                                    'has_illustrations' => false,
+                                                ]
+                                            ),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            new QueryItem(
+                                [
+                                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                    'id_chapter' => 2,
+                                    'name'       => 'Chapter name 2',
+                                    'pages'      => new QueryCollection([]),
+                                ]
+                            ),
+                        ]
+                    ),
+                ]
+            ),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }
@@ -319,44 +353,64 @@ class DataObjectBuilderTest extends TestCase
         $dataObject = $this->builder->buildMutation($data);
 
         $expectedDataObject = [
-            'book' => new MutationItem([
-                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                'id_author' => 1234,
-                'genre'     => null,
-                'chapters'  => new MutationItem([
-                    'upsert' => new MutationCollection([
-                        new MutationItem([
-                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_chapter' => 1,
-                            'name'       => 'Chapter name 1',
-                            'pages'      => new MutationItem([
-                                'upsert' => new MutationCollection([
-                                    new MutationItem([
-                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                        'id_chapter'        => 1,
-                                        'id_page'           => 1,
-                                        'has_illustrations' => false,
-                                    ]),
-                                    new MutationItem([
-                                        'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                                        'id_chapter'        => 1,
-                                        'id_page'           => 2,
-                                        'has_illustrations' => false,
-                                    ]),
-                                ]),
-                            ]),
-                        ]),
-                        new MutationItem([
-                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
-                            'id_chapter' => 2,
-                            'name'       => 'Chapter name 2',
-                            'pages'      => new MutationItem([
-                                'upsert' => new MutationCollection([]),
-                            ]),
-                        ]),
-                    ]),
-                ]),
-            ]),
+            'book' => new MutationItem(
+                [
+                    'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_author' => 1234,
+                    'genre'     => null,
+                    'chapters'  => new MutationItem(
+                        [
+                            'upsert' => new MutationCollection(
+                                [
+                                    new MutationItem(
+                                        [
+                                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                            'id_chapter' => 1,
+                                            'name'       => 'Chapter name 1',
+                                            'pages'      => new MutationItem(
+                                                [
+                                                    'upsert' => new MutationCollection(
+                                                        [
+                                                            new MutationItem(
+                                                                [
+                                                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                                    'id_chapter'        => 1,
+                                                                    'id_page'           => 1,
+                                                                    'has_illustrations' => false,
+                                                                ]
+                                                            ),
+                                                            new MutationItem(
+                                                                [
+                                                                    'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                                                    'id_chapter'        => 1,
+                                                                    'id_page'           => 2,
+                                                                    'has_illustrations' => false,
+                                                                ]
+                                                            ),
+                                                        ]
+                                                    ),
+                                                ]
+                                            ),
+                                        ]
+                                    ),
+                                    new MutationItem(
+                                        [
+                                            'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                            'id_chapter' => 2,
+                                            'name'       => 'Chapter name 2',
+                                            'pages'      => new MutationItem(
+                                                [
+                                                    'upsert' => new MutationCollection([]),
+                                                ]
+                                            ),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        ]
+                    ),
+                ]
+            ),
         ];
         $this->assertEquals($expectedDataObject, $dataObject);
     }

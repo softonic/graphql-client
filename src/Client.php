@@ -4,7 +4,7 @@ namespace Softonic\GraphQL;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
-use Softonic\GraphQL\Mutation\MutationObject;
+use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 
 class Client
 {

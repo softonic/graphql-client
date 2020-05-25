@@ -19,7 +19,8 @@ class GetIntrospection extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(<<<'GQL'
+        $output->writeln(
+            <<<'GQL'
 query IntrospectionQuery {
   __schema {
     mutationType { name }
