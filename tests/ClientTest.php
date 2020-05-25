@@ -21,7 +21,7 @@ class ClientTest extends TestCase
 
     private $client;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->httpClient                 = $this->createMock(ClientInterface::class);
         $this->mockGraphqlResponseBuilder = $this->createMock(ResponseBuilder::class);

@@ -12,7 +12,7 @@ class ResponseBuilderTest extends TestCase
 
     private $responseBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dataObjectBuilder = $this->createMock(DataObjectBuilder::class);
 

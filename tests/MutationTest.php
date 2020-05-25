@@ -24,7 +24,7 @@ class MutationTest extends TestCase
      */
     private $collectionConfigMock;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->itemConfigMock       = $this->getConfigMock()
             ->get('ReplaceBook');
