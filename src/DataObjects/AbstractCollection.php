@@ -7,9 +7,12 @@ use RecursiveIteratorIterator;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
 use Softonic\GraphQL\DataObjects\Query\Collection;
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
+use Softonic\GraphQL\Traits\CollectionArrayAccess;
 
-abstract class AbstractCollection extends AbstractObject implements IteratorAggregate
+abstract class AbstractCollection extends AbstractObject implements IteratorAggregate, \ArrayAccess
 {
+    use CollectionArrayAccess;
+
     public function has(string $key): bool
     {
         foreach ($this->arguments as $argument) {
