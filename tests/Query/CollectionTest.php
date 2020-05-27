@@ -515,4 +515,146 @@ class CollectionTest extends TestCase
         ];
         $this->assertFalse($lines->hasItem($itemDataThatDoesNotExist));
     }
+
+    public function testArrayAccessOffsetSetShouldThrowABadMethodCallException()
+    {
+        $book = new Item(
+            [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => new Collection(
+                    [
+                        new Item(
+                            [
+                                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter' => 1,
+                                'name'       => 'Chapter one',
+                                'pov'        => 'first person',
+                            ]
+                        ),
+                        new Item(
+                            [
+                                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter' => 2,
+                                'name'       => 'Chapter two',
+                                'pov'        => 'third person',
+                            ]
+                        ),
+                    ]
+                ),
+            ]
+        );
+
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('Try using add() instead');
+
+        $book->chapters->name[0] = 'Chapter three';
+    }
+
+    public function testArrayAccessOffsetExists()
+    {
+        $book = new Item(
+            [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => new Collection(
+                    [
+                        new Item(
+                            [
+                                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter' => 1,
+                                'name'       => 'Chapter one',
+                                'pov'        => 'first person',
+                            ]
+                        ),
+                        new Item(
+                            [
+                                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter' => 2,
+                                'name'       => 'Chapter two',
+                                'pov'        => 'third person',
+                            ]
+                        ),
+                    ]
+                ),
+            ]
+        );
+
+        $this->assertTrue(isset($book->chapters->name[1]));
+        $this->assertFalse(isset($book->chapters->name[2]));
+        $this->assertFalse(empty($book->chapters->name[1]));
+        $this->assertTrue(empty($book->chapters->name[2]));
+    }
+
+    public function testArrayAccessOffsetUnsetShouldThrowABadMethodCallException()
+    {
+        $book = new Item(
+            [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => new Collection(
+                    [
+                        new Item(
+                            [
+                                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter' => 1,
+                                'name'       => 'Chapter one',
+                                'pov'        => 'first person',
+                            ]
+                        ),
+                        new Item(
+                            [
+                                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter' => 2,
+                                'name'       => 'Chapter two',
+                                'pov'        => 'third person',
+                            ]
+                        ),
+                    ]
+                ),
+            ]
+        );
+
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('Try using remove() instead');
+
+        unset($book->chapters->name[0]);
+    }
+
+    public function testArrayAccessOffsetGet()
+    {
+        $book = new Item(
+            [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+                'genre'     => null,
+                'chapters'  => new Collection(
+                    [
+                        new Item(
+                            [
+                                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter' => 1,
+                                'name'       => 'Chapter one',
+                                'pov'        => 'first person',
+                            ]
+                        ),
+                        new Item(
+                            [
+                                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                                'id_chapter' => 2,
+                                'name'       => 'Chapter two',
+                                'pov'        => 'third person',
+                            ]
+                        ),
+                    ]
+                ),
+            ]
+        );
+
+        $this->assertEquals('Chapter one', $book->chapters->name[0]);
+        $this->assertEquals('Chapter two', $book->chapters->name[1]);
+    }
 }
