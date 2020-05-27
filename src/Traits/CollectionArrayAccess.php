@@ -11,7 +11,7 @@ trait CollectionArrayAccess
 
     public function offsetExists($offset)
     {
-        return isset($this->arguments[$offset]);
+        return array_key_exists($offset, $this->arguments);
     }
 
     public function offsetUnset($offset)
