@@ -35,7 +35,7 @@
     }
   },
   "bin": [
-    "bin/graphql-client-generator"
+    "bin/graphql-client"
   ],
   "scripts": {
     "test": "phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
