@@ -21,6 +21,8 @@ class GenerateConfig extends Command
 
     protected static $defaultName = 'mutation:generate-config';
 
+    protected $generatedFieldTypes = [];
+
     protected function configure()
     {
         $this->setDescription('Creates a mutation config.')
@@ -133,12 +135,15 @@ class GenerateConfig extends Command
                         continue;
                     }
 
-                    $linksTo                     = "{$parentLinksTo}.{$inputField->name}";
-                    $children[$inputField->name] = [
-                        'linksTo'  => $linksTo,
-                        'type'     => $isCollection ? Collection::class : Item::class,
-                        'children' => $this->getMutationConfig($jsonSchema, $type, $linksTo),
-                    ];
+                    if (!in_array($inputType, $this->generatedFieldTypes[$inputField->name] ?? [])) {
+                        $this->generatedFieldTypes[$inputField->name][] = $inputType;
+                        $linksTo                                        = "{$parentLinksTo}.{$inputField->name}";
+                        $children[$inputField->name]                    = [
+                            'linksTo'  => $linksTo,
+                            'type'     => $isCollection ? Collection::class : Item::class,
+                            'children' => $this->getMutationConfig($jsonSchema, $type, $linksTo),
+                        ];
+                    }
                 }
                 break;
             }
