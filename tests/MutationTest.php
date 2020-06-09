@@ -22,13 +22,20 @@ class MutationTest extends TestCase
     /**
      * @var array
      */
+    private $sameQueryStructureConfigMock;
+
+    /**
+     * @var array
+     */
     private $collectionConfigMock;
 
     protected function setUp(): void
     {
-        $this->itemConfigMock       = $this->getConfigMock()
+        $this->itemConfigMock               = $this->getConfigMock()
             ->get('ReplaceBook');
-        $this->collectionConfigMock = $this->getConfigMock()
+        $this->sameQueryStructureConfigMock = $this->getConfigMock()
+            ->get('ReplaceBookWithSameQueryStructure');
+        $this->collectionConfigMock         = $this->getConfigMock()
             ->get('ReplaceBooks');
     }
 
@@ -36,20 +43,14 @@ class MutationTest extends TestCase
     {
         return new MutationsConfig(
             [
-                'ReplaceBook'  => [
+                'ReplaceBook'                       => [
                     'book' => [
                         'linksTo'  => '.',
                         'type'     => MutationItem::class,
                         'children' => [
-                            'id_book'   => [
-                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                            ],
-                            'id_author' => [
-                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                            ],
-                            'genre'     => [
-                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                            ],
+                            'id_book'   => [],
+                            'id_author' => [],
+                            'genre'     => [],
                             'chapters'  => [
                                 'type'     => MutationItem::class,
                                 'children' => [
@@ -57,21 +58,11 @@ class MutationTest extends TestCase
                                         'linksTo'  => '.chapters',
                                         'type'     => MutationCollection::class,
                                         'children' => [
-                                            'id_book'    => [
-                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                            ],
-                                            'id_chapter' => [
-                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                            ],
-                                            'name'       => [
-                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                            ],
-                                            'pov'        => [
-                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                            ],
-                                            'header'     => [
-                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                            ],
+                                            'id_book'    => [],
+                                            'id_chapter' => [],
+                                            'name'       => [],
+                                            'pov'        => [],
+                                            'header'     => [],
                                             'pages'      => [
                                                 'type'     => MutationItem::class,
                                                 'children' => [
@@ -79,18 +70,10 @@ class MutationTest extends TestCase
                                                         'linksTo'  => '.chapters.pages',
                                                         'type'     => MutationCollection::class,
                                                         'children' => [
-                                                            'id_book'           => [
-                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                            ],
-                                                            'id_chapter'        => [
-                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                            ],
-                                                            'id_page'           => [
-                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                            ],
-                                                            'has_illustrations' => [
-                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                            ],
+                                                            'id_book'           => [],
+                                                            'id_chapter'        => [],
+                                                            'id_page'           => [],
+                                                            'has_illustrations' => [],
                                                             'lines'             => [
                                                                 'type'     => MutationItem::class,
                                                                 'children' => [
@@ -98,21 +81,11 @@ class MutationTest extends TestCase
                                                                         'linksTo'  => '.chapters.pages.lines',
                                                                         'type'     => MutationCollection::class,
                                                                         'children' => [
-                                                                            'id_book'     => [
-                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                                            ],
-                                                                            'id_chapter'  => [
-                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                                            ],
-                                                                            'id_page'     => [
-                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                                            ],
-                                                                            'id_line'     => [
-                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                                            ],
-                                                                            'words_count' => [
-                                                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                                                            ],
+                                                                            'id_book'     => [],
+                                                                            'id_chapter'  => [],
+                                                                            'id_page'     => [],
+                                                                            'id_line'     => [],
+                                                                            'words_count' => [],
                                                                         ],
                                                                     ],
                                                                 ],
@@ -132,11 +105,68 @@ class MutationTest extends TestCase
                                         'linksTo'  => '.languages',
                                         'type'     => MutationCollection::class,
                                         'children' => [
-                                            'id_book'     => [
-                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                            ],
-                                            'id_language' => [
-                                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
+                                            'id_book'     => [],
+                                            'id_language' => [],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'ReplaceBookWithSameQueryStructure' => [
+                    'book' => [
+                        'linksTo'  => '.',
+                        'type'     => MutationItem::class,
+                        'children' => [
+                            'id_book'   => [],
+                            'id_author' => [],
+                            'genre'     => [],
+                            'chapters'  => [
+                                'linksTo'  => '.chapters',
+                                'type'     => MutationItem::class,
+                                'children' => [
+                                    'upsert' => [
+                                        'linksTo'  => '.chapters.upsert',
+                                        'type'     => MutationCollection::class,
+                                        'children' => [
+                                            'id_book'    => [],
+                                            'id_chapter' => [],
+                                            'name'       => [],
+                                            'pov'        => [],
+                                            'header'     => [],
+                                            'pages'      => [
+                                                'linksTo'  => '.chapters.upsert.pages',
+                                                'type'     => MutationItem::class,
+                                                'children' => [
+                                                    'upsert' => [
+                                                        'linksTo'  => '.chapters.upsert.pages.upsert',
+                                                        'type'     => MutationCollection::class,
+                                                        'children' => [
+                                                            'id_book'           => [],
+                                                            'id_chapter'        => [],
+                                                            'id_page'           => [],
+                                                            'has_illustrations' => [],
+                                                            'lines'             => [
+                                                                'linksTo'  => '.chapters.upsert.pages.upsert.lines',
+                                                                'type'     => MutationItem::class,
+                                                                'children' => [
+                                                                    'upsert' => [
+                                                                        'linksTo'  => '.chapters.upsert.pages.upsert.lines.upsert',
+                                                                        'type'     => MutationCollection::class,
+                                                                        'children' => [
+                                                                            'id_book'     => [],
+                                                                            'id_chapter'  => [],
+                                                                            'id_page'     => [],
+                                                                            'id_line'     => [],
+                                                                            'words_count' => [],
+                                                                        ],
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
                                             ],
                                         ],
                                     ],
@@ -145,39 +175,23 @@ class MutationTest extends TestCase
                         ],
                     ],
                 ],
-                'ReplaceBooks' => [
+                'ReplaceBooks'                      => [
                     'books' => [
                         'linksTo'  => '.',
                         'type'     => MutationCollection::class,
                         'children' => [
-                            'id_book'   => [
-                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                            ],
-                            'id_author' => [
-                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                            ],
-                            'genre'     => [
-                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                            ],
+                            'id_book'   => [],
+                            'id_author' => [],
+                            'genre'     => [],
                             'chapters'  => [
                                 'linksTo'  => '.chapters',
                                 'type'     => MutationCollection::class,
                                 'children' => [
-                                    'id_book'    => [
-                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                    ],
-                                    'id_chapter' => [
-                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                    ],
-                                    'name'       => [
-                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                    ],
-                                    'pov'        => [
-                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                    ],
-                                    'header'     => [
-                                        'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                                    ],
+                                    'id_book'    => [],
+                                    'id_chapter' => [],
+                                    'name'       => [],
+                                    'pov'        => [],
+                                    'header'     => [],
                                 ],
                             ],
                         ],
@@ -2722,7 +2736,7 @@ class MutationTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->itemConfigMock, $book, true);
+        $mutation = Mutation::build($this->sameQueryStructureConfigMock, $book, true);
 
         $expectedMutationData = [
             'book' => [

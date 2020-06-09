@@ -129,9 +129,7 @@ class GenerateConfig extends Command
                     ] = $this->getTypeFromField($inputField);
 
                     if ($type === self::SCALAR) {
-                        $children[$inputField->name] = [
-                            'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                        ];
+                        $children[$inputField->name] = [];
                         continue;
                     }
 

@@ -8,8 +8,6 @@ class MutationTypeConfig
 {
     use JsonPathAccessor;
 
-    const SCALAR_DATA_TYPE = 'scalar';
-
     /**
      * @var string
      */
