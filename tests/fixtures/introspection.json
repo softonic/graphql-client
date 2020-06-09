@@ -1,0 +1,6268 @@
+{
+  "data": {
+    "__schema": {
+      "mutationType": {
+        "name": "Mutation"
+      },
+      "types": [
+        {
+          "kind": "OBJECT",
+          "name": "Query",
+          "description": null,
+          "fields": [
+            {
+              "name": "program",
+              "description": "Find a specific program",
+              "args": [
+                {
+                  "name": "id",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "name": "search",
+              "description": "Find programs filtering for different attributes",
+              "args": [
+                {
+                  "name": "query",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "idPrograms",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "platform",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "origin",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "developer",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "category",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "source",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "store",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "language",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "programName",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "status",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "page",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "perPage",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "name": "searchByDownloads",
+              "description": "Find programs based in their download stats",
+              "args": [
+                {
+                  "name": "daysAgo",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "minDownloads",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "maxDownloads",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "page",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "perPage",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ]
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "ID",
+          "description": "The `ID` scalar type represents a unique identifier, often used to\nrefetch an object or as key for a cache. The ID type appears in a JSON\nresponse as a String; however, it is not intended to be human-readable.\nWhen expected as an input type, any string (such as `\"4\"`) or integer\n(such as `4`) input value will be accepted as an ID.",
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Program",
+          "description": "A complete program representation",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_category",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_developer",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "google_compliant",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "category",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "developer",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "platforms",
+              "description": null,
+              "args": [
+                {
+                  "name": "id_platform",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ]
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "String",
+          "description": "The `String` scalar type represents textual data, represented as UTF-8\ncharacter sequences. The String type is most often used by GraphQL to\nrepresent free-form human-readable text.",
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Boolean",
+          "description": "The `Boolean` scalar type represents `true` or `false`.",
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Category",
+          "description": "Category",
+          "fields": [
+            {
+              "name": "id_category",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Developer",
+          "description": "Program owner",
+          "fields": [
+            {
+              "name": "id_developer",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "email",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "url",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatform",
+          "description": "Platforms in which the program is available",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_origin",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "origin",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "languages",
+              "description": null,
+              "args": [
+                {
+                  "name": "id_language",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "name": "reviewtypes",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "sources",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "urltypes",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "versions",
+              "description": null,
+              "args": [
+                {
+                  "name": "id_version",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "name": "downloadstats",
+              "description": null,
+              "args": [
+                {
+                  "name": "daysAgo",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ]
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Platform",
+          "description": "Platforms",
+          "fields": [
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "versions",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PlatformVersion",
+          "description": "Platform versions",
+          "fields": [
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "platform",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "OrigingroupOrigin",
+          "description": "Origins",
+          "fields": [
+            {
+              "name": "id_origin",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_origingroup",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "origingroup",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Origingroup",
+          "description": "Origin Groups",
+          "fields": [
+            {
+              "name": "id_origingroup",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "origins",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformLanguage",
+          "description": "Languages available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "status",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "publish_date",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "update_date",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "public_note",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "activeVersion",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "activeVersionLanguage",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "versionsLanguage",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "aliases",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "faqs",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "downloadstats",
+              "description": null,
+              "args": [
+                {
+                  "name": "daysAgo",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "name": "websetup",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Date",
+          "description": null,
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformVersion",
+          "description": "Platform versions available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "visible",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_license",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "age",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "software_languages",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "license",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "activeInLanguages",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "binaries",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "languages",
+              "description": null,
+              "args": [
+                {
+                  "name": "id_language",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ]
+            },
+            {
+              "name": "platformversions",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Int",
+          "description": "The `Int` scalar type represents non-fractional signed whole numeric\nvalues. Int can represent values between -(2^31) and 2^31 - 1. ",
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "License",
+          "description": "Licenses",
+          "fields": [
+            {
+              "name": "id_license",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "type",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformVersionBinary",
+          "description": "Binaries available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_binary",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "type",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "created_at",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "languageBinaries",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformVersionLanguageBinary",
+          "description": "Binaries available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_binary",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "binary",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformVersionLanguage",
+          "description": "Languages available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "program_name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "about_license",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "binaries",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "images",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "reviewtypes",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "urltypes",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformVersionLanguageImage",
+          "description": "Images available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_image",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "path",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "filename",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "type",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "priority",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "width",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "height",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformVersionLanguageReviewtype",
+          "description": "Review types available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_review",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "review",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformReviewtypeReview",
+          "description": "Reviews available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_review",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "source",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_editor",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "headline",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "lead",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "body",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "conclusion",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "changes",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "extra",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "pros",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "cons",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "updated_at",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "languageReviewtypes",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformVersionLanguageUrltype",
+          "description": "Url types available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_url",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "url",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformUrltypeUrl",
+          "description": "Urls available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_url",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "url",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "languageUrltypes",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformVersionPlatformversion",
+          "description": "Platform versions available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platformversion",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "platformVersion",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformLanguageAlias",
+          "description": "Aliases available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_alias",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "active",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformLanguageFaq",
+          "description": "FAQs available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_faq",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "question",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "answer",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "priority",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformLanguageDownloadstats",
+          "description": null,
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "downloads",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformLanguageWebsetup",
+          "description": null,
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "dont_allow_download",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "force_external_download",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "is_sales_client",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformReviewtype",
+          "description": "Review types available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "reviews",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformSource",
+          "description": "Where the program can be found in external sources",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_source",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_store",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "source",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Source",
+          "description": "Sources",
+          "fields": [
+            {
+              "name": "id_source",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformUrltype",
+          "description": "Url types available for the program",
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "urls",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProgramPlatformDownloadstats",
+          "description": null,
+          "fields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "downloads",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Mutation",
+          "description": null,
+          "fields": [
+            {
+              "name": "replaceProgram",
+              "description": null,
+              "args": [
+                {
+                  "name": "program",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ProgramInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ]
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramInput",
+          "description": "A complete program representation",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_category",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_developer",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "developer",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForDeveloperHasOneInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "google_compliant",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "platforms",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForDeveloperHasOneInput",
+          "description": "Developer information",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "DeveloperInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "DeveloperInput",
+          "description": "Developer information",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_developer",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "email",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "url",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformHasManyInput",
+          "description": "Platforms in which the program is available",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformInput",
+          "description": "Platforms in which the program is available",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_origin",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "languages",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformLanguageHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "reviewtypes",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformReviewtypeHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sources",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformSourceHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "urltypes",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformUrltypeHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "versions",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformLanguageHasManyInput",
+          "description": "Languages available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformLanguageInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformLanguageIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformLanguageInput",
+          "description": "Languages available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "status",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "publish_date",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "update_date",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "public_note",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "activeVersion",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionHasOneInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "activeVersionLanguage",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageHasOneInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "versionsLanguage",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "aliases",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformLanguageAliasHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "faqs",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformLanguageFaqHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "websetup",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformLanguageWebsetupHasOne",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionHasOneInput",
+          "description": "Platform versions available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProgramPlatformVersionInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProgramPlatformVersionIdInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionInput",
+          "description": "Platform versions available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "name",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "visible",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_license",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "age",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "software_languages",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "activeInLanguages",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformLanguageHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "binaries",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionBinaryHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "languages",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "platformversions",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionPlatformversionHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionBinaryHasManyInput",
+          "description": "Binaries available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionBinaryInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionBinaryIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionBinaryInput",
+          "description": "Binaries available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_binary",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "type",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionBinaryIdInput",
+          "description": "Binaries identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_binary",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageHasManyInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageInput",
+          "description": "Languages available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "program_name",
+              "description": "Required for creation",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "about_license",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "binaries",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageBinaryHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "binariesupload",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageBinaryuploadHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "images",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageImageHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imagesupload",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageImageuploadHasMany",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "reviewtypes",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageReviewtypeHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "urltypes",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageUrltypeHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageBinaryHasManyInput",
+          "description": "Binaries available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageBinaryInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageBinaryInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageBinaryInput",
+          "description": "Binaries available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_binary",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageBinaryuploadHasManyInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageBinaryuploadInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageBinaryuploadInput",
+          "description": "Binaries to upload available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "url",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "file_type",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_upload_request",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "type",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageImageHasManyInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageImageInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageImageIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageImageInput",
+          "description": "Images available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_image",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "path",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "filename",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "type",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "priority",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "width",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "height",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageImageIdInput",
+          "description": "Images identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_image",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageImageuploadHasMany",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageImageuploadInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageImageuploadInput",
+          "description": "Images to upload available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "url",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "filename",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "type",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "priority",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageReviewtypeHasManyInput",
+          "description": "Review types available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageReviewtypeInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageReviewtypeIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageReviewtypeInput",
+          "description": "Review types available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_review",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "reviewgenerator",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformVersionLanguageReviewtypeReviewgeneratorHasOne",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageReviewtypeReviewgeneratorHasOne",
+          "description": "Review generator information",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ProgramPlatformVersionLanguageReviewtypeReviewgeneratorInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageReviewtypeReviewgeneratorInput",
+          "description": "Review generator information",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageReviewtypeIdInput",
+          "description": "Review types identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageUrltypeHasManyInput",
+          "description": "Url types available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageUrltypeInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionLanguageUrltypeIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageUrltypeInput",
+          "description": "Url types available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_url",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageUrltypeIdInput",
+          "description": "Url types identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageIdInput",
+          "description": "Languages identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionPlatformversionHasManyInput",
+          "description": "Platform versions available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionPlatformversionInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionPlatformversionInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionPlatformversionInput",
+          "description": "Platform versions available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platformversion",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionIdInput",
+          "description": "Platform versions identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionLanguageHasOneInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProgramPlatformVersionLanguageInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProgramPlatformVersionLanguageIdInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformLanguageAliasHasManyInput",
+          "description": "Aliases available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformLanguageAliasInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformLanguageAliasInput",
+          "description": "Aliases available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_alias",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformLanguageFaqHasManyInput",
+          "description": "FAQs available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformLanguageFaqInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformLanguageFaqIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformLanguageFaqInput",
+          "description": "FAQs available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_faq",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "question",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "answer",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "priority",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformLanguageFaqIdInput",
+          "description": "FAQs identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_faq",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformLanguageWebsetupHasOne",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ProgramPlatformLanguageWebsetupInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformLanguageWebsetupInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "dont_allow_download",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "force_external_download",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "is_sales_client",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformLanguageIdInput",
+          "description": "Languages identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformReviewtypeHasManyInput",
+          "description": "Review types available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformReviewtypeInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformReviewtypeIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformReviewtypeInput",
+          "description": "Review types available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "reviews",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformReviewtypeReviewHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformReviewtypeReviewHasManyInput",
+          "description": "Reviews available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformReviewtypeReviewInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformReviewtypeReviewIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformReviewtypeReviewInput",
+          "description": "Reviews available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_review",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "source",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_editor",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "headline",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "lead",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "body",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "conclusion",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "changes",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "extra",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "pros",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "cons",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformReviewtypeReviewIdInput",
+          "description": "Reviews identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_review",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformReviewtypeIdInput",
+          "description": "Review types identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_reviewtype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformSourceHasManyInput",
+          "description": "Where the program can be found in external sources",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformSourceInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformSourceIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformSourceInput",
+          "description": "Where the program can be found in external sources",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_source",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_store",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformSourceIdInput",
+          "description": "Identifier where the program can be found in external sources",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_source",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformUrltypeHasManyInput",
+          "description": "Url types available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformUrltypeInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformUrltypeIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformUrltypeInput",
+          "description": "Url types available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "urls",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForProgramPlatformUrltypeUrlHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformUrltypeUrlHasManyInput",
+          "description": "Urls available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformUrltypeUrlInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformUrltypeUrlIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformUrltypeUrlInput",
+          "description": "Urls available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_url",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "url",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformUrltypeUrlIdInput",
+          "description": "Urls identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_url",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformUrltypeIdInput",
+          "description": "Url types identifier available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_urltype",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForProgramPlatformVersionHasManyInput",
+          "description": "Platform versions available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProgramPlatformVersionIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformIdInput",
+          "description": "Platforms identifier in which the program is available",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "MutationResult",
+          "description": null,
+          "fields": [
+            {
+              "name": "status",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "LicenseInput",
+          "description": "Licenses",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_license",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "description",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "type",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "OrigingroupInput",
+          "description": "Origin Groups",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_origingroup",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "origins",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ActionsForOrigingroupOriginHasManyInput",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForOrigingroupOriginHasManyInput",
+          "description": "Origins",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "OrigingroupOriginInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "OrigingroupOriginIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "OrigingroupOriginInput",
+          "description": "Origins",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_origin",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_origingroup",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "OrigingroupOriginIdInput",
+          "description": "Origins identifier",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_origin",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_origingroup",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ActionsForPlatformVersionHasManyInput",
+          "description": "Platform versions",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "upsert",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PlatformVersionInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "delete",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "PlatformVersionIdInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "PlatformVersionInput",
+          "description": "Platform versions",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "PlatformVersionIdInput",
+          "description": "Platform versions identifier",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PaginatorInfo",
+          "description": "Pagination information about the corresponding list of items.",
+          "fields": [
+            {
+              "name": "count",
+              "description": "Total count of available items in the page.",
+              "args": []
+            },
+            {
+              "name": "currentPage",
+              "description": "Current pagination page.",
+              "args": []
+            },
+            {
+              "name": "firstItem",
+              "description": "Index of first item in the current page.",
+              "args": []
+            },
+            {
+              "name": "hasMorePages",
+              "description": "If collection has more pages.",
+              "args": []
+            },
+            {
+              "name": "lastItem",
+              "description": "Index of last item in the current page.",
+              "args": []
+            },
+            {
+              "name": "lastPage",
+              "description": "Last page number of the collection.",
+              "args": []
+            },
+            {
+              "name": "perPage",
+              "description": "Number of items per page in the collection.",
+              "args": []
+            },
+            {
+              "name": "total",
+              "description": "Total items available in the collection.",
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PageInfo",
+          "description": "Pagination information about the corresponding list of items.",
+          "fields": [
+            {
+              "name": "hasNextPage",
+              "description": "When paginating forwards, are there more items?",
+              "args": []
+            },
+            {
+              "name": "hasPreviousPage",
+              "description": "When paginating backwards, are there more items?",
+              "args": []
+            },
+            {
+              "name": "startCursor",
+              "description": "When paginating backwards, the cursor to continue.",
+              "args": []
+            },
+            {
+              "name": "endCursor",
+              "description": "When paginating forwards, the cursor to continue.",
+              "args": []
+            },
+            {
+              "name": "total",
+              "description": "Total number of node in connection.",
+              "args": []
+            },
+            {
+              "name": "count",
+              "description": "Count of nodes in current request.",
+              "args": []
+            },
+            {
+              "name": "currentPage",
+              "description": "Current page of request.",
+              "args": []
+            },
+            {
+              "name": "lastPage",
+              "description": "Last page in connection.",
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "ENUM",
+          "name": "SortOrder",
+          "description": "The available directions for ordering a list of records.",
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "OrderByClause",
+          "description": "Allows ordering a list of records.",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "field",
+              "description": "The column that is used for ordering.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "order",
+              "description": "The direction that is used for ordering.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "SortOrder",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "ENUM",
+          "name": "Trashed",
+          "description": "Specify if you want to include or exclude trashed results from a query.",
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Float",
+          "description": "The `Float` scalar type represents signed double-precision fractional\nvalues as specified by\n[IEEE 754](http:\/\/en.wikipedia.org\/wiki\/IEEE_floating_point). ",
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "__Schema",
+          "description": "A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.",
+          "fields": [
+            {
+              "name": "types",
+              "description": "A list of all types supported by this server.",
+              "args": []
+            },
+            {
+              "name": "queryType",
+              "description": "The type that query operations will be rooted at.",
+              "args": []
+            },
+            {
+              "name": "mutationType",
+              "description": "If this server supports mutation, the type that mutation operations will be rooted at.",
+              "args": []
+            },
+            {
+              "name": "subscriptionType",
+              "description": "If this server support subscription, the type that subscription operations will be rooted at.",
+              "args": []
+            },
+            {
+              "name": "directives",
+              "description": "A list of all directives supported by this server.",
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "__Type",
+          "description": "The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.\n\nDepending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name and description, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.",
+          "fields": [
+            {
+              "name": "kind",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "fields",
+              "description": null,
+              "args": [
+                {
+                  "name": "includeDeprecated",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false"
+                }
+              ]
+            },
+            {
+              "name": "interfaces",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "possibleTypes",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "enumValues",
+              "description": null,
+              "args": [
+                {
+                  "name": "includeDeprecated",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false"
+                }
+              ]
+            },
+            {
+              "name": "inputFields",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "ofType",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "ENUM",
+          "name": "__TypeKind",
+          "description": "An enum describing what kind of type a given `__Type` is.",
+          "fields": null,
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "__Field",
+          "description": "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
+          "fields": [
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "args",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "type",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "isDeprecated",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "deprecationReason",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "__InputValue",
+          "description": "Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.",
+          "fields": [
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "type",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "defaultValue",
+              "description": "A GraphQL-formatted string representing the default value for this input value.",
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "__EnumValue",
+          "description": "One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.",
+          "fields": [
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "isDeprecated",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "deprecationReason",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "__Directive",
+          "description": "A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.\n\nIn some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.",
+          "fields": [
+            {
+              "name": "name",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "locations",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "args",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "onOperation",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "onFragment",
+              "description": null,
+              "args": []
+            },
+            {
+              "name": "onField",
+              "description": null,
+              "args": []
+            }
+          ],
+          "inputFields": null
+        },
+        {
+          "kind": "ENUM",
+          "name": "__DirectiveLocation",
+          "description": "A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.",
+          "fields": null,
+          "inputFields": null
+        }
+      ]
+    }
+  }
+}
