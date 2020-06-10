@@ -2,7 +2,6 @@
 
 namespace Softonic\GraphQL\Console\Mutation;
 
-use Softonic\GraphQL\Config\MutationTypeConfig;
 use Softonic\GraphQL\DataObjects\Mutation\Collection;
 use Softonic\GraphQL\DataObjects\Mutation\Item;
 use stdClass;
@@ -32,15 +31,16 @@ class GenerateConfig extends Command
     protected function configure()
     {
         $this->setDescription('Creates a mutation config.')
-            ->setHelp('This command allows you to create a mutation config based in the result of a ' .
-                'introspection query for a specific mutation.');
+            ->setHelp(
+                'This command allows you to create a mutation config based in the result of an introspection query'
+                . ' for a specific mutation.'
+            );
 
-        $this
-            ->addArgument(
-                'instrospection-result',
-                InputArgument::REQUIRED,
-                'Json file with the introspection query result'
-            )
+        $this->addArgument(
+            'instrospection-result',
+            InputArgument::REQUIRED,
+            'Json file with the introspection query result'
+        )
             ->addOption(
                 'from-same-mutation',
                 'z',
@@ -99,7 +99,7 @@ class GenerateConfig extends Command
                 $initialMutationField => [
                     'linksTo'  => '.',
                     'type'     => Item::class,
-                    'children' => $this->getMutationConfig($jsonSchema, $inputType),
+                    'children' => $this->getMutationConfig($jsonSchema->data->__schema->types, $inputType),
                 ],
             ],
         ];
@@ -130,60 +130,84 @@ class GenerateConfig extends Command
         ];
     }
 
-    private function getMutationConfig(stdClass $jsonSchema, $inputType, $parentLinksTo = ''): array
+    private function getMutationConfig(array $graphqlTypes, $inputType, $parentLinksTo = ''): array
     {
         $children = [];
-        foreach ($jsonSchema->data->__schema->types as $type) {
-            if ($type->name === $inputType) {
-                foreach ($type->inputFields as $inputField) {
+        foreach ($graphqlTypes as $graphqlType) {
+            if ($graphqlType->name === $inputType) {
+                foreach ($graphqlType->inputFields as $inputField) {
                     [
-                        'type'         => $type,
+                        'type'         => $inputFieldType,
                         'isCollection' => $isCollection,
                     ] = $this->getTypeFromField($inputField);
 
-                    if ($type === self::SCALAR) {
+                    if ($inputFieldType === self::SCALAR) {
                         $children[$inputField->name] = [];
                         continue;
                     }
 
-                    $linksTo = $parentLinksTo;
-
-                    if (
-                        in_array($inputType, $this->generatedFieldTypes[$inputField->name] ?? [])
-                        && in_array($inputField->name, explode('.', $linksTo))
-                    ) {
+                    // Avoid cyclic relations to define infinite configs.
+                    if ($this->isFieldPreviouslyAdded($inputType, $inputField, $parentLinksTo)) {
                         continue;
                     }
 
                     $this->generatedFieldTypes[$inputField->name][] = $inputType;
 
-                    $queryTypeExists = true;
-                    if (!$this->fromSameMutation) {
-                        $queryType       = $this->getQueryTypeFromInputType($type);
-                        $queryTypeExists = $this->queryTypeExists($queryType, $jsonSchema->data->__schema->types);
-                    } else {
-                        $linksTo = "{$parentLinksTo}.{$inputField->name}";
-                    }
-
-                    if ($queryTypeExists) {
-                        $children[$inputField->name] = [
-                            'linksTo'  => $linksTo,
-                            'type'     => $isCollection ? Collection::class : Item::class,
-                            'children' => $this->getMutationConfig($jsonSchema, $type, $linksTo),
-                        ];
-                    } else {
-                        $children[$inputField->name] = [
-                            'type'     => $isCollection ? Collection::class : Item::class,
-                            'children' => $this->getMutationConfig($jsonSchema, $type,
-                                "{$linksTo}.{$inputField->name}"),
-                        ];
-                    }
+                    $children[$inputField->name] = $this->getFieldInfo(
+                        $graphqlTypes,
+                        $inputFieldType,
+                        $inputField->name,
+                        $parentLinksTo,
+                        $isCollection
+                    );
                 }
                 break;
             }
         }
 
         return $children;
+    }
+
+    private function isFieldPreviouslyAdded($inputType, $inputField, string $linksTo): bool
+    {
+        return in_array($inputType, $this->generatedFieldTypes[$inputField->name] ?? [])
+            && in_array($inputField->name, explode('.', $linksTo));
+    }
+
+    private function getFieldInfo(
+        array $graphqlTypes,
+        $graphqlType,
+        $inputFieldName,
+        $parentLinksTo,
+        $isCollection
+    ): array {
+        if ($this->fromSameMutation) {
+            return $this->defineConfigLinkedInputType(
+                "{$parentLinksTo}.{$inputFieldName}",
+                $isCollection,
+                $graphqlTypes,
+                $graphqlType
+            );
+        }
+
+        $queryType       = $this->getQueryTypeFromInputType($graphqlType);
+        $queryTypeExists = $this->queryTypeExists($queryType, $graphqlTypes);
+
+        if ($queryTypeExists) {
+            return $this->defineConfigLinkedInputType(
+                $parentLinksTo,
+                $isCollection,
+                $graphqlTypes,
+                $graphqlType
+            );
+        }
+
+        return $this->defineConfigNotLinkedInputType(
+            "{$parentLinksTo}.{$inputFieldName}",
+            $isCollection,
+            $graphqlTypes,
+            $graphqlType
+        );
     }
 
     private function getQueryTypeFromInputType($inputType): string
@@ -200,5 +224,30 @@ class GenerateConfig extends Command
         }
 
         return false;
+    }
+
+    private function defineConfigLinkedInputType(
+        string $linksTo,
+        bool $isCollection,
+        array $graphqlTypes,
+        string $type
+    ): array {
+        return [
+            'linksTo'  => $linksTo,
+            'type'     => $isCollection ? Collection::class : Item::class,
+            'children' => $this->getMutationConfig($graphqlTypes, $type, $linksTo),
+        ];
+    }
+
+    private function defineConfigNotLinkedInputType(
+        string $linksTo,
+        bool $isCollection,
+        array $graphqlTypes,
+        string $type
+    ): array {
+        return [
+            'type'     => $isCollection ? Collection::class : Item::class,
+            'children' => $this->getMutationConfig($graphqlTypes, $type, $linksTo),
+        ];
     }
 }

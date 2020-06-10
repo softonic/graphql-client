@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Softonic\GraphQL\Console\Mutation\GenerateConfig;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ConfigGenerator extends TestCase
+class ConfigGeneratorTest extends TestCase
 {
     public function testGenerateFromQuery()
     {
