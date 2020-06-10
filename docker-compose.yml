@@ -3,20 +3,20 @@ version: '3.2'
 services:
   test:
     volumes:
-      - ./:/app
-    image: ricc/composer-prestissimo:latest
+      - ./:/var/www/html
+    image: phpplatform/php-apache-xdebug-composer
     command: composer run test
 
   phpunit:
     volumes:
-      - ./:/app
-    image: ricc/composer-prestissimo:latest
+      - ./:/var/www/html
+    image: phpplatform/php-apache-xdebug-composer
     command: composer run phpunit
 
   fixcs:
     volumes:
-      - ./:/app
-    image: ricc/composer-prestissimo:latest
+      - ./:/var/www/html
+    image: phpplatform/php-apache-xdebug-composer
     command: composer run fix-cs
 
   psysh:

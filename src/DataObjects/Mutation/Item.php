@@ -2,7 +2,6 @@
 
 namespace Softonic\GraphQL\DataObjects\Mutation;
 
-use Softonic\GraphQL\Config\MutationTypeConfig;
 use Softonic\GraphQL\DataObjects\AbstractItem;
 use Softonic\GraphQL\DataObjects\Mutation\Traits\MutationObjectHandler;
 
@@ -24,16 +23,16 @@ class Item extends AbstractItem implements MutationObject
     {
         parent::__construct($arguments);
 
-        $this->config = $config;
+        $this->config     = $config;
         $this->hasChanged = $hasChanged;
     }
 
     public function __get(string $key)
     {
-        if ((!array_key_exists($key, $this->arguments) || ($this->arguments[$key] === null)) && array_key_exists(
-            $key,
-            $this->config
-        ) && ($this->config[$key]->type !== MutationTypeConfig::SCALAR_DATA_TYPE)) {
+        if ((!array_key_exists($key, $this->arguments) || ($this->arguments[$key] === null))
+            && array_key_exists($key, $this->config)
+            && (($this->config[$key]->type === Item::class) || ($this->config[$key]->type === Collection::class))
+        ) {
             $mutationTypeClass = $this->config[$key]->type;
 
             $this->arguments[$key] = new $mutationTypeClass([], $this->config[$key]->children);

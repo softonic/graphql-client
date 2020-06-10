@@ -9,6 +9,7 @@ use stdClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateConfig extends Command
@@ -23,6 +24,11 @@ class GenerateConfig extends Command
 
     protected $generatedFieldTypes = [];
 
+    /**
+     * @var bool|string|string[]|null
+     */
+    private $fromSameMutation;
+
     protected function configure()
     {
         $this->setDescription('Creates a mutation config.')
@@ -34,6 +40,12 @@ class GenerateConfig extends Command
                 'instrospection-result',
                 InputArgument::REQUIRED,
                 'Json file with the introspection query result'
+            )
+            ->addOption(
+                'from-same-mutation',
+                'z',
+                InputOption::VALUE_NONE,
+                'Flag to determine if the input for this config is the same mutation output'
             )
             ->addArgument(
                 'mutation',
@@ -48,8 +60,9 @@ class GenerateConfig extends Command
             return 1;
         }
 
-        $jsonSchema = file_get_contents($input->getArgument('instrospection-result'));
-        $mutation   = $input->getArgument('mutation');
+        $jsonSchema             = file_get_contents($input->getArgument('instrospection-result'));
+        $mutation               = $input->getArgument('mutation');
+        $this->fromSameMutation = $input->getOption('from-same-mutation');
 
         $mutationConfig = $this->generateConfig(json_decode($jsonSchema), $mutation);
 
@@ -129,19 +142,40 @@ class GenerateConfig extends Command
                     ] = $this->getTypeFromField($inputField);
 
                     if ($type === self::SCALAR) {
-                        $children[$inputField->name] = [
-                            'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                        ];
+                        $children[$inputField->name] = [];
                         continue;
                     }
 
-                    if (!in_array($inputType, $this->generatedFieldTypes[$inputField->name] ?? [])) {
-                        $this->generatedFieldTypes[$inputField->name][] = $inputType;
-                        $linksTo                                        = "{$parentLinksTo}.{$inputField->name}";
-                        $children[$inputField->name]                    = [
+                    $linksTo = $parentLinksTo;
+
+                    if (
+                        in_array($inputType, $this->generatedFieldTypes[$inputField->name] ?? [])
+                        && in_array($inputField->name, explode('.', $linksTo))
+                    ) {
+                        continue;
+                    }
+
+                    $this->generatedFieldTypes[$inputField->name][] = $inputType;
+
+                    $queryTypeExists = true;
+                    if (!$this->fromSameMutation) {
+                        $queryType       = $this->getQueryTypeFromInputType($type);
+                        $queryTypeExists = $this->queryTypeExists($queryType, $jsonSchema->data->__schema->types);
+                    } else {
+                        $linksTo = "{$parentLinksTo}.{$inputField->name}";
+                    }
+
+                    if ($queryTypeExists) {
+                        $children[$inputField->name] = [
                             'linksTo'  => $linksTo,
                             'type'     => $isCollection ? Collection::class : Item::class,
                             'children' => $this->getMutationConfig($jsonSchema, $type, $linksTo),
+                        ];
+                    } else {
+                        $children[$inputField->name] = [
+                            'type'     => $isCollection ? Collection::class : Item::class,
+                            'children' => $this->getMutationConfig($jsonSchema, $type,
+                                "{$linksTo}.{$inputField->name}"),
                         ];
                     }
                 }
@@ -150,5 +184,21 @@ class GenerateConfig extends Command
         }
 
         return $children;
+    }
+
+    private function getQueryTypeFromInputType($inputType): string
+    {
+        return preg_replace('/Input$/', '', $inputType);
+    }
+
+    private function queryTypeExists(string $queryType, $types): bool
+    {
+        foreach ($types as $type) {
+            if ($type->name === $queryType) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -26,8 +26,7 @@ class JsonPathAccessorTest extends TestCase
         $chaptersConfig->type     = Item::class;
         $chaptersConfig->children = ['upsert' => $upsertConfig];
 
-        $typeConfig       = new MutationTypeConfig();
-        $typeConfig->type = MutationTypeConfig::SCALAR_DATA_TYPE;
+        $typeConfig = new MutationTypeConfig();
 
         $bookConfig           = new MutationTypeConfig();
         $bookConfig->type     = Item::class;
@@ -39,8 +38,6 @@ class JsonPathAccessorTest extends TestCase
 
         $this->assertEquals($chaptersConfig, $bookConfig->get('.chapters'));
         $this->assertEquals($upsertConfig, $bookConfig->get('.chapters.upsert'));
-        // In this case, the child has the same name than a MutationTypeConfig attribute.
-        $this->assertEquals($typeConfig, $bookConfig->get('.type'));
     }
 
     public function testWhenObjectAttributesAreRetrieved()

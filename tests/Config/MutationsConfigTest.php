@@ -26,9 +26,7 @@ class MutationsConfigTest extends TestCase
                                     ],
                                 ],
                             ],
-                            'title'    => [
-                                'type' => MutationTypeConfig::SCALAR_DATA_TYPE,
-                            ],
+                            'title'    => [],
                         ],
                     ],
                 ],
@@ -43,8 +41,7 @@ class MutationsConfigTest extends TestCase
         $chaptersConfig->type     = Item::class;
         $chaptersConfig->children = ['upsert' => $upsertConfig];
 
-        $titleConfig       = new MutationTypeConfig();
-        $titleConfig->type = MutationTypeConfig::SCALAR_DATA_TYPE;
+        $titleConfig = new MutationTypeConfig();
 
         $bookConfig           = new MutationTypeConfig();
         $bookConfig->type     = Item::class;
