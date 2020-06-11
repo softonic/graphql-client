@@ -230,7 +230,6 @@ array (
                                                     ),
                                                     'delete' => 
                                                     array (
-                                                      'linksTo' => '.platforms.languages.activeVersion.activeInLanguages.activeVersionLanguage.binaries',
                                                       'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                                       'children' => 
                                                       array (
@@ -622,7 +621,6 @@ array (
                                                     ),
                                                     'delete' => 
                                                     array (
-                                                      'linksTo' => '.platforms.languages.activeVersion.activeInLanguages.versionsLanguage.binaries',
                                                       'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                                       'children' => 
                                                       array (
@@ -1199,7 +1197,6 @@ array (
                                             ),
                                             'delete' => 
                                             array (
-                                              'linksTo' => '.platforms.languages.activeVersion.languages.binaries',
                                               'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                               'children' => 
                                               array (
@@ -1559,7 +1556,6 @@ array (
                                     ),
                                     'delete' => 
                                     array (
-                                      'linksTo' => '.platforms.languages.activeVersion.platformversions',
                                       'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                       'children' => 
                                       array (
@@ -1658,7 +1654,6 @@ array (
                                     ),
                                     'delete' => 
                                     array (
-                                      'linksTo' => '.platforms.languages.activeVersionLanguage.binaries',
                                       'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                       'children' => 
                                       array (
@@ -2050,7 +2045,6 @@ array (
                                     ),
                                     'delete' => 
                                     array (
-                                      'linksTo' => '.platforms.languages.versionsLanguage.binaries',
                                       'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                       'children' => 
                                       array (
@@ -2980,7 +2974,6 @@ array (
                                                     ),
                                                     'delete' => 
                                                     array (
-                                                      'linksTo' => '.platforms.versions.activeInLanguages.activeVersion.languages.binaries',
                                                       'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                                       'children' => 
                                                       array (
@@ -3340,7 +3333,6 @@ array (
                                             ),
                                             'delete' => 
                                             array (
-                                              'linksTo' => '.platforms.versions.activeInLanguages.activeVersion.platformversions',
                                               'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                               'children' => 
                                               array (
@@ -3439,7 +3431,6 @@ array (
                                             ),
                                             'delete' => 
                                             array (
-                                              'linksTo' => '.platforms.versions.activeInLanguages.activeVersionLanguage.binaries',
                                               'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                               'children' => 
                                               array (
@@ -3831,7 +3822,6 @@ array (
                                             ),
                                             'delete' => 
                                             array (
-                                              'linksTo' => '.platforms.versions.activeInLanguages.versionsLanguage.binaries',
                                               'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                               'children' => 
                                               array (
@@ -4408,7 +4398,6 @@ array (
                                     ),
                                     'delete' => 
                                     array (
-                                      'linksTo' => '.platforms.versions.languages.binaries',
                                       'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                                       'children' => 
                                       array (
@@ -4768,7 +4757,6 @@ array (
                             ),
                             'delete' => 
                             array (
-                              'linksTo' => '.platforms.versions.platformversions',
                               'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                               'children' => 
                               array (
