@@ -79,8 +79,11 @@ class Mutation
                 break;
             }
 
-            if ($sourceValue instanceof QueryObject) {
-                $arguments[$sourceKey] = self::mutateChild($childConfig, $sourceValue, $childPath);
+            if (self::hasChildrenToMutate($childConfig, $sourceValue)) {
+                $mutatedChild = self::mutateChild($childConfig, $sourceValue, $childPath);
+                if (!is_null($mutatedChild)) {
+                    $arguments[$sourceKey] = $mutatedChild;
+                }
             } else {
                 $arguments[$sourceKey] = $sourceValue;
             }
@@ -94,16 +97,30 @@ class Mutation
         return ('.' === $parent) ? ".{$child}" : "{$parent}.{$child}";
     }
 
+    private static function hasChildrenToMutate(MutationTypeConfig $childConfig, $sourceValue): bool
+    {
+        return !is_null($childConfig->type) && !is_null($sourceValue);
+    }
+
     private static function mutateChild(
         MutationTypeConfig $config,
         QueryObject $sourceObject,
         string $path
-    ): MutationObject {
+    ): ?MutationObject {
         if (is_null($config->linksTo)) {
             $arguments = [];
             foreach ($config->children as $key => $childConfig) {
-                $childPath       = self::createPathFromParent($path, $key);
-                $arguments[$key] = self::mutateChild($childConfig, $sourceObject, $childPath);
+                if (!is_null($childConfig->type)) {
+                    $childPath    = self::createPathFromParent($path, $key);
+                    $mutatedChild = self::mutateChild($childConfig, $sourceObject, $childPath);
+                    if (!is_null($mutatedChild)) {
+                        $arguments[$key] = $mutatedChild;
+                    }
+                }
+            }
+
+            if (empty($arguments)) {
+                return null;
             }
 
             return new $config->type($arguments, $config->children, self::$hasChanged);

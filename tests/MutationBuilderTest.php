@@ -63,6 +63,7 @@ class MutationBuilderTest extends TestCase
                                     'id_book'    => [],
                                     'id_chapter' => [],
                                     'name'       => [],
+                                    'tags'       => [],
                                 ],
                             ],
                         ],
@@ -111,12 +112,36 @@ class MutationBuilderTest extends TestCase
                                                                             'words_count' => [],
                                                                         ],
                                                                     ],
+                                                                    'delete' => [
+                                                                        'type'     => MutationCollection::class,
+                                                                        'children' => [
+                                                                            'id_book'    => [],
+                                                                            'id_chapter' => [],
+                                                                            'id_page'    => [],
+                                                                            'id_line'    => [],
+                                                                        ],
+                                                                    ],
                                                                 ],
                                                             ],
                                                         ],
                                                     ],
+                                                    'delete' => [
+                                                        'type'     => MutationCollection::class,
+                                                        'children' => [
+                                                            'id_book'    => [],
+                                                            'id_chapter' => [],
+                                                            'id_page'    => [],
+                                                        ],
+                                                    ],
                                                 ],
                                             ],
+                                        ],
+                                    ],
+                                    'delete' => [
+                                        'type'     => MutationCollection::class,
+                                        'children' => [
+                                            'id_book'    => [],
+                                            'id_chapter' => [],
                                         ],
                                     ],
                                 ],
@@ -126,6 +151,13 @@ class MutationBuilderTest extends TestCase
                                 'children' => [
                                     'upsert' => [
                                         'linksTo'  => '.languages',
+                                        'type'     => MutationCollection::class,
+                                        'children' => [
+                                            'id_book'     => [],
+                                            'id_language' => [],
+                                        ],
+                                    ],
+                                    'delete' => [
                                         'type'     => MutationCollection::class,
                                         'children' => [
                                             'id_book'     => [],
@@ -262,6 +294,7 @@ class MutationBuilderTest extends TestCase
                                 'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                                 'id_chapter' => 1,
                                 'name'       => 'Chapter name 1',
+                                'tags'       => new QueryCollection(['tag1', 'tag2']),
                                 'invalid'    => 'nope',
                             ]
                         ),
@@ -270,6 +303,7 @@ class MutationBuilderTest extends TestCase
                                 'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                                 'id_chapter' => 2,
                                 'name'       => 'Chapter name 2',
+                                'tags'       => new QueryCollection([]),
                                 'invalid'    => 'nope',
                             ]
                         ),
@@ -290,11 +324,13 @@ class MutationBuilderTest extends TestCase
                         'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                         'id_chapter' => 1,
                         'name'       => 'Chapter name 1',
+                        'tags'       => ['tag1', 'tag2'],
                     ],
                     [
                         'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                         'id_chapter' => 2,
                         'name'       => 'Chapter name 2',
+                        'tags'       => [],
                     ],
                 ],
             ],
