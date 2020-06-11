@@ -2594,7 +2594,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "ProgramPlatformVersionLanguageBinaryInput",
+                    "name": "ProgramPlatformVersionLanguageBinaryIdInput",
                     "ofType": null
                   }
                 }
@@ -2607,6 +2607,84 @@
           "kind": "INPUT_OBJECT",
           "name": "ProgramPlatformVersionLanguageBinaryInput",
           "description": "Binaries available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_language",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_binary",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionLanguageBinaryIdInput",
+          "description": "Binaries identifier available for the program",
           "fields": null,
           "inputFields": [
             {
@@ -3862,7 +3940,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "ProgramPlatformVersionPlatformversionInput",
+                    "name": "ProgramPlatformVersionPlatformversionIdInput",
                     "ofType": null
                   }
                 }
@@ -3875,6 +3953,70 @@
           "kind": "INPUT_OBJECT",
           "name": "ProgramPlatformVersionPlatformversionInput",
           "description": "Platform versions available for the program",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id_program",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platform",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_version",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "id_platformversion",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ]
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ProgramPlatformVersionPlatformversionIdInput",
+          "description": "Platform versions identifier available for the program",
           "fields": null,
           "inputFields": [
             {

@@ -100,6 +100,7 @@ class Mutation
         string $path
     ): MutationObject {
         if (is_null($config->linksTo)) {
+            $arguments = [];
             foreach ($config->children as $key => $childConfig) {
                 $childPath       = self::createPathFromParent($path, $key);
                 $arguments[$key] = self::mutateChild($childConfig, $sourceObject, $childPath);
