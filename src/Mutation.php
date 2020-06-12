@@ -85,6 +85,9 @@ class Mutation
                     $arguments[$sourceKey] = $mutatedChild;
                 }
             } else {
+                if ($sourceValue instanceof QueryObject) {
+                    $sourceValue = $sourceValue->toArray();
+                }
                 $arguments[$sourceKey] = $sourceValue;
             }
         }

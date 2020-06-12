@@ -4,7 +4,6 @@ namespace Softonic\GraphQL;
 
 use PHPUnit\Framework\TestCase;
 use Softonic\GraphQL\Config\MutationsConfig;
-use Softonic\GraphQL\Config\MutationTypeConfig;
 use Softonic\GraphQL\DataObjects\Mutation\Collection as MutationCollection;
 use Softonic\GraphQL\DataObjects\Mutation\Item as MutationItem;
 use Softonic\GraphQL\DataObjects\Query\Collection as QueryCollection;
@@ -244,7 +243,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->simpleConfigMock, $queryItem);
+        $mutation = Mutation::build($this->simpleConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -253,7 +252,7 @@ class MutationBuilderTest extends TestCase
                 'genre'     => null,
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenThereIsAnEmptyChild()
@@ -267,7 +266,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->simpleConfigMock, $queryItem);
+        $mutation = Mutation::build($this->simpleConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -277,7 +276,7 @@ class MutationBuilderTest extends TestCase
                 'chapters'  => [],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenThereAreChildrenWithSimpleConfig()
@@ -312,7 +311,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->simpleConfigMock, $queryItem);
+        $mutation = Mutation::build($this->simpleConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -335,7 +334,7 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenThereAreChildrenWithComplexConfig()
@@ -366,7 +365,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -389,7 +388,7 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenThereAreTwoChildren()
@@ -436,7 +435,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -471,7 +470,7 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenThereIsAThirdLevel()
@@ -550,7 +549,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -613,7 +612,7 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenThereIsAFourthLevel()
@@ -721,7 +720,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -811,7 +810,7 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenTheSourceHasItemsWithItemArguments()
@@ -831,7 +830,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->complexConfigMock, $queryItem);
+        $mutation = Mutation::build($this->complexConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -847,7 +846,7 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenTheSourceHasTheSameStructureThanTheConfig()
@@ -882,7 +881,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->sameQueryStructureConfigMock, $queryItem);
+        $mutation = Mutation::build($this->sameQueryStructureConfigMock, $queryItem, true);
 
         $expectedMutationArguments = [
             'book' => [
@@ -905,7 +904,7 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenRootIsACollectionWithoutChildren()
@@ -929,7 +928,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->collectionConfigMock, $queryCollection);
+        $mutation = Mutation::build($this->collectionConfigMock, $queryCollection, true);
 
         $expectedMutationArguments = [
             'books' => [
@@ -945,7 +944,7 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
     public function testWhenRootIsACollectionWithChildren()
@@ -991,7 +990,7 @@ class MutationBuilderTest extends TestCase
             ]
         );
 
-        $mutation = Mutation::build($this->collectionConfigMock, $queryCollection);
+        $mutation = Mutation::build($this->collectionConfigMock, $queryCollection, true);
 
         $expectedMutationArguments = [
             'books' => [
@@ -1021,6 +1020,6 @@ class MutationBuilderTest extends TestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMutationArguments, $mutation->toArray());
+        $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 }
