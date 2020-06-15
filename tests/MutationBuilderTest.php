@@ -273,7 +273,6 @@ class MutationBuilderTest extends TestCase
                 'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                 'id_author' => 1234,
                 'genre'     => null,
-                'chapters'  => [],
             ],
         ];
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
@@ -562,9 +561,6 @@ class MutationBuilderTest extends TestCase
                             'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                             'id_chapter' => 1,
                             'name'       => 'Chapter name 1',
-                            'pages'      => [
-                                'upsert' => [],
-                            ],
                         ],
                         [
                             'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -790,18 +786,12 @@ class MutationBuilderTest extends TestCase
                                         'id_chapter'        => 2,
                                         'id_page'           => 1,
                                         'has_illustrations' => false,
-                                        'lines'             => [
-                                            'upsert' => [],
-                                        ],
                                     ],
                                     [
                                         'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                                         'id_chapter'        => 2,
                                         'id_page'           => 2,
                                         'has_illustrations' => false,
-                                        'lines'             => [
-                                            'upsert' => [],
-                                        ],
                                     ],
                                 ],
                             ],

@@ -147,11 +147,9 @@ class GenerateConfig extends Command
                     }
 
                     // Avoid cyclic relations to define infinite configs.
-                    if ($this->isFieldPreviouslyAdded($inputType, $inputField, $parentLinksTo)) {
+                    if ($this->isFieldPreviouslyAdded($inputFieldType, $inputField, $parentLinksTo)) {
                         continue;
                     }
-
-                    $this->generatedFieldTypes[$inputField->name][] = $inputType;
 
                     $children[$inputField->name] = $this->getFieldInfo(
                         $graphqlTypes,
@@ -170,8 +168,19 @@ class GenerateConfig extends Command
 
     private function isFieldPreviouslyAdded($inputType, $inputField, string $linksTo): bool
     {
-        return in_array($inputType, $this->generatedFieldTypes[$inputField->name] ?? [])
-            && in_array($inputField->name, explode('.', $linksTo));
+        $linksParts = explode('.', $linksTo);
+        for ($i=1, $iMax = count($linksParts); $i<= $iMax; $i++) {
+            $parentLink = implode('.', array_slice($linksParts, 0, $i));
+            if (
+                in_array($inputType, $this->generatedFieldTypes[$parentLink] ?? [])
+            ) {
+                return true;
+            }
+        }
+
+        $this->generatedFieldTypes[$linksTo][] = $inputType;
+
+        return false;
     }
 
     private function getFieldInfo(
