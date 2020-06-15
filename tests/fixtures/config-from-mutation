@@ -140,31 +140,6 @@ array (
                                 'software_languages' => 
                                 array (
                                 ),
-                                'activeInLanguages' => 
-                                array (
-                                  'linksTo' => '.platforms.upsert.languages.upsert.activeVersion.upsert.activeInLanguages',
-                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
-                                  'children' => 
-                                  array (
-                                    'delete' => 
-                                    array (
-                                      'linksTo' => '.platforms.upsert.languages.upsert.activeVersion.upsert.activeInLanguages.delete',
-                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
-                                      'children' => 
-                                      array (
-                                        'id_program' => 
-                                        array (
-                                        ),
-                                        'id_platform' => 
-                                        array (
-                                        ),
-                                        'id_language' => 
-                                        array (
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
                                 'binaries' => 
                                 array (
                                   'linksTo' => '.platforms.upsert.languages.upsert.activeVersion.upsert.binaries',
@@ -328,9 +303,6 @@ array (
                                                 array (
                                                 ),
                                                 'file_type' => 
-                                                array (
-                                                ),
-                                                'id_upload_request' => 
                                                 array (
                                                 ),
                                                 'type' => 
@@ -726,6 +698,29 @@ array (
                                   'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                                   'children' => 
                                   array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.binaries.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_binary' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
                                     'delete' => 
                                     array (
                                       'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.binaries.delete',
@@ -757,6 +752,35 @@ array (
                                   'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                                   'children' => 
                                   array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.binariesupload.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'url' => 
+                                        array (
+                                        ),
+                                        'file_type' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 'images' => 
@@ -765,6 +789,47 @@ array (
                                   'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                                   'children' => 
                                   array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.images.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_image' => 
+                                        array (
+                                        ),
+                                        'path' => 
+                                        array (
+                                        ),
+                                        'filename' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                        'priority' => 
+                                        array (
+                                        ),
+                                        'width' => 
+                                        array (
+                                        ),
+                                        'height' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
                                     'delete' => 
                                     array (
                                       'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.images.delete',
@@ -796,6 +861,38 @@ array (
                                   'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                                   'children' => 
                                   array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.imagesupload.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'url' => 
+                                        array (
+                                        ),
+                                        'filename' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                        'priority' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 'reviewtypes' => 
@@ -804,6 +901,63 @@ array (
                                   'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                                   'children' => 
                                   array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.reviewtypes.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_reviewtype' => 
+                                        array (
+                                        ),
+                                        'id_review' => 
+                                        array (
+                                        ),
+                                        'reviewgenerator' => 
+                                        array (
+                                          'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.reviewtypes.upsert.reviewgenerator',
+                                          'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                          'children' => 
+                                          array (
+                                            'upsert' => 
+                                            array (
+                                              'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.reviewtypes.upsert.reviewgenerator.upsert',
+                                              'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                              'children' => 
+                                              array (
+                                                'id_program' => 
+                                                array (
+                                                ),
+                                                'id_platform' => 
+                                                array (
+                                                ),
+                                                'id_version' => 
+                                                array (
+                                                ),
+                                                'id_language' => 
+                                                array (
+                                                ),
+                                                'id_reviewtype' => 
+                                                array (
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     'delete' => 
                                     array (
                                       'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.reviewtypes.delete',
@@ -835,6 +989,32 @@ array (
                                   'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                                   'children' => 
                                   array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.urltypes.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_urltype' => 
+                                        array (
+                                        ),
+                                        'id_url' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
                                     'delete' => 
                                     array (
                                       'linksTo' => '.platforms.upsert.languages.upsert.activeVersionLanguage.upsert.urltypes.delete',
@@ -890,6 +1070,380 @@ array (
                           'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                           'children' => 
                           array (
+                            'upsert' => 
+                            array (
+                              'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert',
+                              'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                              'children' => 
+                              array (
+                                'id_program' => 
+                                array (
+                                ),
+                                'id_platform' => 
+                                array (
+                                ),
+                                'id_version' => 
+                                array (
+                                ),
+                                'id_language' => 
+                                array (
+                                ),
+                                'program_name' => 
+                                array (
+                                ),
+                                'about_license' => 
+                                array (
+                                ),
+                                'binaries' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.binaries',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.binaries.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_binary' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                    'delete' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.binaries.delete',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_binary' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'binariesupload' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.binariesupload',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.binariesupload.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'url' => 
+                                        array (
+                                        ),
+                                        'file_type' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'images' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.images',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.images.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_image' => 
+                                        array (
+                                        ),
+                                        'path' => 
+                                        array (
+                                        ),
+                                        'filename' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                        'priority' => 
+                                        array (
+                                        ),
+                                        'width' => 
+                                        array (
+                                        ),
+                                        'height' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                    'delete' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.images.delete',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_image' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'imagesupload' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.imagesupload',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.imagesupload.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'url' => 
+                                        array (
+                                        ),
+                                        'filename' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                        'priority' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'reviewtypes' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.reviewtypes',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.reviewtypes.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_reviewtype' => 
+                                        array (
+                                        ),
+                                        'id_review' => 
+                                        array (
+                                        ),
+                                        'reviewgenerator' => 
+                                        array (
+                                          'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.reviewtypes.upsert.reviewgenerator',
+                                          'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                          'children' => 
+                                          array (
+                                            'upsert' => 
+                                            array (
+                                              'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.reviewtypes.upsert.reviewgenerator.upsert',
+                                              'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                              'children' => 
+                                              array (
+                                                'id_program' => 
+                                                array (
+                                                ),
+                                                'id_platform' => 
+                                                array (
+                                                ),
+                                                'id_version' => 
+                                                array (
+                                                ),
+                                                'id_language' => 
+                                                array (
+                                                ),
+                                                'id_reviewtype' => 
+                                                array (
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    'delete' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.reviewtypes.delete',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_reviewtype' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'urltypes' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.urltypes',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.urltypes.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_urltype' => 
+                                        array (
+                                        ),
+                                        'id_url' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                    'delete' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.upsert.urltypes.delete',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_urltype' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                             'delete' => 
                             array (
                               'linksTo' => '.platforms.upsert.languages.upsert.versionsLanguage.delete',
@@ -1346,15 +1900,15 @@ array (
                         'software_languages' => 
                         array (
                         ),
-                        'activeInLanguages' => 
+                        'binaries' => 
                         array (
-                          'linksTo' => '.platforms.upsert.versions.upsert.activeInLanguages',
+                          'linksTo' => '.platforms.upsert.versions.upsert.binaries',
                           'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                           'children' => 
                           array (
-                            'delete' => 
+                            'upsert' => 
                             array (
-                              'linksTo' => '.platforms.upsert.versions.upsert.activeInLanguages.delete',
+                              'linksTo' => '.platforms.upsert.versions.upsert.binaries.upsert',
                               'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
                               'children' => 
                               array (
@@ -1364,19 +1918,17 @@ array (
                                 'id_platform' => 
                                 array (
                                 ),
-                                'id_language' => 
+                                'id_version' => 
+                                array (
+                                ),
+                                'id_binary' => 
+                                array (
+                                ),
+                                'type' => 
                                 array (
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        'binaries' => 
-                        array (
-                          'linksTo' => '.platforms.upsert.versions.upsert.binaries',
-                          'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
-                          'children' => 
-                          array (
                             'delete' => 
                             array (
                               'linksTo' => '.platforms.upsert.versions.upsert.binaries.delete',
@@ -1405,6 +1957,380 @@ array (
                           'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                           'children' => 
                           array (
+                            'upsert' => 
+                            array (
+                              'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert',
+                              'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                              'children' => 
+                              array (
+                                'id_program' => 
+                                array (
+                                ),
+                                'id_platform' => 
+                                array (
+                                ),
+                                'id_version' => 
+                                array (
+                                ),
+                                'id_language' => 
+                                array (
+                                ),
+                                'program_name' => 
+                                array (
+                                ),
+                                'about_license' => 
+                                array (
+                                ),
+                                'binaries' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.binaries',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.binaries.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_binary' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                    'delete' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.binaries.delete',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_binary' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'binariesupload' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.binariesupload',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.binariesupload.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'url' => 
+                                        array (
+                                        ),
+                                        'file_type' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'images' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.images',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.images.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_image' => 
+                                        array (
+                                        ),
+                                        'path' => 
+                                        array (
+                                        ),
+                                        'filename' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                        'priority' => 
+                                        array (
+                                        ),
+                                        'width' => 
+                                        array (
+                                        ),
+                                        'height' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                    'delete' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.images.delete',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_image' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'imagesupload' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.imagesupload',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.imagesupload.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'url' => 
+                                        array (
+                                        ),
+                                        'filename' => 
+                                        array (
+                                        ),
+                                        'type' => 
+                                        array (
+                                        ),
+                                        'priority' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'reviewtypes' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.reviewtypes',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.reviewtypes.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_reviewtype' => 
+                                        array (
+                                        ),
+                                        'id_review' => 
+                                        array (
+                                        ),
+                                        'reviewgenerator' => 
+                                        array (
+                                          'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.reviewtypes.upsert.reviewgenerator',
+                                          'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                          'children' => 
+                                          array (
+                                            'upsert' => 
+                                            array (
+                                              'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.reviewtypes.upsert.reviewgenerator.upsert',
+                                              'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                              'children' => 
+                                              array (
+                                                'id_program' => 
+                                                array (
+                                                ),
+                                                'id_platform' => 
+                                                array (
+                                                ),
+                                                'id_version' => 
+                                                array (
+                                                ),
+                                                'id_language' => 
+                                                array (
+                                                ),
+                                                'id_reviewtype' => 
+                                                array (
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    'delete' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.reviewtypes.delete',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_reviewtype' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                'urltypes' => 
+                                array (
+                                  'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.urltypes',
+                                  'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
+                                  'children' => 
+                                  array (
+                                    'upsert' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.urltypes.upsert',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_urltype' => 
+                                        array (
+                                        ),
+                                        'id_url' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                    'delete' => 
+                                    array (
+                                      'linksTo' => '.platforms.upsert.versions.upsert.languages.upsert.urltypes.delete',
+                                      'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                                      'children' => 
+                                      array (
+                                        'id_program' => 
+                                        array (
+                                        ),
+                                        'id_platform' => 
+                                        array (
+                                        ),
+                                        'id_version' => 
+                                        array (
+                                        ),
+                                        'id_language' => 
+                                        array (
+                                        ),
+                                        'id_urltype' => 
+                                        array (
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                             'delete' => 
                             array (
                               'linksTo' => '.platforms.upsert.versions.upsert.languages.delete',
@@ -1433,6 +2359,26 @@ array (
                           'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Item',
                           'children' => 
                           array (
+                            'upsert' => 
+                            array (
+                              'linksTo' => '.platforms.upsert.versions.upsert.platformversions.upsert',
+                              'type' => 'Softonic\\GraphQL\\DataObjects\\Mutation\\Collection',
+                              'children' => 
+                              array (
+                                'id_program' => 
+                                array (
+                                ),
+                                'id_platform' => 
+                                array (
+                                ),
+                                'id_version' => 
+                                array (
+                                ),
+                                'id_platformversion' => 
+                                array (
+                                ),
+                              ),
+                            ),
                             'delete' => 
                             array (
                               'linksTo' => '.platforms.upsert.versions.upsert.platformversions.delete',

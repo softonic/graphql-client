@@ -169,9 +169,9 @@ class GenerateConfig extends Command
     private function isFieldPreviouslyAdded($inputType, $inputField, string $linksTo): bool
     {
         $linksParts = explode('.', $linksTo);
-        for($i=1, $iMax = count($linksParts); $i<= $iMax; $i++) {
+        for ($i=1, $iMax = count($linksParts); $i<= $iMax; $i++) {
             $parentLink = implode('.', array_slice($linksParts, 0, $i));
-            if(
+            if (
                 in_array($inputType, $this->generatedFieldTypes[$parentLink] ?? [])
             ) {
                 return true;

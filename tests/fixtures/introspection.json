@@ -2872,16 +2872,6 @@
               "defaultValue": null
             },
             {
-              "name": "id_upload_request",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
               "name": "type",
               "description": null,
               "type": {
