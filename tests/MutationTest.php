@@ -986,6 +986,7 @@ class MutationTest extends TestCase
         $this->assertTrue($mutation->book->chapters->upsert->has('pages.upsert.has_illustrations'));
         $this->assertFalse($mutation->book->chapters->upsert->has('pages.upsert.invalid'));
         $this->assertFalse($mutation->book->has('not_existing.upsert.invalid'));
+        $this->assertFalse($mutation->book->has('chapters.upsert.pages.upsert.has_illustrations.invalid'));
     }
 
     public function testWhenThirdLevelItemsAreUpdated()
