@@ -402,9 +402,9 @@ class MutationTest extends TestCase
             [
                 'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
                 'id_chapter' => 3,
-                'name'       => 'Chapter name',
+                'name'       => 'Chapter fail',
             ]
-        );
+        )->name = 'Chapter name';
 
         $expectedMutationData = [
             'book' => [
