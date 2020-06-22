@@ -24,7 +24,7 @@ abstract class AbstractItem extends AbstractObject implements \Iterator
             return true;
         }
 
-        if(!$this->arguments[$firstKey] instanceof DataObject) {
+        if (!$this->arguments[$firstKey] instanceof DataObject) {
             return false;
         }
 
