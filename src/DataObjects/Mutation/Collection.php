@@ -7,11 +7,12 @@ class Collection extends FilteredCollection
     public function add(array $itemData): MutationObject
     {
         if (!empty($this->arguments[0]) && $this->arguments[0] instanceof Collection) {
+            $elements = [];
             foreach ($this->arguments as $argument) {
-                $argument->add($itemData);
+                $elements[] = $argument->add($itemData);
             }
 
-            return $argument;
+            return new FilteredCollection($elements);
         }
 
         $item              = new Item($itemData, $this->config, true);
