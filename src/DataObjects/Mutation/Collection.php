@@ -12,7 +12,7 @@ class Collection extends FilteredCollection
                 $elements[] = $argument->add($itemData);
             }
 
-            return new FilteredCollection($elements);
+            return new FilteredCollection($elements, $this->config);
         }
 
         $item              = new Item($itemData, $this->config, true);
