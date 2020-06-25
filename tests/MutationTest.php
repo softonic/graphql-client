@@ -312,6 +312,25 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
+    public function testWhenThereAreMalformedCollectionsItShouldThrowAnError()
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'genre'     => null,
+            'chapters'  => new QueryCollection([
+                'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_chapter' => 1,
+                'name'       => 'Chapter name',
+            ]),
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        Mutation::build($this->itemConfigMock, $book);
+    }
+
+
     public function testWhenThereAreChangesInRootLevelWithSecondLevelInput()
     {
         $book = new QueryItem([
