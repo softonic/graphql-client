@@ -1,7 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+if (file_exists(__DIR__.'/../../autoload.php')) {
+    // The usual location, since this file will reside in vendor/bin
+    require __DIR__.'/../../autoload.php';
+} else {
+    // Useful when doing development on this package
+    require __DIR__.'/../vendor/autoload.php';
+}
 
 use Softonic\GraphQL\Console\Mutation\GenerateConfig;
 use Softonic\GraphQL\Console\Mutation\GetIntrospection;
