@@ -29,7 +29,11 @@ class CollectionIterator extends RecursiveArrayIterator
             return true;
         }
 
-        return $current->hasChildren();
+        if ($current instanceof AbstractCollection) {
+            return $current->hasChildren();
+        }
+
+        throw new \InvalidArgumentException("Collections only can contain Items or other Collection, instead '$current' value found");
     }
 
     public function getChildren()

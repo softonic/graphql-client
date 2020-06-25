@@ -76,7 +76,7 @@ class Mutation
             $childConfig = self::$mutationTypeConfig->get($childPath);
 
             if (is_null($childConfig)) {
-                break;
+                continue;
             }
 
             if (self::hasChildrenToMutate($childConfig, $sourceValue)) {
