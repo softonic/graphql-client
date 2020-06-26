@@ -97,7 +97,10 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
         $filteredData = [];
         if ($this->areAllArgumentsCollections()) {
             foreach ($this->arguments as $argument) {
-                $filteredData[] = $argument->filter($filters);
+                $data = $argument->filter($filters);
+                if(!$data->isEmpty()) {
+                    $filteredData[] = $data;
+                }
             }
         } else {
             $filteredData = $this->filterItems($this->arguments, $filters);
