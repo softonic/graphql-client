@@ -1174,10 +1174,35 @@ class MutationTest extends TestCase
                         ]),
                     ]),
                 ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 2,
+                    'name'       => 'Chapter name',
+                    'pov'        => null,
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 3,
+                            'id_page'           => 1,
+                            'has_illustrations' => true,
+                        ]),
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 3,
+                            'id_page'           => 2,
+                            'has_illustrations' => true,
+                        ]),
+                    ]),
+                ]),
             ]),
         ]);
 
         $mutation = Mutation::build($this->itemConfigMock, $book);
+
+        $this->assertNull(
+            $mutation->book->chapters->upsert->pages->upsert->filter(['has_illustrations' => false])[2],
+            'The filter should remove the empty collections like chapter 3 with all pages illustrated.'
+        );
 
         $mutation->book->chapters->upsert->pages->upsert->filter(['id_page' => 1])
             ->set(['has_illustrations' => true]);
