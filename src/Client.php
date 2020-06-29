@@ -44,14 +44,17 @@ class Client
 
     private function executeQuery(string $query, $variables): Response
     {
+        $body = ['query' => $query];
+        if (!is_null($variables)) {
+            $options['body']['variables'] = $variables;
+        }
+
         $options = [
-            'json' => [
-                'query' => $query,
+            'body'    => json_encode($body, JSON_UNESCAPED_SLASHES),
+            'headers' => [
+                'Content-Type' => 'application/json',
             ],
         ];
-        if (!is_null($variables)) {
-            $options['json']['variables'] = $variables;
-        }
 
         try {
             $response = $this->httpClient->request('POST', '', $options);
