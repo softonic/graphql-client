@@ -89,8 +89,11 @@ QUERY;
                 'POST',
                 '',
                 [
-                    'json' => [
+                    'body' => json_encode([
                         'query' => $query,
+                    ], JSON_UNESCAPED_SLASHES),
+                    'headers' => [
+                        'Content-Type' => 'application/json',
                     ],
                 ]
             )
@@ -119,8 +122,11 @@ QUERY;
                 'POST',
                 '',
                 [
-                    'json' => [
+                    'body' => json_encode([
                         'query' => $query,
+                    ], JSON_UNESCAPED_SLASHES),
+                    'headers' => [
+                        'Content-Type' => 'application/json',
                     ],
                 ]
             )
@@ -151,9 +157,12 @@ QUERY;
                 'POST',
                 '',
                 [
-                    'json' => [
-                        'query'     => $query,
+                    'body' => json_encode([
+                        'query' => $query,
                         'variables' => $variables,
+                    ], JSON_UNESCAPED_SLASHES),
+                    'headers' => [
+                        'Content-Type' => 'application/json',
                     ],
                 ]
             )
@@ -195,9 +204,12 @@ QUERY;
                 'POST',
                 '',
                 [
-                    'json' => [
-                        'query'     => $query,
+                    'body' => json_encode([
+                        'query' => $query,
                         'variables' => $variables,
+                    ], JSON_UNESCAPED_SLASHES),
+                    'headers' => [
+                        'Content-Type' => 'application/json',
                     ],
                 ]
             )
