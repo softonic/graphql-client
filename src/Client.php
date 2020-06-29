@@ -46,7 +46,7 @@ class Client
     {
         $body = ['query' => $query];
         if (!is_null($variables)) {
-            $options['body']['variables'] = $variables;
+            $body['variables'] = $variables;
         }
 
         $options = [
