@@ -2190,7 +2190,7 @@ class MutationTest extends TestCase
         $mutation = Mutation::build($this->itemConfigMock, $book);
 
         $i=0;
-        foreach($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $line) {
+        foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $line) {
             $i++;
         }
         $this->assertEquals(4, $i);
