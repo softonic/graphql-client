@@ -2170,11 +2170,30 @@ class MutationTest extends TestCase
                         ]),
                     ]),
                 ]),
+                new QueryItem([
+                    'id_book'    => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                    'id_chapter' => 3,
+                    'name'       => 'Chapter name',
+                    'pov'        => 'first person',
+                    'pages'      => new QueryCollection([
+                        new QueryItem([
+                            'id_book'           => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                            'id_chapter'        => 2,
+                            'id_page'           => 1,
+                            'has_illustrations' => false,
+                        ]),
+                    ]),
+                ]),
             ]),
         ]);
 
         $mutation = Mutation::build($this->itemConfigMock, $book);
 
+        $i=0;
+        foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $line) {
+            $i++;
+        }
+        $this->assertEquals(4, $i);
         $this->assertEquals(4, $mutation->book->chapters->upsert->pages->upsert->lines->upsert->count());
     }
 

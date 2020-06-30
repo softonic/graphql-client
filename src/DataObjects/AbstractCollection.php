@@ -56,12 +56,13 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
 
         $items = [];
         foreach ($this->arguments as $argument) {
-            if ($argument->{$key} instanceof Collection) {
-                foreach ($argument->{$key} as $item) {
+            $arguments = $argument->{$key};
+            if ($arguments instanceof Collection) {
+                foreach ($arguments as $item) {
                     $items[] = $item;
                 }
             } else {
-                $items[] = $argument->{$key};
+                $items[] = $arguments;
             }
         }
 
@@ -98,7 +99,7 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
         if ($this->areAllArgumentsCollections()) {
             foreach ($this->arguments as $argument) {
                 $data = $argument->filter($filters);
-                if(!$data->isEmpty()) {
+                if (!$data->isEmpty()) {
                     $filteredData[] = $data;
                 }
             }

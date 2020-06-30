@@ -27,5 +27,7 @@ abstract class AbstractObject implements JsonSerializable, DataObject
         return $item;
     }
 
+    abstract public function isEmpty(): bool;
+
     abstract public function has(string $key): bool;
 }

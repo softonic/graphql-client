@@ -48,6 +48,11 @@ abstract class AbstractItem extends AbstractObject implements \Iterator
         return $data === $this->arguments;
     }
 
+    public function isEmpty(): bool
+    {
+        return empty($this->arguments);
+    }
+
     public function jsonSerialize()
     {
         $item = [];

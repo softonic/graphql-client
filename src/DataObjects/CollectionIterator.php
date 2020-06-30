@@ -15,6 +15,12 @@ class CollectionIterator extends RecursiveArrayIterator
             return $this->valid();
         }
 
+        if ($isValid && $this->current()->isEmpty()) {
+            $this->next();
+
+            return $this->valid();
+        }
+
         return $isValid;
     }
 
