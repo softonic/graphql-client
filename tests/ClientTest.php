@@ -2,8 +2,18 @@
 
 namespace Softonic\GraphQL\Test;
 
+use Exception;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\TransferException;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Softonic\GraphQL\Client;
+use Softonic\GraphQL\Response;
+use Softonic\GraphQL\ResponseBuilder;
+use UnexpectedValueException;
 
 class ClientTest extends TestCase
 {
@@ -13,8 +23,8 @@ class ClientTest extends TestCase
 
     public function setUp()
     {
-        $this->httpClient = $this->createMock(\GuzzleHttp\ClientInterface::class);
-        $this->mockGraphqlResponseBuilder = $this->createMock(\Softonic\GraphQL\ResponseBuilder::class);
+        $this->httpClient = $this->createMock(ClientInterface::class);
+        $this->mockGraphqlResponseBuilder = $this->createMock(ResponseBuilder::class);
         $this->client = new Client($this->httpClient, $this->mockGraphqlResponseBuilder);
     }
 
@@ -22,9 +32,9 @@ class ClientTest extends TestCase
     {
         $this->httpClient->expects($this->once())
             ->method('request')
-            ->willThrowException(new \GuzzleHttp\Exception\TransferException('library error'));
+            ->willThrowException(new TransferException('library error'));
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Network Error.');
 
         $query = $this->getSimpleQuery();
@@ -35,9 +45,10 @@ class ClientTest extends TestCase
     {
         $previousException = null;
         try {
-            $originalException = new \GuzzleHttp\Exception\ServerException(
+            $originalException = new ServerException(
                 'Server side error',
-                $this->createMock(\Psr\Http\Message\RequestInterface::class)
+                $this->createMock(RequestInterface::class),
+                $this->createMock(ResponseInterface::class)
             );
 
             $this->httpClient->expects($this->once())
@@ -46,7 +57,7 @@ class ClientTest extends TestCase
 
             $query = $this->getSimpleQuery();
             $this->client->query($query);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $previousException = $e->getPrevious();
         } finally {
             $this->assertSame($originalException, $previousException);
@@ -57,11 +68,11 @@ class ClientTest extends TestCase
     {
         $query = $this->getSimpleQuery();
 
-        $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $mockHttpResponse = $this->createMock(ResponseInterface::class);
         $this->mockGraphqlResponseBuilder->expects($this->once())
             ->method('build')
             ->with($mockHttpResponse)
-            ->willThrowException(new \UnexpectedValueException('Invalid JSON response.'));
+            ->willThrowException(new UnexpectedValueException('Invalid JSON response.'));
         $this->httpClient->expects($this->once())
             ->method('request')
             ->with(
@@ -75,7 +86,7 @@ class ClientTest extends TestCase
             )
             ->willReturn($mockHttpResponse);
 
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Invalid JSON response.');
 
         $this->client->query($query);
@@ -83,8 +94,8 @@ class ClientTest extends TestCase
 
     public function testSimpleQuery()
     {
-        $mockResponse = $this->createMock(\Softonic\GraphQL\Response::class);
-        $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $mockResponse = $this->createMock(Response::class);
+        $mockHttpResponse = $this->createMock(ResponseInterface::class);
 
         $response = [
             'data' => [
@@ -114,13 +125,13 @@ class ClientTest extends TestCase
             ->willReturn($mockHttpResponse);
 
         $response = $this->client->query($query);
-        $this->assertInstanceOf(\Softonic\GraphQL\Response::class, $response);
+        $this->assertInstanceOf(Response::class, $response);
     }
 
     public function testQueryWithVariables()
     {
-        $mockResponse = $this->createMock(\Softonic\GraphQL\Response::class);
-        $mockHttpResponse = $this->createMock(\Psr\Http\Message\ResponseInterface::class);
+        $mockResponse = $this->createMock(Response::class);
+        $mockHttpResponse = $this->createMock(ResponseInterface::class);
         
         $response = [
             'data' => [
@@ -155,7 +166,7 @@ class ClientTest extends TestCase
             ->willReturn($mockHttpResponse);
 
         $response = $this->client->query($query, $variables);
-        $this->assertInstanceOf(\Softonic\GraphQL\Response::class, $response);
+        $this->assertInstanceOf(Response::class, $response);
     }
 
     private function getSimpleQuery()

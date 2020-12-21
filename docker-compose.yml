@@ -1,19 +1,31 @@
-version: '3.2'
+version: "3.7"
 
 services:
+  php:
+    volumes:
+    - ./:/app
+    image: composer:2.0
+
+  install:
+    volumes:
+    - ./:/app
+    image: composer:2.0
+    command: composer install
+
+  phpunit:
+    volumes:
+    - ./:/app
+    image: composer:2.0
+    command: composer phpunit
+
   test:
     volumes:
-      - ./:/app
-    image: ricc/composer-prestissimo:latest
-    command: composer run test
+    - ./:/app
+    image: composer:2.0
+    command: composer run tests
 
   fixcs:
     volumes:
-      - ./:/app
-    image: ricc/composer-prestissimo:latest
+    - ./:/app
+    image: composer:2.0
     command: composer run fix-cs
-
-  psysh:
-    volumes:
-      - ./:/app
-    image: ricc/psysh:latest
