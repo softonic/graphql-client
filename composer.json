@@ -10,7 +10,7 @@
   },
   "require": {
     "php": ">=7.0",
-    "guzzlehttp/guzzle": "^6.3",
+    "guzzlehttp/guzzle": "^6.3 || ^7.0",
     "softonic/guzzle-oauth2-middleware": "^1.1"
   },
   "require-dev": {
