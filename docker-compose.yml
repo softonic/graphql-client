@@ -1,25 +1,31 @@
-version: '3.2'
+version: "3.7"
 
 services:
-  test:
+  php:
     volumes:
-      - ./:/var/www/html
-    image: phpplatform/php-apache-xdebug-composer
-    command: composer run test
+    - ./:/app
+    image: composer:2.0
+
+  install:
+    volumes:
+    - ./:/app
+    image: composer:2.0
+    command: composer install
 
   phpunit:
     volumes:
-      - ./:/var/www/html
-    image: phpplatform/php-apache-xdebug-composer
-    command: composer run phpunit
+    - ./:/app
+    image: composer:2.0
+    command: composer phpunit
+
+  test:
+    volumes:
+    - ./:/app
+    image: composer:2.0
+    command: composer run tests
 
   fixcs:
     volumes:
-      - ./:/var/www/html
-    image: phpplatform/php-apache-xdebug-composer
+    - ./:/app
+    image: composer:2.0
     command: composer run fix-cs
-
-  psysh:
-    volumes:
-      - ./:/app
-    image: ricc/psysh:latest
