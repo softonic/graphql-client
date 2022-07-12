@@ -16,7 +16,7 @@
   "require": {
     "php": "^8.0",
     "guzzlehttp/guzzle": "^6.3 || ^7.0",
-    "softonic/guzzle-oauth2-middleware": "^1.1",
+    "softonic/guzzle-oauth2-middleware": "^2.1",
     "ext-json": "*",
     "symfony/console": "^5.0"
   },
