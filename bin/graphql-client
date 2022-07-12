@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+if (file_exists(__DIR__.'/../../autoload.php')) {
+    // The usual location, since this file will reside in vendor/bin
+    require __DIR__.'/../../autoload.php';
+} else {
+    // Useful when doing development on this package
+    require __DIR__.'/../vendor/autoload.php';
+}
+
+use Softonic\GraphQL\Console\Mutation\GenerateConfig;
+use Softonic\GraphQL\Console\Mutation\GetIntrospection;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+$application->add(new GenerateConfig());
+$application->add(new GetIntrospection());
+
+$application->run();

@@ -1,21 +1,31 @@
 {
   "name": "softonic/graphql-client",
   "type": "library",
-  "description" : "Softonic GraphQL client",
-  "keywords": ["softonic", "oauth2", "graphql", "client"],
+  "description": "Softonic GraphQL client",
+  "keywords": [
+    "softonic",
+    "oauth2",
+    "graphql",
+    "client"
+  ],
   "license": "Apache-2.0",
   "homepage": "https://github.com/softonic/graphql-client",
   "support": {
     "issues": "https://github.com/softonic/graphql-client/issues"
   },
   "require": {
-    "php": ">=7.0",
+    "php": "^8.0",
     "guzzlehttp/guzzle": "^6.3 || ^7.0",
-    "softonic/guzzle-oauth2-middleware": "^1.1"
+    "softonic/guzzle-oauth2-middleware": "^1.1",
+    "ext-json": "*",
+    "symfony/console": "^5.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.0",
-    "friendsofphp/php-cs-fixer": "^2.4"
+    "friendsofphp/php-cs-fixer": "^3.9",
+    "phpunit/phpunit": "^9.5",
+    "rector/rector": "^0.13.8",
+    "squizlabs/php_codesniffer": "^3.7",
+    "mockery/mockery": "^1.5"
   },
   "autoload": {
     "psr-4": {
@@ -27,10 +37,24 @@
       "Softonic\\GraphQL\\Test\\": "tests/"
     }
   },
+  "bin": [
+    "bin/graphql-client"
+  ],
   "scripts": {
-    "test": "phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
+    "test": [
+      "@checkstyle",
+      "@phpunit"
+    ],
     "phpunit": "phpunit --coverage-text",
-    "phpcs": "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
-    "fix-cs": "php-cs-fixer fix -v --diff --allow-risky=yes;"
+    "checkstyle": [
+      "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes",
+      "rector --dry-run"
+    ],
+    "fix-checkstyle": [
+      "@php-cs-fixer",
+      "@rector"
+    ],
+    "php-cs-fixer": "php-cs-fixer fix -v --diff --allow-risky=yes",
+    "rector": "rector"
   }
 }

@@ -1,17 +1,18 @@
 <?php
 
-namespace Softonic\GraphQL\Test;
+namespace Softonic\GraphQL;
 
 use GuzzleHttp\Cookie\CookieJar;
+use League\OAuth2\Client\Provider\AbstractProvider;
 use PHPUnit\Framework\TestCase;
-use Softonic\GraphQL\ClientBuilder;
+use Psr\Cache\CacheItemPoolInterface;
 
 class ClientBuilderTest extends TestCase
 {
     public function testBuild()
     {
         $client = ClientBuilder::build('http://foo.bar/qux');
-        $this->assertInstanceOf(\Softonic\GraphQL\Client::class, $client);
+        $this->assertInstanceOf(Client::class, $client);
     }
 
     public function testBuildWithGuzzleOptions()
@@ -21,16 +22,16 @@ class ClientBuilderTest extends TestCase
         ];
 
         $client = ClientBuilder::build('http://foo.bar/qux', $guzzleOptions);
-        $this->assertInstanceOf(\Softonic\GraphQL\Client::class, $client);
+        $this->assertInstanceOf(Client::class, $client);
     }
 
     public function testBuildWithOAuth2Provider()
     {
-        $mockCache = $this->createMock(\Psr\Cache\CacheItemPoolInterface::class);
-        $mockProvider = $this->createMock(\League\OAuth2\Client\Provider\AbstractProvider::class);
+        $mockCache        = $this->createMock(CacheItemPoolInterface::class);
+        $mockProvider     = $this->createMock(AbstractProvider::class);
         $mockTokenOptions = [
             'grant_type' => 'client_credentials',
-            'scope' => 'myscope',
+            'scope'      => 'myscope',
         ];
 
         $client = ClientBuilder::buildWithOAuth2Provider(
@@ -39,16 +40,16 @@ class ClientBuilderTest extends TestCase
             $mockTokenOptions,
             $mockCache
         );
-        $this->assertInstanceOf(\Softonic\GraphQL\Client::class, $client);
+        $this->assertInstanceOf(Client::class, $client);
     }
 
     public function testBuildWithOAuth2ProviderAndGuzzleOptions()
     {
-        $mockCache = $this->createMock(\Psr\Cache\CacheItemPoolInterface::class);
-        $mockProvider = $this->createMock(\League\OAuth2\Client\Provider\AbstractProvider::class);
+        $mockCache        = $this->createMock(CacheItemPoolInterface::class);
+        $mockProvider     = $this->createMock(AbstractProvider::class);
         $mockTokenOptions = [
             'grant_type' => 'client_credentials',
-            'scope' => 'myscope',
+            'scope'      => 'myscope',
         ];
 
         $guzzleOptions = [
@@ -62,6 +63,6 @@ class ClientBuilderTest extends TestCase
             $mockCache,
             $guzzleOptions
         );
-        $this->assertInstanceOf(\Softonic\GraphQL\Client::class, $client);
+        $this->assertInstanceOf(Client::class, $client);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Softonic\GraphQL\Test;
+namespace Softonic\GraphQL;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
@@ -10,22 +10,22 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
-use Softonic\GraphQL\Client;
-use Softonic\GraphQL\Response;
-use Softonic\GraphQL\ResponseBuilder;
+use Softonic\GraphQL\DataObjects\Query\Item;
 use UnexpectedValueException;
 
 class ClientTest extends TestCase
 {
     private $httpClient;
+
     private $mockGraphqlResponseBuilder;
+
     private $client;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->httpClient = $this->createMock(ClientInterface::class);
+        $this->httpClient                 = $this->createMock(ClientInterface::class);
         $this->mockGraphqlResponseBuilder = $this->createMock(ResponseBuilder::class);
-        $this->client = new Client($this->httpClient, $this->mockGraphqlResponseBuilder);
+        $this->client                     = new Client($this->httpClient, $this->mockGraphqlResponseBuilder);
     }
 
     public function testSimpleQueryWhenHasNetworkErrors()
@@ -39,6 +39,17 @@ class ClientTest extends TestCase
 
         $query = $this->getSimpleQuery();
         $this->client->query($query);
+    }
+
+    private function getSimpleQuery()
+    {
+        return <<<'QUERY'
+{
+  foo(id:"bar") {
+    id_foo
+  }
+}
+QUERY;
     }
 
     public function testCanRetrievePreviousExceptionWhenSimpleQueryHasErrors()
@@ -79,8 +90,11 @@ class ClientTest extends TestCase
                 'POST',
                 '',
                 [
-                    'json' => [
+                    'body' => json_encode([
                         'query' => $query,
+                    ], JSON_UNESCAPED_SLASHES),
+                    'headers' => [
+                        'Content-Type' => 'application/json',
                     ],
                 ]
             )
@@ -94,17 +108,9 @@ class ClientTest extends TestCase
 
     public function testSimpleQuery()
     {
-        $mockResponse = $this->createMock(Response::class);
+        $mockResponse     = $this->createMock(Response::class);
         $mockHttpResponse = $this->createMock(ResponseInterface::class);
 
-        $response = [
-            'data' => [
-                'program' => [
-                    'id_appstore' => null,
-                ],
-            ],
-        ];
-        $expectedData = $response['data'];
         $query = $this->getSimpleQuery();
 
         $this->mockGraphqlResponseBuilder->expects($this->once())
@@ -117,8 +123,11 @@ class ClientTest extends TestCase
                 'POST',
                 '',
                 [
-                    'json' => [
+                    'body' => json_encode([
                         'query' => $query,
+                    ], JSON_UNESCAPED_SLASHES),
+                    'headers' => [
+                        'Content-Type' => 'application/json',
                     ],
                 ]
             )
@@ -130,21 +139,13 @@ class ClientTest extends TestCase
 
     public function testQueryWithVariables()
     {
-        $mockResponse = $this->createMock(Response::class);
+        $mockResponse     = $this->createMock(Response::class);
         $mockHttpResponse = $this->createMock(ResponseInterface::class);
-        
-        $response = [
-            'data' => [
-                'program' => [
-                    'id_appstore' => null,
-                ],
-            ],
-        ];
 
-        $query = $this->getQueryWithVariables();
+        $query     = $this->getQueryWithVariables();
         $variables = [
-            'idProgram' => '642e69c0-9b2e-11e6-9850-00163ed833e7',
-            'locale'    => 'nl',
+            'idFoo' => '642e69c0-9b2e-11e6-9850-00163ed833e7',
+            'page'  => 1,
         ];
 
         $this->mockGraphqlResponseBuilder->expects($this->once())
@@ -157,9 +158,12 @@ class ClientTest extends TestCase
                 'POST',
                 '',
                 [
-                    'json' => [
+                    'body' => json_encode([
                         'query' => $query,
                         'variables' => $variables,
+                    ], JSON_UNESCAPED_SLASHES),
+                    'headers' => [
+                        'Content-Type' => 'application/json',
                     ],
                 ]
             )
@@ -167,17 +171,6 @@ class ClientTest extends TestCase
 
         $response = $this->client->query($query, $variables);
         $this->assertInstanceOf(Response::class, $response);
-    }
-
-    private function getSimpleQuery()
-    {
-        return <<<'QUERY'
-{
-  foo(id:"bar") {
-    id_foo
-  }
-}
-QUERY;
     }
 
     private function getQueryWithVariables()
@@ -189,6 +182,50 @@ query GetFooBar($idFoo: String, $idBar: String) {
     bar (id: $idBar) {
       id_bar
     }
+  }
+}
+QUERY;
+    }
+
+    public function testMutate()
+    {
+        $mockResponse     = $this->createMock(Response::class);
+        $mockHttpResponse = $this->createMock(ResponseInterface::class);
+
+        $query     = $this->getMutationQuery();
+        $variables = Mutation::build([], new Item(['idFoo' => '642e69c0-9b2e-11e6-9850-00163ed833e7']));
+
+        $this->mockGraphqlResponseBuilder->expects($this->once())
+            ->method('build')
+            ->with($mockHttpResponse)
+            ->willReturn($mockResponse);
+        $this->httpClient->expects($this->once())
+            ->method('request')
+            ->with(
+                'POST',
+                '',
+                [
+                    'body' => json_encode([
+                        'query' => $query,
+                        'variables' => $variables,
+                    ], JSON_UNESCAPED_SLASHES),
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                ]
+            )
+            ->willReturn($mockHttpResponse);
+
+        $response = $this->client->mutate($query, $variables);
+        $this->assertInstanceOf(Response::class, $response);
+    }
+
+    private function getMutationQuery()
+    {
+        return <<<'QUERY'
+mutation replaceFoo($foo: FooInput!) {
+  replaceFoo(foo: $foo) {
+    status
   }
 }
 QUERY;
