@@ -22,6 +22,30 @@ composer require softonic/graphql-client
 
 ### Working with the client
 
+To instantiate a client:
+
+``` php
+<?php
+$client = \Softonic\GraphQL\ClientBuilder::build('https://catalog.swarm.pub.softonic.one/graphql');
+
+$query = <<<'QUERY'
+query GetFooBar($idFoo: String, $idBar: String) {
+  foo(id: $idFoo) {
+    id_foo
+    bar (id: $idBar) {
+      id_bar
+    }
+  }
+}
+QUERY;
+
+$variables = [
+    'idFoo' => 'foo',
+    'idBar' => 'bar',
+];
+$response = $client->query($query, $variables);
+```
+
 To instantiate a client with an OAuth2 provider:
 
 ``` php
@@ -78,30 +102,6 @@ $variables = [
 $response = $client->query($mutation, $variables);
 ```
 
-To instantiate a client without OAuth2:
-
-``` php
-<?php
-$client = \Softonic\GraphQL\ClientBuilder::build('https://catalog.swarm.pub.softonic.one/graphql');
-
-$query = <<<'QUERY'
-query GetFooBar($idFoo: String, $idBar: String) {
-  foo(id: $idFoo) {
-    id_foo
-    bar (id: $idBar) {
-      id_bar
-    }
-  }
-}
-QUERY;
-
-$variables = [
-    'idFoo' => 'foo',
-    'idBar' => 'bar',
-];
-$response = $client->query($query, $variables);
-```
-
 ### From query result to mutation
 
 The query result can be obtained as an object which will provide facilities to convert it to a mutation and modify the data easily.
@@ -152,7 +152,7 @@ $data = $response->getDataObject();
  */
 ```
 
-We can also filter the results in order to work with less data later. GraphQL queries may not have all the filters imaginable.
+We can also filter the results in order to work with fewer data later. GraphQL queries may not have all the filters imaginable.
 
 ``` php
 $data->chapters = $data->chapters->filter(['pov' => 'third person']);
@@ -409,17 +409,17 @@ NOTE 2: The example has been done for a root Item "book", but it also works for 
 
 ## Testing
 
-`softonic/graphql-client` has a [PHPUnit](https://phpunit.de) test suite and a coding style compliance test suite using [PHP CS Fixer](http://cs.sensiolabs.org/).
+`softonic/graphql-client` has a [PHPUnit](https://phpunit.de) test suite, and a coding style compliance test suite using [PHP CS Fixer](http://cs.sensiolabs.org/).
 
 To run the tests, run the following command from the project folder.
 
 ``` bash
-$ docker-compose run test
+$ make tests
 ```
 
-To run interactively using [PsySH](http://psysh.org/):
+To open a terminal in the dev environment:
 ``` bash
-$ docker-compose run psysh
+$ make debug
 ```
 
 ## License

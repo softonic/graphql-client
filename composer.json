@@ -22,7 +22,10 @@
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.4",
-    "phpunit/phpunit": "^8.0"
+    "phpunit/phpunit": "^8.0",
+    "rector/rector": "^0.13.8",
+    "squizlabs/php_codesniffer": "^3.7",
+    "mockery/mockery": "^1.5"
   },
   "autoload": {
     "psr-4": {
@@ -38,9 +41,20 @@
     "bin/graphql-client"
   ],
   "scripts": {
-    "test": "phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
+    "test": [
+      "@checkstyle",
+      "@phpunit"
+    ],
     "phpunit": "phpunit --coverage-text",
-    "phpcs": "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;",
-    "fix-cs": "php-cs-fixer fix -v --diff --allow-risky=yes;"
+    "checkstyle": [
+      "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes",
+      "rector --dry-run"
+    ],
+    "fix-checkstyle": [
+      "@php-cs-fixer",
+      "@rector"
+    ],
+    "php-cs-fixer": "php-cs-fixer fix -v --diff --allow-risky=yes",
+    "rector": "rector"
   }
 }
