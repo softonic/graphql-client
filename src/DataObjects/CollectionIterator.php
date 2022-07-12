@@ -42,9 +42,9 @@ class CollectionIterator extends RecursiveArrayIterator
         throw new \InvalidArgumentException("Collections only can contain Items or other Collection, instead '$current' value found");
     }
 
-    public function getChildren()
+    public function getChildren(): ?RecursiveArrayIterator
     {
-        return parent::current()
+        return $this->current()
             ->getIterator()
             ->getInnerIterator();
     }

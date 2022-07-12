@@ -4,27 +4,27 @@ namespace Softonic\GraphQL\Traits;
 
 trait ItemIterator
 {
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->arguments);
     }
 
-    public function current()
+    public function current(): mixed
     {
         return current($this->arguments);
     }
 
-    public function key()
+    public function key(): int|string|null
     {
         return key($this->arguments);
     }
 
-    public function next()
+    public function next(): void
     {
-        return next($this->arguments);
+        next($this->arguments);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         $key = key($this->arguments);
 

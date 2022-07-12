@@ -58,7 +58,8 @@ QUERY;
         try {
             $originalException = new ServerException(
                 'Server side error',
-                $this->createMock(RequestInterface::class)
+                $this->createMock(RequestInterface::class),
+                $this->createMock(ResponseInterface::class)
             );
 
             $this->httpClient->expects($this->once())

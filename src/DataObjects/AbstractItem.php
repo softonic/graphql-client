@@ -53,7 +53,7 @@ abstract class AbstractItem extends AbstractObject implements \Iterator
         return empty($this->arguments);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $item = [];
         foreach ($this->arguments as $key => $value) {

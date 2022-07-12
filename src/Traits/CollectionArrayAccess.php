@@ -4,23 +4,23 @@ namespace Softonic\GraphQL\Traits;
 
 trait CollectionArrayAccess
 {
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \BadMethodCallException('Try using add() instead');
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->arguments);
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \BadMethodCallException('Try using remove() instead');
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
-        return isset($this->arguments[$offset]) ? $this->arguments[$offset] : null;
+        return $this->arguments[$offset] ?? null;
     }
 }
