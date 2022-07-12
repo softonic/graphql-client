@@ -2,14 +2,22 @@
 
 [![Latest Version](https://img.shields.io/github/release/softonic/graphql-client.svg?style=flat-square)](https://github.com/softonic/graphql-client/releases)
 [![Software License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/softonic/graphql-client/master.svg?style=flat-square)](https://travis-ci.org/softonic/graphql-client)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/softonic/graphql-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/softonic/graphql-client/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/softonic/graphql-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/softonic/graphql-client)
+[![Build Status](https://github.com/softonic/graphql-client/actions/workflows/build.yml/badge.svg)](https://github.com/softonic/graphql-client/actions/workflows/build.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/softonic/graphql-client.svg?style=flat-square)](https://packagist.org/packages/softonic/graphql-client)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/softonic/graphql-client.svg?style=flat-square)](http://isitmaintained.com/project/softonic/graphql-client "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/softonic/graphql-client.svg?style=flat-square)](http://isitmaintained.com/project/softonic/graphql-client "Percentage of issues still open")
 
 PHP Client for [GraphQL](http://graphql.org/)
+
+## Main features
+
+* Client with Oauth2 Support
+* Easy query/mutation execution
+* Simple array results for mutation and queries
+* Powerful object results for mutation and queries
+  * Filter results
+  * Manipulate results precisely and bulk
+  * Transform query results in mutations
 
 ## Installation
 
@@ -20,14 +28,49 @@ composer require softonic/graphql-client
 
 ## Documentation
 
-### Working with the client
+### Instantiate a client
 
-To instantiate a client:
+You can instantiate a simple client or with Oauth2 support.
 
-``` php
+Simple Client:
+```php
 <?php
-$client = \Softonic\GraphQL\ClientBuilder::build('https://catalog.swarm.pub.softonic.one/graphql');
+$client = \Softonic\GraphQL\ClientBuilder::build('https://your-domain/graphql');
+```
 
+OAuth2 provider:
+```php
+<?php
+
+$options = [
+    'clientId'     => 'myclient',
+    'clientSecret' => 'mysecret',
+];
+
+$provider = new Softonic\OAuth2\Client\Provider\Softonic($options);
+
+$config = ['grant_type' => 'client_credentials', 'scope' => 'myscope'];
+
+$cache = new \Symfony\Component\Cache\Adapter\FilesystemAdapter();
+
+$client = \Softonic\GraphQL\ClientBuilder::buildWithOAuth2Provider(
+    'https://your-domain/graphql',
+    $provider,
+    $config,
+    $cache
+);
+```
+
+### Using the GraphQL Client
+
+You can use the client to execute queries and mutations and get the results.
+
+```php
+<?php
+
+/**
+ * Query Example
+ */
 $query = <<<'QUERY'
 query GetFooBar($idFoo: String, $idBar: String) {
   foo(id: $idFoo) {
@@ -43,47 +86,22 @@ $variables = [
     'idFoo' => 'foo',
     'idBar' => 'bar',
 ];
+
+/** @var \Softonic\GraphQL\Client $client */
 $response = $client->query($query, $variables);
-```
 
-To instantiate a client with an OAuth2 provider:
-
-``` php
-<?php
-
-$options = [
-    'clientId' => 'myclient',
-    'clientSecret' => 'mysecret',
-];
-
-$provider = new Softonic\OAuth2\Client\Provider\Softonic($options);
-
-$config = ['grant_type' => 'client_credentials', 'scope' => 'myscope'];
-
-$cache = new \Symfony\Component\Cache\Adapter\FilesystemAdapter();
-
-$client = \Softonic\GraphQL\ClientBuilder::buildWithOAuth2Provider(
-    'https://catalog.swarm.pub.softonic.one/graphql',
-    $provider,
-    $config,
-    $cache
-);
-
-// Query Example
-$query = <<<'QUERY'
-query GetFooBar($idFoo: String, $idBar: String) {
-  foo(id: $idFoo) {
-    id_foo
-    bar (id: $idBar) {
-      id_bar
-    }
-  }
+if($response->hasErrors()) {
+    // Returns an array with all the errors found.
+    $response->getErrors();
 }
-QUERY;
-$variables = ['idFoo' => 'foo', 'idBar' => 'bar'];
-$response = $client->query($query, $variables);
+else {
+    // Returns an array with all the data returned by the GraphQL server.
+    $response->getData();
+}
 
-// Mutation Example
+/**
+ * Mutation Example
+ */
 $mutation = <<<'MUTATION'
 mutation ($foo: ObjectInput!){
   CreateObjectMutation (object: $foo) {
@@ -99,10 +117,30 @@ $variables = [
         ]
     ]
 ];
+
+/** @var \Softonic\GraphQL\Client $client */
 $response = $client->query($mutation, $variables);
+
+if($response->hasErrors()) {
+    // Returns an array with all the errors found.
+    $response->getErrors();
+}
+else {
+    // Returns an array with all the data returned by the GraphQL server.
+    $response->getData();
+}
+
 ```
 
-### From query result to mutation
+In the previous examples, the client is used to execute queries and mutations. The response object is used to
+get the results in array format.
+
+This can be convenient for simple use cases, but it is not recommended for complex
+results or when you need to use that output to generate mutations. For this reason, the client provides another output
+called data objects. Those objects allow you to get the results in a more convenient format, allowing you to generate
+mutations, apply filters, etc.
+
+### How to use a data object and transform it to a mutation query
 
 The query result can be obtained as an object which will provide facilities to convert it to a mutation and modify the data easily.
 At the end, the mutation object will be able to be used as the variables of the mutation query in the GraphQL client.
@@ -152,7 +190,8 @@ $data = $response->getDataObject();
  */
 ```
 
-We can also filter the results in order to work with fewer data later. GraphQL queries may not have all the filters imaginable.
+We can also filter the results in order to work with fewer data later. The filter method returns a new object with
+the filtered results, so you need to reassign the object to the original one, if you want to modify it.
 
 ``` php
 $data->chapters = $data->chapters->filter(['pov' => 'third person']);
