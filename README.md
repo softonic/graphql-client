@@ -311,7 +311,7 @@ $mutation = Mutation::build($mutationConfig, $data);
  */
 ```
 
-Now we can modify the mutation data using the following methods:
+#### Now we can modify the mutation data using the following methods:
 * add(): Adds an Item to a Collection.
 * set(): Updates some values of an Item. It also works on Collections, updating all its Items.
 * filter(): Filters the Items of a Collection.
