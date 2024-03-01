@@ -32,13 +32,19 @@ composer require softonic/graphql-client
 
 You can instantiate a simple client or with Oauth2 support.
 
-Simple Client:
+#### Simple Client
 ```php
 <?php
 $client = \Softonic\GraphQL\ClientBuilder::build('https://your-domain/graphql');
 ```
 
-OAuth2 provider:
+#### OAuth2 provider
+
+This package allows you to use [thephpleague/oauth2-client](https://github.com/thephpleague/oauth2-client) adapters for authentication, so the endpoint depends on the adapter that you are using. 
+The adapter could be [custom](https://oauth2-client.thephpleague.com/providers/implementing/) or provided by the library as [official](https://oauth2-client.thephpleague.com/providers/league/) or [third party](https://oauth2-client.thephpleague.com/providers/thirdparty/).
+
+This is an example using a custom provider.
+
 ```php
 <?php
 
