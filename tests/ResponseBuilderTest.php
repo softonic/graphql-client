@@ -2,8 +2,10 @@
 
 namespace Softonic\GraphQL;
 
+use GuzzleHttp\Psr7\BufferStream;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use UnexpectedValueException;
 
 class ResponseBuilderTest extends TestCase
@@ -24,7 +26,7 @@ class ResponseBuilderTest extends TestCase
         $mockHttpResponse = $this->createMock(ResponseInterface::class);
         $mockHttpResponse->expects($this->once())
             ->method('getBody')
-            ->willReturn('malformed response');
+            ->willReturn($this->stringToStream('malformed response'));
 
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Invalid JSON response. Response body: ');
@@ -53,7 +55,7 @@ class ResponseBuilderTest extends TestCase
 
         $mockHttpResponse->expects($this->once())
             ->method('getBody')
-            ->willReturn($body);
+            ->willReturn($this->stringToStream($body));
 
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Invalid GraphQL JSON response. Response body: ');
@@ -67,7 +69,7 @@ class ResponseBuilderTest extends TestCase
 
         $mockHttpResponse->expects($this->once())
             ->method('getBody')
-            ->willReturn('{"data": {"foo": "bar"}}');
+            ->willReturn($this->stringToStream('{"data": {"foo": "bar"}}'));
 
         $expectedData   = ['foo' => 'bar'];
         $dataObjectMock = [
@@ -107,7 +109,7 @@ class ResponseBuilderTest extends TestCase
 
         $mockHttpResponse->expects($this->once())
             ->method('getBody')
-            ->willReturn($body);
+            ->willReturn($this->stringToStream($body));
 
         $this->dataObjectBuilder->expects($this->once())
             ->method('buildQuery')
@@ -120,5 +122,14 @@ class ResponseBuilderTest extends TestCase
         $this->assertEquals([], $response->getDataObject());
         $this->assertTrue($response->hasErrors());
         $this->assertEquals([['foo' => 'bar']], $response->getErrors());
+    }
+
+    public function stringToStream(string $string): StreamInterface
+    {
+        $buffer = new BufferStream();
+
+        $buffer->write($string);
+
+        return $buffer;
     }
 }
