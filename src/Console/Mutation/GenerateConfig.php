@@ -54,7 +54,7 @@ class GenerateConfig extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->checkArguments($input, $output)) {
             return 1;
