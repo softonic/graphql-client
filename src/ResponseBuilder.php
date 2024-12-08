@@ -8,7 +8,7 @@ class ResponseBuilder
 {
     private $dataObjectBuilder;
 
-    public function __construct(DataObjectBuilder $dataObjectBuilder = null)
+    public function __construct(?DataObjectBuilder $dataObjectBuilder = null)
     {
         $this->dataObjectBuilder = $dataObjectBuilder;
     }
