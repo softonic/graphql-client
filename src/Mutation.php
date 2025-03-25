@@ -13,15 +13,9 @@ class Mutation
 {
     const SOURCE_ROOT_PATH = '.';
 
-    /**
-     * @var array
-     */
-    private static $config;
+    private static ?array $config = null;
 
-    /**
-     * @var bool
-     */
-    private static $hasChanged;
+    private static ?bool $hasChanged = null;
 
     /**
      * @var MutationTypeConfig
@@ -88,6 +82,7 @@ class Mutation
                 if ($sourceValue instanceof QueryObject) {
                     $sourceValue = $sourceValue->toArray();
                 }
+
                 $arguments[$sourceKey] = $sourceValue;
             }
         }
@@ -122,7 +117,7 @@ class Mutation
                 }
             }
 
-            if (empty($arguments)) {
+            if ($arguments === []) {
                 return null;
             }
 

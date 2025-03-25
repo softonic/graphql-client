@@ -8,7 +8,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ConfigGeneratorTest extends TestCase
 {
-    public function testGenerateFromQuery()
+    public function testGenerateFromQuery(): void
     {
         $commandTester = new CommandTester(new GenerateConfig());
         $commandTester->execute(
@@ -23,7 +23,7 @@ class ConfigGeneratorTest extends TestCase
         $this->assertSame($expectedOutput, $output);
     }
 
-    public function testGenerateFromMutation()
+    public function testGenerateFromMutation(): void
     {
         $commandTester = new CommandTester(new GenerateConfig());
         $commandTester->execute(

@@ -10,20 +10,13 @@ class FilteredCollection extends AbstractCollection implements MutationObject
     use MutationObjectHandler;
 
     /**
-     * @var array
-     */
-    protected $config;
-
-    /**
      * @var bool
      */
     protected $hasChanged = false;
 
-    public function __construct(array $arguments = [], array $config = [], bool $hasChanged = false)
+    public function __construct(array $arguments = [], protected array $config = [], bool $hasChanged = false)
     {
         parent::__construct($arguments);
-
-        $this->config     = $config;
         $this->hasChanged = $hasChanged;
     }
 
@@ -67,12 +60,12 @@ class FilteredCollection extends AbstractCollection implements MutationObject
         return false;
     }
 
-    protected function buildFilteredCollection($items)
+    protected function buildFilteredCollection($items): \Softonic\GraphQL\DataObjects\Mutation\FilteredCollection
     {
         return new FilteredCollection($items, $this->config);
     }
 
-    protected function buildSubCollection(array $items, string $key)
+    protected function buildSubCollection(array $items, string $key): Collection
     {
         return new Collection($items, $this->config[$key]->children);
     }

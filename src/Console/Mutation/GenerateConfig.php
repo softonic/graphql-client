@@ -71,7 +71,7 @@ class GenerateConfig extends Command
         return 0;
     }
 
-    private function checkArguments(InputInterface $input, OutputInterface $output)
+    private function checkArguments(InputInterface $input, OutputInterface $output): bool
     {
         $jsonPath = $input->getArgument('instrospection-result');
 
@@ -84,7 +84,7 @@ class GenerateConfig extends Command
         return true;
     }
 
-    private function generateConfig(StdClass $jsonSchema, string $mutation)
+    private function generateConfig(StdClass $jsonSchema, string $mutation): array
     {
         foreach ($jsonSchema->data->__schema->types as $type) {
             if ($type->name === 'Mutation' && $type->fields[0]->name === $mutation) {
@@ -105,7 +105,7 @@ class GenerateConfig extends Command
         ];
     }
 
-    private function getTypeFromField($field)
+    private function getTypeFromField($field): array
     {
         $isCollection = false;
         $type         = $field->type;
@@ -114,6 +114,7 @@ class GenerateConfig extends Command
             if ($type->kind === self::LIST) {
                 $isCollection = true;
             }
+
             $type = $type->ofType;
         }
 
@@ -130,7 +131,7 @@ class GenerateConfig extends Command
         ];
     }
 
-    private function getMutationConfig(array $graphqlTypes, $inputType, $parentLinksTo = ''): array
+    private function getMutationConfig(array $graphqlTypes, $inputType, string $parentLinksTo = ''): array
     {
         $children = [];
         foreach ($graphqlTypes as $graphqlType) {
@@ -147,7 +148,7 @@ class GenerateConfig extends Command
                     }
 
                     // Avoid cyclic relations to define infinite configs.
-                    if ($this->isFieldPreviouslyAdded($inputFieldType, $inputField, $parentLinksTo)) {
+                    if ($this->isFieldPreviouslyAdded($inputFieldType, $parentLinksTo)) {
                         continue;
                     }
 
@@ -159,6 +160,7 @@ class GenerateConfig extends Command
                         $isCollection
                     );
                 }
+
                 break;
             }
         }
@@ -166,7 +168,7 @@ class GenerateConfig extends Command
         return $children;
     }
 
-    private function isFieldPreviouslyAdded($inputType, $inputField, string $linksTo): bool
+    private function isFieldPreviouslyAdded($inputType, string $linksTo): bool
     {
         $linksParts = explode('.', $linksTo);
         for ($i=1, $iMax = count($linksParts); $i<= $iMax; $i++) {
@@ -187,8 +189,8 @@ class GenerateConfig extends Command
         array $graphqlTypes,
         $graphqlType,
         $inputFieldName,
-        $parentLinksTo,
-        $isCollection
+        string $parentLinksTo,
+        bool $isCollection
     ): array {
         if ($this->fromSameMutation) {
             return $this->defineConfigLinkedInputType(
@@ -224,7 +226,7 @@ class GenerateConfig extends Command
         return preg_replace('/Input$/', '', $inputType);
     }
 
-    private function queryTypeExists(string $queryType, $types): bool
+    private function queryTypeExists(string $queryType, array $types): bool
     {
         foreach ($types as $type) {
             if ($type->name === $queryType) {

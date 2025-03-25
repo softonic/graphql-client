@@ -10,14 +10,14 @@ use Softonic\GraphQL\DataObjects\Query\Item as QueryItem;
 
 class DataObjectBuilderTest extends TestCase
 {
-    private $builder;
+    private DataObjectBuilder $builder;
 
     protected function setUp(): void
     {
         $this->builder = new DataObjectBuilder();
     }
 
-    public function testWhenDataIsNull()
+    public function testWhenDataIsNull(): void
     {
         $data = [
             'book' => null,
@@ -31,7 +31,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataIsAnEmptyArray()
+    public function testWhenDataIsAnEmptyArray(): void
     {
         $data = [
             'search' => [],
@@ -45,7 +45,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAQueryItem()
+    public function testWhenDataHasAQueryItem(): void
     {
         $data = [
             'book' => [
@@ -69,7 +69,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAQueryItemWithAnArrayOfStringsArgument()
+    public function testWhenDataHasAQueryItemWithAnArrayOfStringsArgument(): void
     {
         $data = [
             'book' => [
@@ -95,7 +95,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAnArrayOfQueryItems()
+    public function testWhenDataHasAnArrayOfQueryItems(): void
     {
         $data = [
             'search' => [
@@ -137,7 +137,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAQueryItemWithEmptySecondLevel()
+    public function testWhenDataHasAQueryItemWithEmptySecondLevel(): void
     {
         $data = [
             'book' => [
@@ -163,7 +163,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAQueryItemWithSecondLevel()
+    public function testWhenDataHasAQueryItemWithSecondLevel(): void
     {
         $data = [
             'book' => [
@@ -217,7 +217,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAQueryItemWithThirdLevel()
+    public function testWhenDataHasAQueryItemWithThirdLevel(): void
     {
         $data = [
             'book' => [
@@ -307,7 +307,7 @@ class DataObjectBuilderTest extends TestCase
         $this->assertEquals($expectedDataObject, $dataObject);
     }
 
-    public function testWhenDataHasAQueryItemInsideAnotherQueryItem()
+    public function testWhenDataHasAQueryItemInsideAnotherQueryItem(): void
     {
         $data = [
             'book' => [

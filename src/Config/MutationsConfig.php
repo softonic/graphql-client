@@ -4,10 +4,7 @@ namespace Softonic\GraphQL\Config;
 
 class MutationsConfig
 {
-    /**
-     * @var array
-     */
-    private $mutationsConfig = [];
+    private array $mutationsConfig = [];
 
     public function __construct(array $config)
     {

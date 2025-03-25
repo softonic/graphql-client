@@ -43,7 +43,7 @@ class MutationBuilderTest extends TestCase
             ->get('ReplaceBooks');
     }
 
-    private function getConfigMock()
+    private function getConfigMock(): MutationsConfig
     {
         return new MutationsConfig(
             [
@@ -232,7 +232,7 @@ class MutationBuilderTest extends TestCase
         );
     }
 
-    public function testWhenThereAreOnlyArguments()
+    public function testWhenThereAreOnlyArguments(): void
     {
         $queryItem = new QueryItem(
             [
@@ -255,7 +255,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereIsAnEmptyChild()
+    public function testWhenThereIsAnEmptyChild(): void
     {
         $queryItem = new QueryItem(
             [
@@ -278,7 +278,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereAreChildrenWithSimpleConfig()
+    public function testWhenThereAreChildrenWithSimpleConfig(): void
     {
         $queryItem = new QueryItem(
             [
@@ -336,7 +336,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereAreChildrenWithComplexConfig()
+    public function testWhenThereAreChildrenWithComplexConfig(): void
     {
         $queryItem = new QueryItem(
             [
@@ -390,7 +390,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereAreTwoChildren()
+    public function testWhenThereAreTwoChildren(): void
     {
         $queryItem = new QueryItem(
             [
@@ -472,7 +472,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereIsAThirdLevel()
+    public function testWhenThereIsAThirdLevel(): void
     {
         $queryItem = new QueryItem(
             [
@@ -611,7 +611,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereIsAFourthLevel()
+    public function testWhenThereIsAFourthLevel(): void
     {
         $queryItem = new QueryItem(
             [
@@ -803,7 +803,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenTheSourceHasItemsWithItemArguments()
+    public function testWhenTheSourceHasItemsWithItemArguments(): void
     {
         $queryItem = new QueryItem(
             [
@@ -839,7 +839,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenTheSourceHasTheSameStructureThanTheConfig()
+    public function testWhenTheSourceHasTheSameStructureThanTheConfig(): void
     {
         $queryItem = new QueryItem(
             [
@@ -897,7 +897,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenRootIsACollectionWithoutChildren()
+    public function testWhenRootIsACollectionWithoutChildren(): void
     {
         $queryCollection = new QueryCollection(
             [
@@ -937,7 +937,7 @@ class MutationBuilderTest extends TestCase
         $this->assertEquals($expectedMutationArguments, $mutation->jsonSerialize());
     }
 
-    public function testWhenRootIsACollectionWithChildren()
+    public function testWhenRootIsACollectionWithChildren(): void
     {
         $queryCollection = new QueryCollection(
             [

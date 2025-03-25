@@ -2,6 +2,7 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
+use InvalidArgumentException;
 use RecursiveArrayIterator;
 
 class CollectionIterator extends RecursiveArrayIterator
@@ -39,7 +40,7 @@ class CollectionIterator extends RecursiveArrayIterator
             return $current->hasChildren();
         }
 
-        throw new \InvalidArgumentException("Collections only can contain Items or other Collection, instead '$current' value found");
+        throw new InvalidArgumentException("Collections only can contain Items or other Collection, instead '{$current}' value found");
     }
 
     public function getChildren(): ?RecursiveArrayIterator

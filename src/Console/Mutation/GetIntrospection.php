@@ -17,7 +17,7 @@ class GetIntrospection extends Command
                 'to generate the needed file to generate the config.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln(
             <<<'GQL'

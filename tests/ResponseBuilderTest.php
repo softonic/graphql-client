@@ -2,6 +2,7 @@
 
 namespace Softonic\GraphQL;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use GuzzleHttp\Psr7\BufferStream;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -10,9 +11,9 @@ use UnexpectedValueException;
 
 class ResponseBuilderTest extends TestCase
 {
-    private $dataObjectBuilder;
+    private MockObject $dataObjectBuilder;
 
-    private $responseBuilder;
+    private ResponseBuilder $responseBuilder;
 
     protected function setUp(): void
     {
@@ -21,7 +22,7 @@ class ResponseBuilderTest extends TestCase
         $this->responseBuilder = new ResponseBuilder($this->dataObjectBuilder);
     }
 
-    public function testBuildMalformedResponse()
+    public function testBuildMalformedResponse(): void
     {
         $mockHttpResponse = $this->createMock(ResponseInterface::class);
         $mockHttpResponse->expects($this->once())
@@ -34,7 +35,7 @@ class ResponseBuilderTest extends TestCase
         $this->responseBuilder->build($mockHttpResponse);
     }
 
-    public function buildInvalidGraphqlJsonResponseProvider()
+    public static function buildInvalidGraphqlJsonResponseProvider(): array
     {
         return [
             'Invalid structure'    => [
@@ -49,7 +50,7 @@ class ResponseBuilderTest extends TestCase
     /**
      * @dataProvider buildInvalidGraphqlJsonResponseProvider
      */
-    public function testBuildInvalidGraphqlJsonResponse(string $body)
+    public function testBuildInvalidGraphqlJsonResponse(string $body): void
     {
         $mockHttpResponse = $this->createMock(ResponseInterface::class);
 
@@ -63,7 +64,7 @@ class ResponseBuilderTest extends TestCase
         $this->responseBuilder->build($mockHttpResponse);
     }
 
-    public function testBuildValidGraphqlJsonWithoutErrors()
+    public function testBuildValidGraphqlJsonWithoutErrors(): void
     {
         $mockHttpResponse = $this->createMock(ResponseInterface::class);
 
@@ -88,7 +89,7 @@ class ResponseBuilderTest extends TestCase
         $this->assertEquals($dataObjectMock, $response->getDataObject());
     }
 
-    public function buildValidGraphqlJsonWithErrorsProvider()
+    public static function buildValidGraphqlJsonWithErrorsProvider(): array
     {
         return [
             'Response with null data' => [
@@ -103,7 +104,7 @@ class ResponseBuilderTest extends TestCase
     /**
      * @dataProvider buildValidGraphqlJsonWithErrorsProvider
      */
-    public function testBuildValidGraphqlJsonWithErrors(string $body)
+    public function testBuildValidGraphqlJsonWithErrors(string $body): void
     {
         $mockHttpResponse = $this->createMock(ResponseInterface::class);
 

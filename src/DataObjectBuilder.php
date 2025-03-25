@@ -39,7 +39,7 @@ class DataObjectBuilder
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 if ($this->isAList($value)) {
-                    if (empty($value) || is_array($value[0])) {
+                    if ($value === [] || is_array($value[0])) {
                         $items = [];
                         foreach ($value as $objectData) {
                             $itemData = $this->build($objectData, $objects);
