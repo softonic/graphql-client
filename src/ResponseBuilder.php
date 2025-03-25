@@ -2,8 +2,8 @@
 
 namespace Softonic\GraphQL;
 
-use UnexpectedValueException;
 use Psr\Http\Message\ResponseInterface;
+use UnexpectedValueException;
 
 class ResponseBuilder
 {

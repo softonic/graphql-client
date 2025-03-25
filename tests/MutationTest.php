@@ -2,8 +2,8 @@
 
 namespace Softonic\GraphQL;
 
-use InvalidArgumentException;
 use Error;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Softonic\GraphQL\Config\MutationsConfig;
 use Softonic\GraphQL\DataObjects\Mutation\Collection as MutationCollection;
@@ -14,20 +14,11 @@ use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
 class MutationTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    private $itemConfigMock;
+    private array $itemConfigMock;
 
-    /**
-     * @var array
-     */
-    private $sameQueryStructureConfigMock;
+    private array $sameQueryStructureConfigMock;
 
-    /**
-     * @var array
-     */
-    private $collectionConfigMock;
+    private array $collectionConfigMock;
 
     protected function setUp(): void
     {
@@ -2966,7 +2957,7 @@ class MutationTest extends TestCase
 
         $mutation = Mutation::build($this->itemConfigMock, $book, true);
 
-        foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $key => $line) {
+        foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $line) {
             if (35 === $line->words_count) {
                 $mutation->book->chapters->upsert->pages->upsert->lines->upsert->remove($line);
                 break;

@@ -2,11 +2,11 @@
 
 namespace Softonic\GraphQL;
 
-use RuntimeException;
-use UnexpectedValueException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use RuntimeException;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
+use UnexpectedValueException;
 
 class Client
 {
@@ -16,7 +16,7 @@ class Client
 
     /**
      * @throws UnexpectedValueException When response body is not a valid json
-     * @throws RuntimeException When there are transfer errors
+     * @throws RuntimeException         When there are transfer errors
      */
     public function query(string $query, ?array $variables = null): Response
     {
@@ -25,7 +25,7 @@ class Client
 
     /**
      * @throws UnexpectedValueException When response body is not a valid json
-     * @throws RuntimeException When there are transfer errors
+     * @throws RuntimeException         When there are transfer errors
      */
     public function mutate(string $query, MutationObject $mutation): Response
     {

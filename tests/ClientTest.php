@@ -2,11 +2,11 @@
 
 namespace Softonic\GraphQL;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\TransferException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

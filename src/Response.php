@@ -20,7 +20,7 @@ class Response
 
     public function hasErrors(): bool
     {
-        return !empty($this->errors);
+        return $this->errors !== [];
     }
 
     public function getDataObject(): array

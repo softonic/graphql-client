@@ -11,25 +11,13 @@ use Softonic\GraphQL\DataObjects\Query\Item as QueryItem;
 
 class MutationBuilderTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    private $simpleConfigMock;
+    private array $simpleConfigMock;
 
-    /**
-     * @var array
-     */
-    private $complexConfigMock;
+    private array $complexConfigMock;
 
-    /**
-     * @var array
-     */
-    private $sameQueryStructureConfigMock;
+    private array $sameQueryStructureConfigMock;
 
-    /**
-     * @var array
-     */
-    private $collectionConfigMock;
+    private array $collectionConfigMock;
 
     protected function setUp(): void
     {

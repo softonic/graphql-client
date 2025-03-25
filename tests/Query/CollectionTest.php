@@ -2,10 +2,9 @@
 
 namespace Softonic\GraphQL\DataObjects\Query;
 
-use PHPUnit\Framework\Attributes\Test;
 use BadMethodCallException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Softonic\GraphQL\DataObjects\Query\Item;
 
 class CollectionTest extends TestCase
 {

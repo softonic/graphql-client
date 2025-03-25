@@ -2,8 +2,8 @@
 
 namespace Softonic\GraphQL;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use GuzzleHttp\Psr7\BufferStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
