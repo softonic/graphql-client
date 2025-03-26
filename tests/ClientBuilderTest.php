@@ -9,13 +9,13 @@ use Psr\Cache\CacheItemPoolInterface;
 
 class ClientBuilderTest extends TestCase
 {
-    public function testBuild()
+    public function testBuild(): void
     {
         $client = ClientBuilder::build('http://foo.bar/qux');
         $this->assertInstanceOf(Client::class, $client);
     }
 
-    public function testBuildWithGuzzleOptions()
+    public function testBuildWithGuzzleOptions(): void
     {
         $guzzleOptions = [
             'cookies' => new CookieJar(),
@@ -25,7 +25,7 @@ class ClientBuilderTest extends TestCase
         $this->assertInstanceOf(Client::class, $client);
     }
 
-    public function testBuildWithOAuth2Provider()
+    public function testBuildWithOAuth2Provider(): void
     {
         $mockCache        = $this->createMock(CacheItemPoolInterface::class);
         $mockProvider     = $this->createMock(AbstractProvider::class);
@@ -43,7 +43,7 @@ class ClientBuilderTest extends TestCase
         $this->assertInstanceOf(Client::class, $client);
     }
 
-    public function testBuildWithOAuth2ProviderAndGuzzleOptions()
+    public function testBuildWithOAuth2ProviderAndGuzzleOptions(): void
     {
         $mockCache        = $this->createMock(CacheItemPoolInterface::class);
         $mockProvider     = $this->createMock(AbstractProvider::class);

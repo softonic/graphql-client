@@ -3,17 +3,15 @@
 namespace Softonic\GraphQL;
 
 use Psr\Http\Message\ResponseInterface;
+use UnexpectedValueException;
 
 class ResponseBuilder
 {
-    private $dataObjectBuilder;
-
-    public function __construct(?DataObjectBuilder $dataObjectBuilder = null)
+    public function __construct(private ?DataObjectBuilder $dataObjectBuilder = null)
     {
-        $this->dataObjectBuilder = $dataObjectBuilder;
     }
 
-    public function build(ResponseInterface $httpResponse)
+    public function build(ResponseInterface $httpResponse): Response
     {
         $body = $httpResponse->getBody();
 
@@ -30,12 +28,12 @@ class ResponseBuilder
         );
     }
 
-    private function getNormalizedResponse(string $body)
+    private function getNormalizedResponse(string $body): array
     {
         $decodedResponse = $this->getJsonDecodedResponse($body);
 
         if (false === array_key_exists('data', $decodedResponse) && empty($decodedResponse['errors'])) {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'Invalid GraphQL JSON response. Response body: ' . json_encode($decodedResponse)
             );
         }
@@ -58,7 +56,7 @@ class ResponseBuilder
 
         $error = json_last_error();
         if (JSON_ERROR_NONE !== $error) {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 'Invalid JSON response. Response body: ' . $body
             );
         }

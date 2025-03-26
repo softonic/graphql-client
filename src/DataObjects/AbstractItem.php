@@ -2,12 +2,13 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
+use Iterator;
 use JsonSerializable;
 use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
 use Softonic\GraphQL\DataObjects\Mutation\FilteredCollection;
 use Softonic\GraphQL\Traits\ItemIterator;
 
-abstract class AbstractItem extends AbstractObject implements \Iterator
+abstract class AbstractItem extends AbstractObject implements Iterator
 {
     use ItemIterator;
 
@@ -20,7 +21,7 @@ abstract class AbstractItem extends AbstractObject implements \Iterator
             return false;
         }
 
-        if (empty($keyPath)) {
+        if ($keyPath === []) {
             return true;
         }
 
@@ -35,7 +36,7 @@ abstract class AbstractItem extends AbstractObject implements \Iterator
 
     public function __get(string $key)
     {
-        return array_key_exists($key, $this->arguments) ? $this->arguments[$key] : null;
+        return $this->arguments[$key] ?? null;
     }
 
     public function __set(string $key, $value): void
@@ -50,7 +51,7 @@ abstract class AbstractItem extends AbstractObject implements \Iterator
 
     public function isEmpty(): bool
     {
-        return empty($this->arguments);
+        return $this->arguments === [];
     }
 
     public function jsonSerialize(): array

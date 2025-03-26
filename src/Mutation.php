@@ -13,15 +13,9 @@ class Mutation
 {
     const SOURCE_ROOT_PATH = '.';
 
-    /**
-     * @var array
-     */
-    private static $config;
+    private static ?array $config = null;
 
-    /**
-     * @var bool
-     */
-    private static $hasChanged;
+    private static ?bool $hasChanged = null;
 
     /**
      * @var MutationTypeConfig
@@ -79,7 +73,11 @@ class Mutation
                 continue;
             }
 
-            if (self::hasChildrenToMutate($childConfig, $sourceValue)) {
+            if (self::hasChildrenToMutate($childConfig)) {
+                if (is_null($sourceValue)) {
+                    continue;
+                }
+
                 $mutatedChild = self::mutateChild($childConfig, $sourceValue, $childPath);
                 if (!is_null($mutatedChild)) {
                     $arguments[$sourceKey] = $mutatedChild;
@@ -88,6 +86,7 @@ class Mutation
                 if ($sourceValue instanceof QueryObject) {
                     $sourceValue = $sourceValue->toArray();
                 }
+
                 $arguments[$sourceKey] = $sourceValue;
             }
         }
@@ -100,9 +99,9 @@ class Mutation
         return ('.' === $parent) ? ".{$child}" : "{$parent}.{$child}";
     }
 
-    private static function hasChildrenToMutate(MutationTypeConfig $childConfig, $sourceValue): bool
+    private static function hasChildrenToMutate(MutationTypeConfig $childConfig): bool
     {
-        return !is_null($childConfig->type) && !is_null($sourceValue);
+        return !is_null($childConfig->type);
     }
 
     private static function mutateChild(
@@ -122,7 +121,7 @@ class Mutation
                 }
             }
 
-            if (empty($arguments)) {
+            if ($arguments === []) {
                 return null;
             }
 

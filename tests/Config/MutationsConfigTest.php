@@ -8,7 +8,7 @@ use Softonic\GraphQL\DataObjects\Mutation\Item;
 
 class MutationsConfigTest extends TestCase
 {
-    public function testWhenThereIsOneMutationWithOneVariable()
+    public function testWhenThereIsOneMutationWithOneVariable(): void
     {
         $mutationsConfig = new MutationsConfig(
             [
@@ -54,7 +54,7 @@ class MutationsConfigTest extends TestCase
         $this->assertEquals(['book' => $bookConfig], $mutationsConfig->get('ReplaceBook'));
     }
 
-    public function testWhenThereIsOneMutationsWithTwoVariables()
+    public function testWhenThereIsOneMutationsWithTwoVariables(): void
     {
         $mutationsConfig = new MutationsConfig(
             [
@@ -106,7 +106,7 @@ class MutationsConfigTest extends TestCase
         $this->assertEquals($expectedMutationConfig, $mutationsConfig->get('ReplaceBook'));
     }
 
-    public function testWhenThereAreTwoMutations()
+    public function testWhenThereAreTwoMutations(): void
     {
         $mutationsConfig = new MutationsConfig(
             [

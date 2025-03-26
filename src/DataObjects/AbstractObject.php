@@ -7,14 +7,8 @@ use Softonic\GraphQL\DataObjects\Interfaces\DataObject;
 
 abstract class AbstractObject implements JsonSerializable, DataObject
 {
-    /**
-     * @var array
-     */
-    protected $arguments;
-
-    public function __construct(array $arguments = [])
+    public function __construct(protected array $arguments = [])
     {
-        $this->arguments = $arguments;
     }
 
     public function toArray(): array

@@ -19,14 +19,19 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+        restore-keys: ${{ runner.os }}-php-
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
     - name: Run test suite
-      run: composer run-script test
+      run: composer run-script tests

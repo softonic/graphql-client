@@ -11,9 +11,9 @@ class ClientBuilder
     {
         $guzzleOptions = array_merge(['base_uri' => $endpoint], $guzzleOptions);
 
-        return new \Softonic\GraphQL\Client(
+        return new Client(
             new \GuzzleHttp\Client($guzzleOptions),
-            new \Softonic\GraphQL\ResponseBuilder(new \Softonic\GraphQL\DataObjectBuilder())
+            new ResponseBuilder(new DataObjectBuilder())
         );
     }
 
@@ -27,14 +27,14 @@ class ClientBuilder
         $guzzleOptions = array_merge(['base_uri' => $endpoint], $guzzleOptions);
 
 
-        return new \Softonic\GraphQL\Client(
+        return new Client(
             \Softonic\OAuth2\Guzzle\Middleware\ClientBuilder::build(
                 $oauthProvider,
                 $tokenOptions,
                 $cache,
                 $guzzleOptions
             ),
-            new \Softonic\GraphQL\ResponseBuilder(new \Softonic\GraphQL\DataObjectBuilder())
+            new ResponseBuilder(new DataObjectBuilder())
         );
     }
 }

@@ -20,12 +20,12 @@ class Collection extends AbstractCollection implements QueryObject
         return $items;
     }
 
-    protected function buildFilteredCollection($items)
+    protected function buildFilteredCollection($items): Collection
     {
         return new Collection($items);
     }
 
-    protected function buildSubCollection(array $items, string $key)
+    protected function buildSubCollection(array $items, string $key): Collection
     {
         return new Collection($items);
     }

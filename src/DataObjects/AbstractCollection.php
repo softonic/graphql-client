@@ -2,6 +2,7 @@
 
 namespace Softonic\GraphQL\DataObjects;
 
+use ArrayAccess;
 use IteratorAggregate;
 use RecursiveIteratorIterator;
 use Softonic\GraphQL\DataObjects\Mutation\MutationObject;
@@ -9,7 +10,7 @@ use Softonic\GraphQL\DataObjects\Query\Collection;
 use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 use Softonic\GraphQL\Traits\CollectionArrayAccess;
 
-abstract class AbstractCollection extends AbstractObject implements IteratorAggregate, \ArrayAccess
+abstract class AbstractCollection extends AbstractObject implements IteratorAggregate, ArrayAccess
 {
     use CollectionArrayAccess;
 
@@ -50,7 +51,7 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
 
     public function __get(string $key): AbstractCollection
     {
-        if (empty($this->arguments)) {
+        if ($this->arguments === []) {
             throw InaccessibleArgumentException::fromEmptyArguments($key);
         }
 
@@ -119,9 +120,9 @@ abstract class AbstractCollection extends AbstractObject implements IteratorAggr
     {
         $filteredItems = array_filter(
             $arguments,
-            function ($item) use ($filters) {
+            function ($item) use ($filters): bool {
                 foreach ($filters as $filterKey => $filterValue) {
-                    if (!($item->{$filterKey} == $filterValue)) {
+                    if ($item->{$filterKey} != $filterValue) {
                         return false;
                     }
                 }

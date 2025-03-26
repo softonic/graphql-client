@@ -9,14 +9,14 @@ use Softonic\GraphQL\DataObjects\Mutation\Item;
 
 class JsonPathAccessorTest extends TestCase
 {
-    public function testWhenRootIsRetrieved()
+    public function testWhenRootIsRetrieved(): void
     {
         $obj = new MutationTypeConfig();
 
         $this->assertSame($obj, $obj->get('.'));
     }
 
-    public function testWhenChildrenAreRetrieved()
+    public function testWhenChildrenAreRetrieved(): void
     {
         $upsertConfig          = new MutationTypeConfig();
         $upsertConfig->type    = Collection::class;
@@ -40,7 +40,7 @@ class JsonPathAccessorTest extends TestCase
         $this->assertEquals($upsertConfig, $bookConfig->get('.chapters.upsert'));
     }
 
-    public function testWhenObjectAttributesAreRetrieved()
+    public function testWhenObjectAttributesAreRetrieved(): void
     {
         $bookConfig           = new MutationTypeConfig();
         $bookConfig->type     = Item::class;

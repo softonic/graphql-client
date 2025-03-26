@@ -1,13 +1,17 @@
 <?php
 
-namespace Softonic\GraphQL\DataObjects\Query;
+namespace Softonic\GraphQL\Query;
 
+use BadMethodCallException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Softonic\GraphQL\DataObjects\Query\Item as Item;
+use Softonic\GraphQL\DataObjects\Query\Collection;
+use Softonic\GraphQL\DataObjects\Query\Item;
 
 class CollectionTest extends TestCase
 {
-    public function emptyCollectionProvider()
+    public static function emptyCollectionProvider(): array
     {
         return [
             'Empty collection'  => [
@@ -21,17 +25,14 @@ class CollectionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider emptyCollectionProvider
-     */
-    public function checkEmptyCollection(Collection $collection, bool $isEmpty)
+    #[DataProvider('emptyCollectionProvider')]
+    #[Test]
+    public function checkEmptyCollection(Collection $collection, bool $isEmpty): void
     {
         $this->assertSame($isEmpty, $collection->isEmpty());
     }
 
-    public function filterProvider()
+    public static function filterProvider(): array
     {
         return [
             'Filter matches no item'        => [
@@ -117,11 +118,8 @@ class CollectionTest extends TestCase
 
     /**
      * @dataProvider filterProvider
-     *
-     * @param array      $filters
-     * @param Collection $expectedResult
      */
-    public function testFilter(array $filters, Collection $expectedResult)
+    public function testFilter(array $filters, Collection $expectedResult): void
     {
         $books = new Collection(
             [
@@ -154,7 +152,7 @@ class CollectionTest extends TestCase
         $this->assertEquals($expectedResult, $filteredBooks);
     }
 
-    public function testFilterWhenRootIsAnItemAndTheFilterIsInSecondLevel()
+    public function testFilterWhenRootIsAnItemAndTheFilterIsInSecondLevel(): void
     {
         $book = new Item(
             [
@@ -205,7 +203,7 @@ class CollectionTest extends TestCase
         $this->assertEquals($expectedResult, $book);
     }
 
-    public function testUniqueLevelToArray()
+    public function testUniqueLevelToArray(): void
     {
         $book = new Item(
             [
@@ -250,7 +248,7 @@ class CollectionTest extends TestCase
         $this->assertEquals($expectedResult, $chapters);
     }
 
-    public function testSiblingsToArray()
+    public function testSiblingsToArray(): void
     {
         $book = new Collection(
             [
@@ -318,7 +316,7 @@ class CollectionTest extends TestCase
         );
     }
 
-    public function testItemHas()
+    public function testItemHas(): void
     {
         $book = new Item(
             [
@@ -333,7 +331,7 @@ class CollectionTest extends TestCase
         $this->assertFalse($book->has('invalid'));
     }
 
-    public function testHasMethodForThirdLevelItems()
+    public function testHasMethodForThirdLevelItems(): void
     {
         $book = new Item(
             [
@@ -386,7 +384,7 @@ class CollectionTest extends TestCase
         $this->assertFalse($book->has('not_existing.invalid'));
     }
 
-    public function testWhenFourthLevelItemsExistenceIsChecked()
+    public function testWhenFourthLevelItemsExistenceIsChecked(): void
     {
         $book = new Item(
             [
@@ -516,7 +514,7 @@ class CollectionTest extends TestCase
         $this->assertFalse($lines->hasItem($itemDataThatDoesNotExist));
     }
 
-    public function testArrayAccessOffsetSetShouldThrowABadMethodCallException()
+    public function testArrayAccessOffsetSetShouldThrowABadMethodCallException(): void
     {
         $book = new Item(
             [
@@ -546,13 +544,13 @@ class CollectionTest extends TestCase
             ]
         );
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('Try using add() instead');
 
         $book->chapters->name[0] = 'Chapter three';
     }
 
-    public function testArrayAccessOffsetExists()
+    public function testArrayAccessOffsetExists(): void
     {
         $book = new Item(
             [
@@ -588,7 +586,7 @@ class CollectionTest extends TestCase
         $this->assertTrue(empty($book->chapters->name[2]));
     }
 
-    public function testArrayAccessOffsetUnsetShouldThrowABadMethodCallException()
+    public function testArrayAccessOffsetUnsetShouldThrowABadMethodCallException(): void
     {
         $book = new Item(
             [
@@ -618,13 +616,13 @@ class CollectionTest extends TestCase
             ]
         );
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('Try using remove() instead');
 
         unset($book->chapters->name[0]);
     }
 
-    public function testArrayAccessOffsetGet()
+    public function testArrayAccessOffsetGet(): void
     {
         $book = new Item(
             [

@@ -3,6 +3,7 @@
 namespace Softonic\GraphQL;
 
 use Error;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Softonic\GraphQL\Config\MutationsConfig;
 use Softonic\GraphQL\DataObjects\Mutation\Collection as MutationCollection;
@@ -13,20 +14,11 @@ use Softonic\GraphQL\Exceptions\InaccessibleArgumentException;
 
 class MutationTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    private $itemConfigMock;
+    private array $itemConfigMock;
 
-    /**
-     * @var array
-     */
-    private $sameQueryStructureConfigMock;
+    private array $sameQueryStructureConfigMock;
 
-    /**
-     * @var array
-     */
-    private $collectionConfigMock;
+    private array $collectionConfigMock;
 
     protected function setUp(): void
     {
@@ -38,7 +30,7 @@ class MutationTest extends TestCase
             ->get('ReplaceBooks');
     }
 
-    private function getConfigMock()
+    private function getConfigMock(): MutationsConfig
     {
         return new MutationsConfig([
             'ReplaceBook'                       => [
@@ -198,7 +190,7 @@ class MutationTest extends TestCase
         ]);
     }
 
-    public function testIfAnItemHasAnArgument()
+    public function testIfAnItemHasAnArgument(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -213,7 +205,7 @@ class MutationTest extends TestCase
         $this->assertFalse($mutation->book->has('invalid'));
     }
 
-    public function testWhenThereAreNoChanges()
+    public function testWhenThereAreNoChanges(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -227,7 +219,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereAreChangesInRootLevel()
+    public function testWhenThereAreChangesInRootLevel(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -249,7 +241,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenTryingToUpdateAnItemWithTheSameValueItAlreadyHas()
+    public function testWhenTryingToUpdateAnItemWithTheSameValueItAlreadyHas(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -266,7 +258,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereAreVariousChangesInRootLevelSettingPropertiesNotInRead()
+    public function testWhenThereAreVariousChangesInRootLevelSettingPropertiesNotInRead(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -290,7 +282,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenAnArgumentIsUnset()
+    public function testWhenAnArgumentIsUnset(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -312,7 +304,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenThereAreMalformedCollectionsItShouldThrowAnError()
+    public function testWhenThereAreMalformedCollectionsItShouldThrowAnError(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -325,12 +317,12 @@ class MutationTest extends TestCase
             ]),
         ]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         Mutation::build($this->itemConfigMock, $book);
     }
 
-    public function testWhenThereAreChangesInRootLevelWithSecondLevelInput()
+    public function testWhenThereAreChangesInRootLevelWithSecondLevelInput(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -364,7 +356,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenANewItemIsAddedToACollection()
+    public function testWhenANewItemIsAddedToACollection(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -412,7 +404,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenANewItemIsAddedToACollectionNotPresentInTheQuery()
+    public function testWhenANewItemIsAddedToACollectionNotPresentInTheQuery(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -459,7 +451,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenChangesAreDoneToAllTheItemsFromACollection()
+    public function testWhenChangesAreDoneToAllTheItemsFromACollection(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -511,7 +503,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenChangesAreDoneToAllTheItemsFromACollectionWithIncompleteParentDataConfiguration()
+    public function testWhenChangesAreDoneToAllTheItemsFromACollectionWithIncompleteParentDataConfiguration(): void
     {
         $book = new QueryItem([
             'id_book'       => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -560,7 +552,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenFilteredItemsFromACollectionAreUpdated()
+    public function testWhenFilteredItemsFromACollectionAreUpdated(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -622,7 +614,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenAnItemIsAddedAndAFilterIsAppliedToUpdateTheFilteredItemsAndFinallyAnotherItemIsAdded()
+    public function testWhenAnItemIsAddedAndAFilterIsAppliedToUpdateTheFilteredItemsAndFinallyAnotherItemIsAdded(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -689,7 +681,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenFilterToUpdateAndAddAnotherItemAndAFilterToUpdate()
+    public function testWhenFilterToUpdateAndAddAnotherItemAndAFilterToUpdate(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -762,7 +754,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenAFilterIsAppliedToUpdateAndAnotherFilteredIsAppliedToUpdateToTheFirstFilteredItems()
+    public function testWhenAFilterIsAppliedToUpdateAndAnotherFilteredIsAppliedToUpdateToTheFirstFilteredItems(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -828,7 +820,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenTwoFiltersAreAppliedToUpdateInSeparateActions()
+    public function testWhenTwoFiltersAreAppliedToUpdateInSeparateActions(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -901,7 +893,28 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testHasMethodForThirdLevelItems()
+    public function testWhenItemIsNullMutationShouldRemoveTheKey(): void
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'chapters'  => null,
+        ]);
+
+        $mutation = Mutation::build($this->itemConfigMock, $book, true);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+            ],
+        ];
+
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+
+    }
+
+    public function testHasMethodForThirdLevelItems(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -945,7 +958,7 @@ class MutationTest extends TestCase
         $this->assertFalse($mutation->book->has('chapters.upsert.pages.upsert.has_illustrations.invalid'));
     }
 
-    public function testWhenThirdLevelItemsAreUpdated()
+    public function testWhenThirdLevelItemsAreUpdated(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1015,7 +1028,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenThirdLevelItemsAreUpdatedForTwoSecondLevelItems()
+    public function testWhenThirdLevelItemsAreUpdatedForTwoSecondLevelItems(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1127,7 +1140,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenThirdLevelItemsFilteredAreUpdated()
+    public function testWhenThirdLevelItemsFilteredAreUpdated(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1253,7 +1266,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenANewItemIsTriedToBeAddedToAThirdLevelCollectionWhichParentIsNotPresentInTheQuery()
+    public function testWhenANewItemIsTriedToBeAddedToAThirdLevelCollectionWhichParentIsNotPresentInTheQuery(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1275,7 +1288,7 @@ class MutationTest extends TestCase
         ]);
     }
 
-    public function testWhenANewItemIsTriedToBeAddedToAThirdLevelCollectionWhichParentIsPresentInTheQueryButKeyIsNot()
+    public function testWhenANewItemIsTriedToBeAddedToAThirdLevelCollectionWhichParentIsPresentInTheQueryButKeyIsNot(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1372,7 +1385,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenThirdLevelItemsHaveDifferentUpdates()
+    public function testWhenThirdLevelItemsHaveDifferentUpdates(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1500,7 +1513,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenAnItemIsTriedToBeAddedToAFilteredCollection()
+    public function testWhenAnItemIsTriedToBeAddedToAFilteredCollection(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1563,7 +1576,7 @@ class MutationTest extends TestCase
             ]);
     }
 
-    public function testWhenThirdLevelItemsAreAdded()
+    public function testWhenThirdLevelItemsAreAdded(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1667,7 +1680,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenThirdLevelItemsAreAddedAndThereWereNoneBeforeInTheCollection()
+    public function testWhenThirdLevelItemsAreAddedAndThereWereNoneBeforeInTheCollection(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1723,7 +1736,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenFourthLevelItemsAreAdded()
+    public function testWhenFourthLevelItemsAreAdded(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1853,7 +1866,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenFourthLevelItemsAreUpdated()
+    public function testWhenFourthLevelItemsAreUpdated(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -1931,7 +1944,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenFourthLevelItemsAreIterated()
+    public function testWhenFourthLevelItemsAreIterated(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2051,7 +2064,7 @@ class MutationTest extends TestCase
         }
     }
 
-    public function testWhenIteratingACollectionAndOneItemIsEmpty()
+    public function testWhenIteratingACollectionAndOneItemIsEmpty(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2095,7 +2108,7 @@ class MutationTest extends TestCase
         }
     }
 
-    public function testWhenFourthLevelItemsAreCounted()
+    public function testWhenFourthLevelItemsAreCounted(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2193,11 +2206,12 @@ class MutationTest extends TestCase
         foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $line) {
             $i++;
         }
+
         $this->assertEquals(4, $i);
         $this->assertEquals(4, $mutation->book->chapters->upsert->pages->upsert->lines->upsert->count());
     }
 
-    public function testWhenCheckIsNotEmpty()
+    public function testWhenCheckIsNotEmpty(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2280,7 +2294,7 @@ class MutationTest extends TestCase
         $this->assertFalse($mutation->book->chapters->upsert->pages->upsert->lines->upsert->isEmpty());
     }
 
-    public function testWhenCheckIsEmpty()
+    public function testWhenCheckIsEmpty(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2332,7 +2346,7 @@ class MutationTest extends TestCase
         $this->assertTrue($mutation->book->chapters->upsert->pages->upsert->lines->upsert->isEmpty());
     }
 
-    public function testWhenThereAreChangesInARootLevelCollectionForOneItem()
+    public function testWhenThereAreChangesInARootLevelCollectionForOneItem(): void
     {
         $books = new QueryCollection([
             new QueryItem([
@@ -2364,7 +2378,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenSourceContainsMutationData()
+    public function testWhenSourceContainsMutationData(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2482,7 +2496,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenFourthLevelItemsPropertyIsUnset()
+    public function testWhenFourthLevelItemsPropertyIsUnset(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2650,7 +2664,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenFourthLevelItemsExistenceIsChecked()
+    public function testWhenFourthLevelItemsExistenceIsChecked(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2750,7 +2764,7 @@ class MutationTest extends TestCase
         $this->assertFalse($lines->hasItem($itemDataThatDoesNotExist));
     }
 
-    public function testWhenFourthLevelItemsAreUnset()
+    public function testWhenFourthLevelItemsAreUnset(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2884,7 +2898,7 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
-    public function testWhenFourthLevelItemsAreRemoved()
+    public function testWhenFourthLevelItemsAreRemoved(): void
     {
         $book = new QueryItem([
             'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
@@ -2964,7 +2978,7 @@ class MutationTest extends TestCase
 
         $mutation = Mutation::build($this->itemConfigMock, $book, true);
 
-        foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $key => $line) {
+        foreach ($mutation->book->chapters->upsert->pages->upsert->lines->upsert as $line) {
             if (35 === $line->words_count) {
                 $mutation->book->chapters->upsert->pages->upsert->lines->upsert->remove($line);
                 break;

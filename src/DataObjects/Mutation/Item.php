@@ -10,20 +10,13 @@ class Item extends AbstractItem implements MutationObject
     use MutationObjectHandler;
 
     /**
-     * @var array
-     */
-    protected $config;
-
-    /**
      * @var bool
      */
     private $hasChanged = false;
 
-    public function __construct(array $arguments = [], array $config = [], bool $hasChanged = false)
+    public function __construct(array $arguments = [], protected array $config = [], bool $hasChanged = false)
     {
         parent::__construct($arguments);
-
-        $this->config     = $config;
         $this->hasChanged = $hasChanged;
     }
 

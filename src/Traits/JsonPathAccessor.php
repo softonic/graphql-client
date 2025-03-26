@@ -6,7 +6,7 @@ trait JsonPathAccessor
 {
     public function get(string $path)
     {
-        if ($path == '.') {
+        if ($path === '.') {
             return $this;
         }
 
@@ -21,8 +21,8 @@ trait JsonPathAccessor
          */
         $value = $this->hasChild($attribute) ? $this->children[$attribute] : $this->{$attribute};
 
-        if (!empty($attributes)) {
-            $value = $value->get('.' . implode('.', $attributes));
+        if ($attributes !== []) {
+            return $value->get('.' . implode('.', $attributes));
         }
 
         return $value;
