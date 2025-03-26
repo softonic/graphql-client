@@ -73,7 +73,7 @@ class Mutation
                 continue;
             }
 
-            if (self::hasChildrenToMutate($childConfig, $sourceValue)) {
+            if (self::hasChildrenToMutate($childConfig)) {
                 if (is_null($sourceValue)) {
                     continue;
                 }
