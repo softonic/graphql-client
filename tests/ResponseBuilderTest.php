@@ -3,6 +3,7 @@
 namespace Softonic\GraphQL;
 
 use GuzzleHttp\Psr7\BufferStream;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -47,9 +48,7 @@ class ResponseBuilderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider buildInvalidGraphqlJsonResponseProvider
-     */
+    #[DataProvider('buildInvalidGraphqlJsonResponseProvider')]
     public function testBuildInvalidGraphqlJsonResponse(string $body): void
     {
         $mockHttpResponse = $this->createMock(ResponseInterface::class);
@@ -101,9 +100,7 @@ class ResponseBuilderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider buildValidGraphqlJsonWithErrorsProvider
-     */
+    #[DataProvider('buildValidGraphqlJsonWithErrorsProvider')]
     public function testBuildValidGraphqlJsonWithErrors(string $body): void
     {
         $mockHttpResponse = $this->createMock(ResponseInterface::class);

@@ -1,10 +1,13 @@
 <?php
 
-namespace Softonic\GraphQL\DataObjects\Query;
+namespace Softonic\GraphQL\Query;
 
 use BadMethodCallException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Softonic\GraphQL\DataObjects\Query\Collection;
+use Softonic\GraphQL\DataObjects\Query\Item;
 
 class CollectionTest extends TestCase
 {
@@ -22,9 +25,7 @@ class CollectionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider emptyCollectionProvider
-     */
+    #[DataProvider('emptyCollectionProvider')]
     #[Test]
     public function checkEmptyCollection(Collection $collection, bool $isEmpty): void
     {

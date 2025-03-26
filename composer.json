@@ -34,7 +34,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Softonic\\GraphQL\\Test\\": "tests/"
+      "Softonic\\GraphQL\\": "tests/"
     }
   },
   "bin": [
