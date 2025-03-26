@@ -893,6 +893,27 @@ class MutationTest extends TestCase
         $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
     }
 
+    public function testWhenItemIsNullMutationShouldRemoveTheKey(): void
+    {
+        $book = new QueryItem([
+            'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+            'id_author' => 1234,
+            'chapters'  => null,
+        ]);
+
+        $mutation = Mutation::build($this->itemConfigMock, $book, true);
+
+        $expectedMutationData = [
+            'book' => [
+                'id_book'   => 'f7cfd732-e3d8-3642-a919-ace8c38c2c6d',
+                'id_author' => 1234,
+            ],
+        ];
+
+        $this->assertEquals($expectedMutationData, $mutation->jsonSerialize());
+
+    }
+
     public function testHasMethodForThirdLevelItems(): void
     {
         $book = new QueryItem([
