@@ -60,7 +60,7 @@ class FilteredCollection extends AbstractCollection implements MutationObject
         return false;
     }
 
-    protected function buildFilteredCollection($items): \Softonic\GraphQL\DataObjects\Mutation\FilteredCollection
+    protected function buildFilteredCollection($items): FilteredCollection
     {
         return new FilteredCollection($items, $this->config);
     }
