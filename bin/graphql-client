@@ -15,7 +15,16 @@ use Symfony\Component\Console\Application;
 
 $application = new Application();
 
-$application->add(new GenerateConfig());
-$application->add(new GetIntrospection());
+if (method_exists($application, 'add')) {
+  // Symfony Console ^6
+  $application->add(new GenerateConfig());
+  $application->add(new GetIntrospection());
+}
+
+if (method_exists($application, 'addCommand')) {
+  // Symfony Console ^7 and above
+  $application->addCommand(new GenerateConfig());
+  $application->addCommand(new GetIntrospection());
+}
 
 $application->run();
