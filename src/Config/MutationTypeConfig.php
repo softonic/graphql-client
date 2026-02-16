@@ -23,7 +23,7 @@ class MutationTypeConfig
      */
     public $children = [];
 
-    public function __get(string $propertyName)
+    public function __get(string $propertyName): mixed
     {
         if (property_exists(static::class, $propertyName)) {
             return $this->{$propertyName};

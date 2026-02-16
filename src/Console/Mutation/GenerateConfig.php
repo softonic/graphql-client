@@ -28,7 +28,7 @@ class GenerateConfig extends Command
      */
     private $fromSameMutation;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Creates a mutation config.')
             ->setHelp(

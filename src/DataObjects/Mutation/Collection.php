@@ -21,7 +21,7 @@ class Collection extends FilteredCollection
         return $item;
     }
 
-    public function __unset($key): void
+    public function __unset(string $key): void
     {
         foreach ($this->arguments as $argument) {
             unset($argument->{$key});

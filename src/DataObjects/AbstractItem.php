@@ -34,12 +34,12 @@ abstract class AbstractItem extends AbstractObject implements Iterator
         return $this->arguments[$firstKey]->has($nextKey);
     }
 
-    public function __get(string $key)
+    public function __get(string $key): mixed
     {
         return $this->arguments[$key] ?? null;
     }
 
-    public function __set(string $key, $value): void
+    public function __set(string $key, mixed $value): void
     {
         $this->arguments[$key] = $value;
     }
